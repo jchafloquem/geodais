@@ -259,9 +259,7 @@ const caribZA = new PopupTemplate({
   ],
 });
 const restCaribSurveyPercepcionCacao = new PopupTemplate({
-  // ✔️ Quitar el título evita el encabezado automático de Esri
   title: '',
-  // ✔️ Este popup sobreescribe totalmente el predeterminado
   outFields: ['*'],
   expressionInfos: [
     {
@@ -479,44 +477,43 @@ export class GeovisorSharedService {
   public view: MapView | null = null;
   private highlightLayer = new GraphicsLayer({ id: 'highlight-overlaps' });
 
-  //* Método auxiliar para mostrar los mensajes toast.
-  private showToast(
-    mensaje: string,
-    tipo: 'success' | 'error' = 'success',
-    autoHide: boolean = true
-  ): void {
-    let toast = document.getElementById('toast');
-    if (!toast) {
-      toast = document.createElement('div');
-      toast.id = 'toast';
-      toast.style.opacity = '0';
-      toast.style.zIndex = '10000';
-      document.body.appendChild(toast);
+  //Método auxiliar para mostrar los mensajes toast.
+    private showToast(
+      mensaje: string,
+      tipo: 'success' | 'error' = 'success',
+      autoHide: boolean = true
+    ): void {
+      let toast = document.getElementById('toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast';
+        toast.style.opacity = '0';
+        toast.style.zIndex = '10000';
+        document.body.appendChild(toast);
+      }
+      toast!.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:320px;">
+          <span>${mensaje}</span>
+          <button id="toast-close" style="background:none;border:none;color:white;font-weight:bold;cursor:pointer;">✖</button>
+        </div>
+      `;
+      toast!.className = `
+        fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+        px-4 py-2 rounded shadow text-white
+        ${tipo === 'success' ? 'bg-green-600' : 'bg-red-600'}
+        text-center
+        transition-opacity duration-500
+      `;
+      toast!.style.opacity = '1';
+      if (autoHide) {
+        setTimeout(() => (toast!.style.opacity = '0'), 10000);
+      }
+      document.getElementById('toast-close')?.addEventListener('click', () => {
+        toast!.style.opacity = '0';
+      });
     }
-    toast!.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:320px;">
-        <span>${mensaje}</span>
-        <button id="toast-close" style="background:none;border:none;color:white;font-weight:bold;cursor:pointer;">✖</button>
-      </div>
-    `;
-    toast!.className = `
-      fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-      px-4 py-2 rounded shadow text-white
-      ${tipo === 'success' ? 'bg-green-600' : 'bg-red-600'}
-      text-center
-      transition-opacity duration-500
-    `;
-    toast!.style.opacity = '1';
 
-    if (autoHide) {
-      setTimeout(() => (toast!.style.opacity = '0'), 10000);
-    }
-    document.getElementById('toast-close')?.addEventListener('click', () => {
-      toast!.style.opacity = '0';
-    });
-  }
-
-  //*SERVICIO SISCOD-DEVIDA
+  //Servicio SISCOD-DEVIDA
   public restApiDevida =
     'https://siscod.devida.gob.pe/server/rest/services/DPM_LIMITES_PIRDAIS/MapServer';
   public restCaribSurvey = {
@@ -535,7 +532,6 @@ export class GeovisorSharedService {
     },
   };
   public layers: LayerConfig[] = [
-    //* (DEVIDA)
     {
       type: 'feature',
       title: 'POLIGONOS DE CULTIVO',
@@ -548,8 +544,7 @@ export class GeovisorSharedService {
       // 🔹 Aquí defines las subcapas visibles
       sublayers: [
         {
-          id: 0, // 👈 cambia por el id real de la subcapa que quieras mostrar
-          //title: 'Límites Oficina Zonal',
+          id: 0,
           visible: true,
           labelsVisible: true,
           minScale: 0,
@@ -558,7 +553,6 @@ export class GeovisorSharedService {
         },
       ],
     },
-    //* (SERFOR)
     {
       type: 'map-image',
       title: 'ANP - AREAS NATURALES PROTEGIDAS',
@@ -567,11 +561,9 @@ export class GeovisorSharedService {
       opacity: 0.5,
       maxScale: 0,
       group: '(SERFOR)',
-      // 🔹 Aquí defines las subcapas visibles
       sublayers: [
         {
-          id: 5, // 👈 cambia por el id real de la subcapa que quieras mostrar
-          //title: 'Límites Oficina Zonal',
+          id: 5,
           visible: true,
           labelsVisible: true,
           minScale: 0,
@@ -588,11 +580,9 @@ export class GeovisorSharedService {
       minScale: 0,
       maxScale: 0,
       group: '(SERFOR)',
-      // 🔹 Aquí defines las subcapas visibles
       sublayers: [
         {
-          id: 1, // 👈 cambia por el id real de la subcapa que quieras mostrar
-          //title: 'Límites Oficina Zonal',
+          id: 1,
           visible: true,
           labelsVisible: true,
           minScale: 0,
@@ -609,11 +599,9 @@ export class GeovisorSharedService {
       minScale: 0,
       maxScale: 0,
       group: '(SERFOR)',
-      // 🔹 Aquí defines las subcapas visibles
       sublayers: [
         {
-          id: 27, // 👈 cambia por el id real de la subcapa que quieras mostrar
-          //title: 'Límites Oficina Zonal',
+          id: 27,
           visible: true,
           labelsVisible: true,
           minScale: 0,
@@ -630,11 +618,9 @@ export class GeovisorSharedService {
       minScale: 0,
       maxScale: 0,
       group: '(SERFOR)',
-      // 🔹 Aquí defines las subcapas visibles
       sublayers: [
         {
-          id: 4, // 👈 cambia por el id real de la subcapa que quieras mostrar
-          //title: 'Límites Oficina Zonal',
+          id: 4,
           visible: true,
           labelsVisible: true,
           minScale: 0,
@@ -651,11 +637,9 @@ export class GeovisorSharedService {
       minScale: 0,
       maxScale: 0,
       group: '(SERFOR)',
-      // 🔹 Aquí defines las subcapas visibles
       sublayers: [
         {
-          id: 6, // 👈 cambia por el id real de la subcapa que quieras mostrar
-          //title: 'Límites Oficina Zonal',
+          id: 6,
           visible: true,
           labelsVisible: true,
           minScale: 0,
@@ -672,11 +656,9 @@ export class GeovisorSharedService {
       minScale: 0,
       maxScale: 0,
       group: '(SERFOR)',
-      // 🔹 Aquí defines las subcapas visibles
       sublayers: [
         {
-          id: 1, // 👈 cambia por el id real de la subcapa que quieras mostrar
-          //title: 'Límites Oficina Zonal',
+          id: 1,
           visible: true,
           labelsVisible: true,
           minScale: 0,
@@ -693,12 +675,9 @@ export class GeovisorSharedService {
       minScale: 0,
       maxScale: 0,
       group: 'CARTOGRAFIA DEVIDA',
-
-      // 🔹 Aquí defines las subcapas visibles
       sublayers: [
         {
-          id: 5, // 👈 cambia por el id real de la subcapa que quieras mostrar
-          //title: 'Límites Oficina Zonal',
+          id: 5,
           visible: true,
           labelsVisible: true,
           minScale: 0,
@@ -706,7 +685,7 @@ export class GeovisorSharedService {
         },
       ],
     },
-    //*(LIMITES POLITICOS)
+    //(Limites Politicos)
     {
       type: 'map-image',
       title: 'DISTRITO',
@@ -716,11 +695,9 @@ export class GeovisorSharedService {
       minScale: 0,
       maxScale: 0,
       group: 'LIMITES POLITICOS',
-      // 🔹 Aquí defines las subcapas visibles
       sublayers: [
         {
-          id: 1, // 👈 cambia por el id real de la subcapa que quieras mostrar
-          //title: 'Límites Oficina Zonal',
+          id: 1,
           visible: true,
           labelsVisible: true,
           minScale: 0,
@@ -737,11 +714,9 @@ export class GeovisorSharedService {
       minScale: 0,
       maxScale: 0,
       group: 'LIMITES POLITICOS',
-      // 🔹 Aquí defines las subcapas visibles
       sublayers: [
         {
-          id: 2, // 👈 cambia por el id real de la subcapa que quieras mostrar
-          //title: 'Límites Oficina Zonal',
+          id: 2,
           visible: true,
           labelsVisible: true,
           minScale: 0,
@@ -758,11 +733,9 @@ export class GeovisorSharedService {
       minScale: 0,
       maxScale: 0,
       group: 'LIMITES POLITICOS',
-      // 🔹 Aquí defines las subcapas visibles
       sublayers: [
         {
-          id: 3, // 👈 cambia por el id real de la subcapa que quieras mostrar
-          //title: 'Límites Oficina Zonal',
+          id: 3,
           visible: true,
           labelsVisible: true,
           minScale: 0,
@@ -779,12 +752,9 @@ export class GeovisorSharedService {
       minScale: 0,
       maxScale: 0,
       group: 'LIMITES POLITICOS',
-
-      // 🔹 Aquí defines las subcapas visibles
       sublayers: [
         {
-          id: 4, // 👈 cambia por el id real de la subcapa que quieras mostrar
-          //title: 'Límites Oficina Zonal',
+          id: 4,
           visible: true,
           labelsVisible: true,
           minScale: 0,
@@ -797,7 +767,7 @@ export class GeovisorSharedService {
       title: 'VISITAS DE MONITOREO',
       url: `${this.restCaribSurvey.serviceBase}/${this.restCaribSurvey.capas.recopilacion}`,
       labelingInfo: [],
-      popupTemplate: restCaribRecopilacion,  // 🔹 Quitar temporalmente
+      popupTemplate: restCaribRecopilacion,
       renderer: recopilacionRenderer,
       visible: false,
       labelsVisible: false,
@@ -809,7 +779,6 @@ export class GeovisorSharedService {
   public lis: [] = [];
   public searchTerm = '';
   public filteredArray: [] = [];
-  //* Footer coordenadas
   public gcsLongitude = '00.00';
   public gcsLatitude = '00.00';
   public utmZone = '00.00';
@@ -824,8 +793,8 @@ export class GeovisorSharedService {
 
   initializeMap(mapViewEl: ElementRef): Promise<void> {
     this.layers.forEach((layerConfig) => {
-      const hasValidLayerId = /\/\d+$/.test(layerConfig.url); // Ej. .../MapServer/0
-      const isMapImage = /\/MapServer$/.test(layerConfig.url); // Ej. .../MapServer
+      const hasValidLayerId = /\/\d+$/.test(layerConfig.url);
+      const isMapImage = /\/MapServer$/.test(layerConfig.url);
       let layer: __esri.Layer;
       if (hasValidLayerId) {
         // 🔹 Es un FeatureLayer
@@ -880,7 +849,7 @@ export class GeovisorSharedService {
       this.mapa.add(layer);
     });
 
-    //*Creacion de la Vista del Mapa
+    //Creacion de la Vista del Mapa
     this.view = new MapView({
       container: mapViewEl.nativeElement,
       map: this.mapa,
@@ -898,12 +867,8 @@ export class GeovisorSharedService {
       },
     });
 
-
     this.mapa.layers.on('after-add', (event) => {
       const lyr = event.item;
-      //console.log('Nueva capa agregada:', lyr.title || lyr.id);
-
-      // Forzar carga interna de la capa o sublayer
       if (lyr.type === 'feature') {
         (lyr as __esri.FeatureLayer)
           .load()
@@ -917,20 +882,19 @@ export class GeovisorSharedService {
       }
     });
 
-    //*Ver la escala en el mapa
+    //Ver la escala en el mapa
     this.view.when(() => {
       this.actualizarSelectCapas();
       this.mapa.layers.on('change', () => {
         this.actualizarSelectCapas();
       });
       reactiveUtils.watch(
-        () => this.view!.scale, // <- aquí el "!" le dice a TS que no es null
+        () => this.view!.scale,
         (scale) => {
           this.scale = this.formatScale(scale);
         }
       );
     });
-    //*Banco de controles del visor
     //Arreglo para control de busqueda
     const buscaCapasDEVIDA = [
       {
@@ -942,8 +906,8 @@ export class GeovisorSharedService {
         exactMatch: true,
         outFields: ['*'],
         name: 'CULTIVOS',
-        placeholder: 'INGRESE EL Nro DNI',
-        maxResults: 1,
+        placeholder: 'Nro DNI',
+        maxResults: 5,
         maxSuggestions: 20,
         suggestionsEnabled: true,
         minSuggestCharacters: 1,
@@ -982,27 +946,26 @@ export class GeovisorSharedService {
     const searchElement = document.querySelector('arcgis-search') as any;
     if (searchElement) {
       searchElement.view = this.view;
-      searchElement.sources = buscaCapasDEVIDA; // tus capas personalizadas
+      searchElement.sources = buscaCapasDEVIDA;
     }
-    //*Widgets del Visor
-    //Widget de Zoom
+    //Widgets del Visor
     this.view.ui.add(new Zoom({ view: this.view }), {
       position: 'top-right',
       index: 1,
     });
-    //Widget de Home
+
     const homeEl = document.createElement('arcgis-home') as any;
-    homeEl.autoDestroyDisabled = true; // 👈 evita que se destruya
+    homeEl.autoDestroyDisabled = true;
     homeEl.view = this.view;
     this.view.ui.add(homeEl, { position: 'top-right', index: 2 });
-    //Widget de Locate
+
     const locateEl = document.createElement('arcgis-locate') as any;
-    locateEl.autoDestroyDisabled = true; // 👈 evita que se destruya
+    locateEl.autoDestroyDisabled = true;
     locateEl.view = this.view;
     this.view.ui.add(locateEl, { position: 'top-right', index: 3 });
-    //Widget de Galeria de Mapas
+
     const galleryEl = document.createElement('arcgis-basemap-gallery') as any;
-    galleryEl.autoDestroyDisabled = true; // 👈 evita que se destruya
+    galleryEl.autoDestroyDisabled = true;
     galleryEl.view = this.view;
     const expand = new Expand({
       view: this.view,
@@ -1012,7 +975,7 @@ export class GeovisorSharedService {
     });
     this.view.ui.add(expand, { position: 'top-right', index: 4 });
 
-    //*Widget para cargar GeoJSON
+    //Widget para cargar GeoJSON
     const uploadEl = document.createElement('div');
     uploadEl.className = 'file-upload-widget p-2 bg-white rounded shadow';
     const inputEl = document.createElement('input');
@@ -1033,38 +996,106 @@ export class GeovisorSharedService {
     const expanduploadEl = new Expand({
       view: this.view,
       content: uploadEl,
-      expandTooltip: 'Cargar archivo',
+      expandTooltip: 'Cargar archivo en formato GeoJSON',
       expandIcon: 'upload',
     });
     this.view.ui.add(expanduploadEl, { position: 'top-right', index: 5 });
-    // --- Función para ocultar o mostrar en móviles ---
     function toggleUploadWidget() {
-      if (!expanduploadEl.container) return; // verificar que exista
+      if (!expanduploadEl.container) return;
       if (window.innerWidth < 768) {
-        expanduploadEl.container.style.display = 'none'; // ocultar en móviles
-        expanduploadEl.collapse(); // asegurar que esté cerrado
+        expanduploadEl.container.style.display = 'none';
+        expanduploadEl.collapse();
       } else {
-        expanduploadEl.container.style.display = 'block'; // mostrar en desktop
+        expanduploadEl.container.style.display = 'block';
       }
     }
 
-    //*Widget para ANALISIS ESPACIAL CON BPP-SERFOR
-    const uploadEl6 = document.createElement('div');
-    uploadEl6.className = 'file-upload-widget p-2 bg-white rounded shadow';
-    // Título
-    const titleEl = document.createElement('div');
-    titleEl.textContent = 'Selecciona capas para superposición:';
-    titleEl.className = 'mb-2 font-semibold';
-    uploadEl6.appendChild(titleEl);
+    //Widget para ANALISIS ESPACIAL CON BPP-SERFOR
+        const uploadEl6 = document.createElement('div');
+        uploadEl6.className = 'file-upload-widget p-2 bg-white rounded shadow';
+        const titleEl = document.createElement('div');
+        titleEl.textContent = 'Selecciona capas para superposición:';
+        titleEl.className = 'mb-2 font-semibold';
+        uploadEl6.appendChild(titleEl);
+        const selectEl = document.createElement('select');
+        selectEl.multiple = true;
+        selectEl.className = 'w-full p-1 border rounded mb-2';
+        uploadEl6.appendChild(selectEl);
+        const buttonEl = document.createElement('button');
+        buttonEl.textContent = '🔎 Analizar superposición';
+        buttonEl.className = `
+                      px-4 py-1
+                      bg-blue-600 hover:bg-blue-700
+                      text-white font-semibold rounded
+                      text-base
+                      transition-colors
+                      mx-auto
+                      block
+                    `;
+        uploadEl6.appendChild(buttonEl);
+        const capasVisibles: __esri.FeatureLayer[] = [];
+        this.mapa.layers.forEach((lyr) => {
+          const layerType = (lyr as any).type;
+          if (layerType === 'feature' && lyr.visible) {
+            capasVisibles.push(lyr as __esri.FeatureLayer);
+            const opt = document.createElement('option');
+            opt.value = lyr.id;
+            opt.text = (lyr as any).title || (lyr as any).name || lyr.id;
+            selectEl.appendChild(opt);
+          } else if (layerType === 'map-image' && lyr.visible) {
+            const mapImg = lyr as __esri.MapImageLayer;
+            mapImg.sublayers?.forEach((sub) => {
+              if (sub.visible && 'queryFeatures' in sub) {
+                const fl = sub as unknown as __esri.FeatureLayer;
+                capasVisibles.push(fl);
+                const opt = document.createElement('option');
+                opt.value = fl.id.toString();
+                opt.text =
+                  (sub as any).title || (sub as any).name || `${mapImg.title}`;
+                selectEl.appendChild(opt);
+              }
+            });
+          }
+        });
+        buttonEl.onclick = async () => {
+          try {
+            await this.analizarSuperposicion();
+          } catch (err) {
+            console.error('Error en el análisis:', err);
+          }
+        };
+        const expandAnalisis = new Expand({
+          view: this.view,
+          content: uploadEl6,
+          expandTooltip: 'Analizar superposición con Bosque de Protección Permanente',
+          expandIcon: 'parcel-layer',
+        });
+        this.view.ui.add(expandAnalisis, { position: 'top-right', index: 6 });
+        function toggleAnalisisWidget() {
+          if (!expandAnalisis.container) return;
+          if (window.innerWidth < 768) {
+            expandAnalisis.container.style.display = 'none';
+            expandAnalisis.collapse();
+          } else {
+            expandAnalisis.container.style.display = 'block';
+          }
+        }
 
-    const selectEl = document.createElement('select');
-    selectEl.multiple = true;
-    selectEl.className = 'w-full p-1 border rounded mb-2';
-    uploadEl6.appendChild(selectEl);
-    // Botón analizar
-    const buttonEl = document.createElement('button');
-    buttonEl.textContent = '🔎 Analizar superposición';
-    buttonEl.className = `
+        //Widget para ANALISIS ESPACIAL CON POLIGONOS DE CULTIVO
+        const uploadEl7 = document.createElement('div');
+        uploadEl7.id = 'analisis-cultivo-widget';
+        uploadEl7.className = 'p-2 bg-white rounded shadow';
+        const titleCultivoEl = document.createElement('div');
+        titleCultivoEl.textContent = 'Selecciona capas para superposición:';
+        titleCultivoEl.className = 'mb-2 font-semibold';
+        uploadEl7.appendChild(titleCultivoEl);
+        const selectCultivoEl = document.createElement('select');
+        selectCultivoEl.multiple = true;
+        selectCultivoEl.className = 'w-full p-1 border rounded mb-2';
+        uploadEl7.appendChild(selectCultivoEl);
+        const buttonCultivoEl = document.createElement('button');
+        buttonCultivoEl.textContent = '🔎 Analizar superposición';
+        buttonCultivoEl.className = `
                   px-4 py-1
                   bg-blue-600 hover:bg-blue-700
                   text-white font-semibold rounded
@@ -1073,144 +1104,62 @@ export class GeovisorSharedService {
                   mx-auto
                   block
                 `;
-    uploadEl6.appendChild(buttonEl);
-    const capasVisibles: __esri.FeatureLayer[] = [];
-    this.mapa.layers.forEach((lyr) => {
-      const layerType = (lyr as any).type;
-      if (layerType === 'feature' && lyr.visible) {
-        capasVisibles.push(lyr as __esri.FeatureLayer);
-        const opt = document.createElement('option');
-        opt.value = lyr.id;
-        opt.text = (lyr as any).title || (lyr as any).name || lyr.id;
-        selectEl.appendChild(opt);
-      } else if (layerType === 'map-image' && lyr.visible) {
-        const mapImg = lyr as __esri.MapImageLayer;
-        mapImg.sublayers?.forEach((sub) => {
-          if (sub.visible && 'queryFeatures' in sub) {
-            const fl = sub as unknown as __esri.FeatureLayer;
-            capasVisibles.push(fl);
+        uploadEl7.appendChild(buttonCultivoEl);
+        const capasVisiblesCultivo: __esri.FeatureLayer[] = [];
+        this.mapa.layers.forEach((lyr) => {
+          const layerType = (lyr as any).type;
+          if (layerType === 'feature' && lyr.visible) {
+            capasVisiblesCultivo.push(lyr as __esri.FeatureLayer);
             const opt = document.createElement('option');
-            opt.value = fl.id.toString();
-            opt.text =
-              (sub as any).title || (sub as any).name || `${mapImg.title}`;
+            opt.value = lyr.id;
+            opt.text = (lyr as any).title || (lyr as any).name || lyr.id;
             selectEl.appendChild(opt);
+          } else if (layerType === 'map-image' && lyr.visible) {
+            const mapImg = lyr as __esri.MapImageLayer;
+            mapImg.sublayers?.forEach((sub) => {
+              if (sub.visible && 'queryFeatures' in sub) {
+                const fl = sub as unknown as __esri.FeatureLayer;
+                capasVisiblesCultivo.push(fl);
+                const opt = document.createElement('option');
+                opt.value = fl.id.toString();
+                opt.text =
+                  (sub as any).title || (sub as any).name || `${mapImg.title}`;
+                selectEl.appendChild(opt);
+              }
+            });
           }
         });
-      }
-    });
-    buttonEl.onclick = async () => {
-      try {
-        await this.analizarSuperposicion();
-      } catch (err) {
-        console.error('Error en el análisis:', err);
-      }
-    };
-    const expandAnalisis = new Expand({
-      view: this.view,
-      content: uploadEl6,
-      expandTooltip: 'Analizar superposición',
-      expandIcon: 'analysis',
-    });
-    this.view.ui.add(expandAnalisis, { position: 'top-right', index: 6 });
-    function toggleAnalisisWidget() {
-      if (!expandAnalisis.container) return;
-      if (window.innerWidth < 768) {
-        expandAnalisis.container.style.display = 'none'; // ocultar en móvil
-        expandAnalisis.collapse(); // asegurar que esté cerrado
-      } else {
-        expandAnalisis.container.style.display = 'block'; // mostrar en desktop
-      }
-    }
-
-
-
-    //*Widget para ANALISIS ESPACIAL CON POLIGONOS DE CULTIVO
-    const uploadEl7 = document.createElement('div');
-    uploadEl7.id = 'analisis-cultivo-widget';
-    uploadEl7.className = 'p-2 bg-white rounded shadow';
-    // Título
-    const titleCultivoEl = document.createElement('div');
-    titleCultivoEl.textContent = 'Selecciona capas para superposición:';
-    titleCultivoEl.className = 'mb-2 font-semibold';
-    uploadEl7.appendChild(titleCultivoEl);
-
-    const selectCultivoEl = document.createElement('select');
-    selectCultivoEl.multiple = true; // Asumo selección simple para análisis
-    selectCultivoEl.className = 'w-full p-1 border rounded mb-2';
-    uploadEl7.appendChild(selectCultivoEl);
-
-    const buttonCultivoEl = document.createElement('button');
-    buttonCultivoEl.textContent = '🔎 Analizar superposición';
-    buttonCultivoEl.className = `
-              px-4 py-1
-              bg-blue-600 hover:bg-blue-700
-              text-white font-semibold rounded
-              text-base
-              transition-colors
-              mx-auto
-              block
-            `;
-    uploadEl7.appendChild(buttonCultivoEl);
-    const capasVisiblesCultivo: __esri.FeatureLayer[] = [];
-    this.mapa.layers.forEach((lyr) => {
-      const layerType = (lyr as any).type;
-      if (layerType === 'feature' && lyr.visible) {
-        capasVisiblesCultivo.push(lyr as __esri.FeatureLayer);
-        const opt = document.createElement('option');
-        opt.value = lyr.id;
-        opt.text = (lyr as any).title || (lyr as any).name || lyr.id;
-        selectEl.appendChild(opt);
-      } else if (layerType === 'map-image' && lyr.visible) {
-        const mapImg = lyr as __esri.MapImageLayer;
-        mapImg.sublayers?.forEach((sub) => {
-          if (sub.visible && 'queryFeatures' in sub) {
-            const fl = sub as unknown as __esri.FeatureLayer;
-            capasVisiblesCultivo.push(fl);
-            const opt = document.createElement('option');
-            opt.value = fl.id.toString();
-            opt.text =
-              (sub as any).title || (sub as any).name || `${mapImg.title}`;
-            selectEl.appendChild(opt);
+        buttonCultivoEl.onclick = async () => {
+          try {
+            await this.analizarSuperposicionCultivo();
+          } catch (err) {
+            console.error('Error en el análisis:', err);
           }
+        };
+        const expandAnalisisCultivo = new Expand({
+          view: this.view,
+          content: uploadEl7,
+          expandTooltip: 'Analizar superposición con poligonos de cultivos',
+          expandIcon: 'overwrite-features',
         });
-      }
-    });
-    buttonCultivoEl.onclick = async () => {
-      try {
-        await this.analizarSuperposicionCultivo();
-      } catch (err) {
-        console.error('Error en el análisis:', err);
-      }
-    };
-    const expandAnalisisCultivo = new Expand({
-      view: this.view,
-      content: uploadEl7,
-      expandTooltip: 'Analizar superposición',
-      expandIcon: 'globe',
-    });
-    this.view.ui.add(expandAnalisisCultivo, { position: 'top-right', index: 7 });
-    function toggleAnalisisCultivoWidget() {
-      if (!expandAnalisisCultivo.container) return;
-      if (window.innerWidth < 768) {
-        expandAnalisisCultivo.container.style.display = 'none'; // ocultar en móvil
-        expandAnalisisCultivo.collapse(); // asegurar que esté cerrado
-      } else {
-        expandAnalisisCultivo.container.style.display = 'block'; // mostrar en desktop
-      }
-    }
+        this.view.ui.add(expandAnalisisCultivo, { position: 'top-right', index: 7 });
+        function toggleAnalisisCultivoWidget() {
+          if (!expandAnalisisCultivo.container) return;
+          if (window.innerWidth < 768) {
+            expandAnalisisCultivo.container.style.display = 'none';
+            expandAnalisisCultivo.collapse();
+          } else {
+            expandAnalisisCultivo.container.style.display = 'block';
+          }
+        }
+
     toggleUploadWidget();
     window.addEventListener('resize', toggleUploadWidget);
     toggleAnalisisWidget();
     window.addEventListener('resize', toggleAnalisisWidget);
     toggleAnalisisCultivoWidget();
     window.addEventListener('resize', toggleAnalisisCultivoWidget);
-
-
-
-
-
-    //*Fin de Widgets
-
+    //Fin de Widgets
 
     this.legend = new Legend({
       view: this.view,
@@ -1235,644 +1184,616 @@ export class GeovisorSharedService {
     }
     return this.view.when();
   }
-  //*FIN <InitializeMap>
-  destroyMap(): void {
-    if (this.view) {
-      this.view.container = null;
+  //FIN <InitializeMap>
+
+    destroyMap(): void {if (this.view) {this.view.container = null;}}
+    //Inicio del Toogle
+    toggleLayerVisibility(layerTitle: string, visibility: boolean): void {
+      const layer = this.mapa.layers.find((layer) => layer.title === layerTitle);
+      if (layer) {
+        layer.visible = visibility;
+      }
     }
-  }
-  //*Inicio del Toogle
-  toggleLayerVisibility(layerTitle: string, visibility: boolean): void {
-    const layer = this.mapa.layers.find((layer) => layer.title === layerTitle);
-    if (layer) {
-      layer.visible = visibility;
+    getLayerVisibility(layerTitle: string): boolean {
+      const layer = this.mapa.layers.find((layer) => layer.title === layerTitle);
+      return layer ? layer.visible : false;
     }
-  }
-  //*Fin de toggleLayerVisibility
-  //*Inicio carga de capa
-  getLayerVisibility(layerTitle: string): boolean {
-    const layer = this.mapa.layers.find((layer) => layer.title === layerTitle);
-    return layer ? layer.visible : false;
-  }
-  private capas: Record<string, FeatureLayer> = {};
-  getActiveLayers(): FeatureLayer[] {
-    return Object.values(this.capas).filter((layer) => layer.visible);
-  }
-  //* Coordenadas
-  async updateCoordinates(lat: number, lon: number): Promise<void> {
-    this.gcsLatitude = lat.toFixed(5);
-    this.gcsLongitude = lon.toFixed(5);
-    // Calculate UTM Zone
-    const zoneNumber = Math.floor((lon + 180) / 6) + 1;
-    const utmBand = this.getUtmBand(lat);
-    this.utmZone = `${zoneNumber} ${utmBand}`;
-    const utm = latLonToUTM(lat, lon);
-    this.utmZone = `${utm.zoneNumber} ${utm.zoneLetter}`;
-    this.utmEast = `${utm.easting.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })} m`;
-    this.utmNorth = `${utm.northing.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })} m`;
-    function latLonToUTM(lat: number, lon: number) {
-      const a = 6378137.0;
-      const f = 1 / 298.257223563;
-      const k0 = 0.9996;
+    private capas: Record<string, FeatureLayer> = {};
+    getActiveLayers(): FeatureLayer[] {
+      return Object.values(this.capas).filter((layer) => layer.visible);
+    }
+    //Coordenadas
+    async updateCoordinates(lat: number, lon: number): Promise<void> {
+      this.gcsLatitude = lat.toFixed(5);
+      this.gcsLongitude = lon.toFixed(5);
+      // Calculate UTM Zone
       const zoneNumber = Math.floor((lon + 180) / 6) + 1;
-      const lonOrigin = (zoneNumber - 1) * 6 - 180 + 3;
-      const lonOriginRad = (lonOrigin * Math.PI) / 180;
-      const latRad = (lat * Math.PI) / 180;
-      const lonRad = (lon * Math.PI) / 180;
-      const e = Math.sqrt(f * (2 - f));
-      const N = a / Math.sqrt(1 - Math.pow(e * Math.sin(latRad), 2));
-      const T = Math.tan(latRad) ** 2;
-      const C = ((e * e) / (1 - e * e)) * Math.cos(latRad) ** 2;
-      const A = Math.cos(latRad) * (lonRad - lonOriginRad);
-      const M =
-        a *
-        ((1 - (e * e) / 4 - (3 * e ** 4) / 64 - (5 * e ** 6) / 256) * latRad -
-          ((3 * e * e) / 8 + (3 * e ** 4) / 32 + (45 * e ** 6) / 1024) *
-          Math.sin(2 * latRad) +
-          ((15 * e ** 4) / 256 + (45 * e ** 6) / 1024) * Math.sin(4 * latRad) -
-          ((35 * e ** 6) / 3072) * Math.sin(6 * latRad));
-      const easting =
-        k0 *
-        N *
-        (A +
-          ((1 - T + C) * A ** 3) / 6 +
-          ((5 - 18 * T + T ** 2 + 72 * C - 58 * ((e * e) / (1 - e * e))) *
-            A ** 5) /
-          120) +
-        500000;
-      let northing =
-        k0 *
-        (M +
+      const utmBand = this.getUtmBand(lat);
+      this.utmZone = `${zoneNumber} ${utmBand}`;
+      const utm = latLonToUTM(lat, lon);
+      this.utmZone = `${utm.zoneNumber} ${utm.zoneLetter}`;
+      this.utmEast = `${utm.easting.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })} m`;
+      this.utmNorth = `${utm.northing.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })} m`;
+      function latLonToUTM(lat: number, lon: number) {
+        const a = 6378137.0;
+        const f = 1 / 298.257223563;
+        const k0 = 0.9996;
+        const zoneNumber = Math.floor((lon + 180) / 6) + 1;
+        const lonOrigin = (zoneNumber - 1) * 6 - 180 + 3;
+        const lonOriginRad = (lonOrigin * Math.PI) / 180;
+        const latRad = (lat * Math.PI) / 180;
+        const lonRad = (lon * Math.PI) / 180;
+        const e = Math.sqrt(f * (2 - f));
+        const N = a / Math.sqrt(1 - Math.pow(e * Math.sin(latRad), 2));
+        const T = Math.tan(latRad) ** 2;
+        const C = ((e * e) / (1 - e * e)) * Math.cos(latRad) ** 2;
+        const A = Math.cos(latRad) * (lonRad - lonOriginRad);
+        const M =
+          a *
+          ((1 - (e * e) / 4 - (3 * e ** 4) / 64 - (5 * e ** 6) / 256) * latRad -
+            ((3 * e * e) / 8 + (3 * e ** 4) / 32 + (45 * e ** 6) / 1024) *
+            Math.sin(2 * latRad) +
+            ((15 * e ** 4) / 256 + (45 * e ** 6) / 1024) * Math.sin(4 * latRad) -
+            ((35 * e ** 6) / 3072) * Math.sin(6 * latRad));
+        const easting =
+          k0 *
           N *
-          Math.tan(latRad) *
-          (A ** 2 / 2 +
-            ((5 - T + 9 * C + 4 * C ** 2) * A ** 4) / 24 +
-            ((61 -
-              58 * T +
-              T ** 2 +
-              600 * C -
-              330 * ((e * e) / (1 - e * e))) *
-              A ** 6) /
-            720));
-      if (lat < 0) northing += 10000000;
-      const bands = 'CDEFGHJKLMNPQRSTUVWX';
-      const index = Math.floor((lat + 80) / 8);
-      const zoneLetter = bands.charAt(index);
-      return { easting, northing, zoneNumber, zoneLetter };
-    }
-  }
-  getUtmBand(latitude: number): string {
-    const bands = 'CDEFGHJKLMNPQRSTUVWX'; // Bands from 80S to 84N
-    const index = Math.floor((latitude + 80) / 8);
-    return bands.charAt(index);
-  }
-  formatScale(scale: number): string {
-    return scale.toLocaleString('en-US', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    });
-  }
-  //*Funcion que importa un archivo GeoJson
-  async dataImport(
-    file: File,
-    coordType?: 'UTM' | 'GEOGRAFICA'
-  ): Promise<void> {
-    if (!file || !this.view || !this.mapa) return;
-    const fileName = file.name.toLowerCase();
-    if (
-      !fileName.endsWith('.json') &&
-      !fileName.endsWith('.geojson') &&
-      !fileName.endsWith('.csv')
-    ) {
-      await this.showModal(
-        'Formato no soportado. Solo se permiten archivos .json, .geojson o .csv',
-        '⚠️ Error'
-      );
-      return;
-    }
-    const utmDefs: Record<string, string> = {
-      '17S': '+proj=utm +zone=17 +south +datum=WGS84 +units=m +no_defs',
-      '18S': '+proj=utm +zone=18 +south +datum=WGS84 +units=m +no_defs',
-      '19S': '+proj=utm +zone=19 +south +datum=WGS84 +units=m +no_defs',
-    };
-    const wgs84 = '+proj=longlat +datum=WGS84 +no_defs';
-    // 👉 reemplazo de prompt por select (tipo coordenadas)
-    if (!coordType) {
-      coordType = await this.showSelect<'UTM' | 'GEOGRAFICA'>(
-        'Seleccione el tipo de coordenadas:',
-        [
-          { value: 'UTM', label: 'UTM' },
-          { value: 'GEOGRAFICA', label: 'GEOGRÁFICA' },
-        ]
-      );
-      if (!coordType) return;
-    }
-    // 👉 si eligió UTM, pedimos zona con otro select
-    let utmZone: '17S' | '18S' | '19S' | undefined;
-    if (coordType === 'UTM') {
-      utmZone = await this.showSelect<'17S' | '18S' | '19S'>(
-        'Seleccione la zona UTM:',
-        [
-          { value: '17S', label: '17S' },
-          { value: '18S', label: '18S' },
-          { value: '19S', label: '19S' },
-        ]
-      );
-      if (!utmZone) return;
-    }
-    function reproyectarCoord(coord: number[]): number[] {
-      if (!utmZone) return coord;
-      return proj4(utmDefs[utmZone!], wgs84, coord);
-    }
-    function reproyectarGeoJSONGeometry(geom: any): any {
-      if (!geom) return geom;
-      const mapCoord = (c: number[]) => reproyectarCoord(c);
-      switch (geom.type) {
-        case 'Point':
-          return { type: 'Point', coordinates: mapCoord(geom.coordinates) };
-        case 'LineString':
-        case 'MultiPoint':
-          return {
-            type: geom.type,
-            coordinates: geom.coordinates.map(mapCoord),
-          };
-        case 'Polygon':
-        case 'MultiLineString':
-          return {
-            type: geom.type,
-            coordinates: geom.coordinates.map((ring: any) =>
-              ring.map(mapCoord)
-            ),
-          };
-        case 'MultiPolygon':
-          return {
-            type: 'MultiPolygon',
-            coordinates: geom.coordinates.map((poly: any) =>
-              poly.map((ring: any) => ring.map(mapCoord))
-            ),
-          };
-        default:
-          return geom;
+          (A +
+            ((1 - T + C) * A ** 3) / 6 +
+            ((5 - 18 * T + T ** 2 + 72 * C - 58 * ((e * e) / (1 - e * e))) *
+              A ** 5) /
+            120) +
+          500000;
+        let northing =
+          k0 *
+          (M +
+            N *
+            Math.tan(latRad) *
+            (A ** 2 / 2 +
+              ((5 - T + 9 * C + 4 * C ** 2) * A ** 4) / 24 +
+              ((61 -
+                58 * T +
+                T ** 2 +
+                600 * C -
+                330 * ((e * e) / (1 - e * e))) *
+                A ** 6) /
+              720));
+        if (lat < 0) northing += 10000000;
+        const bands = 'CDEFGHJKLMNPQRSTUVWX';
+        const index = Math.floor((lat + 80) / 8);
+        const zoneLetter = bands.charAt(index);
+        return { easting, northing, zoneNumber, zoneLetter };
       }
     }
-    try {
-      let geojson: any;
-      let layer: __esri.Layer | null = null;
-
-      if (fileName.endsWith('.csv')) {
-        const blobUrl = URL.createObjectURL(file);
-        layer = new CSVLayer({ url: blobUrl, title: file.name });
-      } else {
-        const text = await file.text();
-        geojson = JSON.parse(text);
-      }
-      if (!layer && geojson) {
-        const validFeatures =
-          geojson.features?.filter((f: any) => f.geometry) || [];
-        if (validFeatures.length === 0) {
-          await this.showModal(
-            'El archivo no contiene geometrías válidas para mostrar en el mapa.',
-            '⚠️ Error'
-          );
-          return;
-        }
-        // --- contar polígonos ---
-        const polygonCount = validFeatures.filter(
-          (f: any) =>
-            f.geometry.type === 'Polygon' || f.geometry.type === 'MultiPolygon'
-        ).length;
-        const featuresProcesadas = validFeatures.map((f: any) => ({
-          ...f,
-          geometry: reproyectarGeoJSONGeometry(f.geometry),
-        }));
-        const blob = new Blob(
-          [
-            JSON.stringify({
-              type: 'FeatureCollection',
-              features: featuresProcesadas,
-            }),
-          ],
-          { type: 'application/json' }
+    getUtmBand(latitude: number): string {
+      const bands = 'CDEFGHJKLMNPQRSTUVWX'; // Bands from 80S to 84N
+      const index = Math.floor((latitude + 80) / 8);
+      return bands.charAt(index);
+    }
+    formatScale(scale: number): string {
+      return scale.toLocaleString('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      });
+    }
+    //Funcion que importa un archivo GeoJson
+    async dataImport(
+      file: File,
+      coordType?: 'UTM' | 'GEOGRAFICA'
+    ): Promise<void> {
+      if (!file || !this.view || !this.mapa) return;
+      const fileName = file.name.toLowerCase();
+      if (
+        !fileName.endsWith('.json') &&
+        !fileName.endsWith('.geojson') &&
+        !fileName.endsWith('.csv')
+      ) {
+        await this.showModal(
+          'Formato no soportado. Solo se permiten archivos .json, .geojson o .csv',
+          '⚠️ Error'
         );
-        const blobUrl = URL.createObjectURL(blob);
-        const sampleGeom = featuresProcesadas[0].geometry;
-        let renderer: any;
-        if (!sampleGeom) {
-          renderer = undefined;
-        } else if (
-          sampleGeom.type === 'Point' ||
-          sampleGeom.type === 'MultiPoint'
-        ) {
-          renderer = {
-            type: 'simple',
-            symbol: {
-              type: 'simple-marker',
-              color: [0, 128, 255, 0.8],
-              size: 8,
-              outline: { color: [0, 0, 0, 0.8], width: 1 },
-            },
-          };
-        } else if (
-          sampleGeom.type === 'LineString' ||
-          sampleGeom.type === 'MultiLineString'
-        ) {
-          renderer = {
-            type: 'simple',
-            symbol: {
-              type: 'simple-line',
-              color: [0, 255, 0, 0.8],
-              width: 2,
-            },
-          };
-        } else if (
-          sampleGeom.type === 'Polygon' ||
-          sampleGeom.type === 'MultiPolygon'
-        ) {
-          renderer = {
-            type: 'simple',
-            symbol: {
-              type: 'simple-fill',
-              color: [0, 0, 255, 0.3],
-              outline: { color: [255, 0, 0, 1], width: 1 },
-            },
-          };
-        }
-        layer = new GeoJSONLayer({ url: blobUrl, title: file.name, renderer });
-        // --- mostrar cantidad de polígonos ---
-        if (polygonCount > 0) {
-          //console.log(`📌 Se importaron ${polygonCount} polígonos`);
-          await this.showModal(
-            `Se importaron ${polygonCount} polígonos.`,
-            '✅ Importación exitosa'
-          );
+        return;
+      }
+      const utmDefs: Record<string, string> = {
+        '17S': '+proj=utm +zone=17 +south +datum=WGS84 +units=m +no_defs',
+        '18S': '+proj=utm +zone=18 +south +datum=WGS84 +units=m +no_defs',
+        '19S': '+proj=utm +zone=19 +south +datum=WGS84 +units=m +no_defs',
+      };
+      const wgs84 = '+proj=longlat +datum=WGS84 +no_defs';
+      // 👉 reemplazo de prompt por select (tipo coordenadas)
+      if (!coordType) {
+        coordType = await this.showSelect<'UTM' | 'GEOGRAFICA'>(
+          'Seleccione el tipo de coordenadas:',
+          [
+            { value: 'UTM', label: 'UTM' },
+            { value: 'GEOGRAFICA', label: 'GEOGRÁFICA' },
+          ]
+        );
+        if (!coordType) return;
+      }
+      // 👉 si eligió UTM, pedimos zona con otro select
+      let utmZone: '17S' | '18S' | '19S' | undefined;
+      if (coordType === 'UTM') {
+        utmZone = await this.showSelect<'17S' | '18S' | '19S'>(
+          'Seleccione la zona UTM:',
+          [
+            { value: '17S', label: '17S' },
+            { value: '18S', label: '18S' },
+            { value: '19S', label: '19S' },
+          ]
+        );
+        if (!utmZone) return;
+      }
+      function reproyectarCoord(coord: number[]): number[] {
+        if (!utmZone) return coord;
+        return proj4(utmDefs[utmZone!], wgs84, coord);
+      }
+      function reproyectarGeoJSONGeometry(geom: any): any {
+        if (!geom) return geom;
+        const mapCoord = (c: number[]) => reproyectarCoord(c);
+        switch (geom.type) {
+          case 'Point':
+            return { type: 'Point', coordinates: mapCoord(geom.coordinates) };
+          case 'LineString':
+          case 'MultiPoint':
+            return {
+              type: geom.type,
+              coordinates: geom.coordinates.map(mapCoord),
+            };
+          case 'Polygon':
+          case 'MultiLineString':
+            return {
+              type: geom.type,
+              coordinates: geom.coordinates.map((ring: any) =>
+                ring.map(mapCoord)
+              ),
+            };
+          case 'MultiPolygon':
+            return {
+              type: 'MultiPolygon',
+              coordinates: geom.coordinates.map((poly: any) =>
+                poly.map((ring: any) => ring.map(mapCoord))
+              ),
+            };
+          default:
+            return geom;
         }
       }
-      if (!layer) return;
-      this.mapa.add(layer);
-      layer
-        .when(() => {
-          if (layer!.fullExtent && this.view) {
-            this.view
-              .goTo(layer!.fullExtent)
-              .catch((err) =>
-                console.warn('No se pudo hacer zoom a la capa:', err)
-              );
-          }
-          this.showModal(
-            `Capa "${file.name}" cargada correctamente.`,
-            '✅ Éxito'
-          );
-        })
-        .catch((err) => {
-          console.error('Error cargando la capa:', err);
-          this.showModal(
-            'Ocurrió un error cargando la capa. Revisa la consola.',
-            '⚠️ Error'
-          );
-        });
-    } catch (err) {
-      console.error('Error procesando el archivo:', err);
-      this.showModal(
-        'Ocurrió un error procesando el archivo. Revisa la consola.',
-        '⚠️ Error'
-      );
-    }
-  }
-  private showModal(
-    message: string,
-    typeOrTitle?: 'success' | 'error' | 'info' | string,
-    title?: string
-  ): Promise<void> {
-    return new Promise<void>((resolve) => {
-      // mapa de iconos y títulos por defecto
-      const icons: Record<'success' | 'error' | 'info', string> = {
-        success: '✅',
-        error: '⚠️',
-        info: 'ℹ️',
-      };
-      const defaultTitles: Record<'success' | 'error' | 'info', string> = {
-        success: 'Éxito',
-        error: 'Error',
-        info: 'Aviso',
-      };
-      // determinar type y título final según lo que se pase
-      let type: 'success' | 'error' | 'info' = 'info';
-      let finalTitle: string | undefined = title;
-      if (typeof typeOrTitle === 'string') {
-        // si es exactamente uno de los tipos
-        if (
-          typeOrTitle === 'success' ||
-          typeOrTitle === 'error' ||
-          typeOrTitle === 'info'
-        ) {
-          type = typeOrTitle;
-        } else if (typeOrTitle.includes('✅')) {
-          type = 'success';
-          finalTitle = typeOrTitle;
-        } else if (typeOrTitle.includes('⚠️')) {
-          type = 'error';
-          finalTitle = typeOrTitle;
-        } else if (typeOrTitle.includes('ℹ️')) {
-          type = 'info';
-          finalTitle = typeOrTitle;
+      try {
+        let geojson: any;
+        let layer: __esri.Layer | null = null;
+
+        if (fileName.endsWith('.csv')) {
+          const blobUrl = URL.createObjectURL(file);
+          layer = new CSVLayer({ url: blobUrl, title: file.name });
         } else {
-          // si no contiene emoji ni es literal tipo, lo tratamos como título personalizado
-          finalTitle = typeOrTitle;
+          const text = await file.text();
+          geojson = JSON.parse(text);
         }
-      }
-      const icon = icons[type];
-      const header = finalTitle || defaultTitles[type];
-      const wrapper = document.createElement('div');
-      wrapper.className =
-        'modal-overlay fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50';
-      wrapper.innerHTML = `
-        <div class="bg-white rounded-lg shadow-lg p-6 w-96">
-          <div class="flex items-center mb-4">
-            <span class="text-2xl mr-3">${icon}</span>
-            <h2 class="text-lg font-bold">${header}</h2>
-          </div>
-          <p class="mb-4">${message}</p>
-          <div class="flex justify-end">
-            <button id="modalOk" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Aceptar</button>
-          </div>
-        </div>
-      `;
-      document.body.appendChild(wrapper);
-      const btn = wrapper.querySelector<HTMLButtonElement>('#modalOk')!;
-      btn.onclick = () => {
-        wrapper.remove();
-        resolve();
-      };
-      // opcional: cerrar con ESC
-      const onKey = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') {
-          wrapper.remove();
-          window.removeEventListener('keydown', onKey);
-          resolve();
-        }
-      };
-      window.addEventListener('keydown', onKey);
-    });
-  }
-  private showSelect<T extends string>(
-    label: string,
-    options: { value: T; label: string }[]
-  ): Promise<T | undefined> {
-    return new Promise<T | undefined>((resolve) => {
-      const wrapper = document.createElement('div');
-      wrapper.className =
-        'modal-overlay fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50';
-      wrapper.innerHTML = `
-        <div class="bg-white rounded-lg shadow-lg p-6 w-96">
-          <div class="flex items-center mb-4">
-            <span class="text-2xl mr-2">📌</span>
-            <h2 class="text-lg font-bold">Seleccione una opción</h2>
-          </div>
-          <p class="mb-2">${label}</p>
-          <select id="modalSelect" class="p-2 border rounded w-full mb-4">
-            <option value="">-- Seleccione --</option>
-            ${options
-          .map((o) => `<option value="${o.value}">${o.label}</option>`)
-          .join('')}
-          </select>
-          <button id="modalOk" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Aceptar</button>
-        </div>
-      `;
-      document.body.appendChild(wrapper);
-      const select = wrapper.querySelector<HTMLSelectElement>('#modalSelect')!;
-      const btn = wrapper.querySelector<HTMLButtonElement>('#modalOk')!;
-      btn.onclick = () => {
-        const value = select.value as T;
-        wrapper.remove();
-        resolve(value || undefined);
-      };
-    });
-  }
-  //*Funcion que analiza la superposicion de una capa con la capa BPP(SERFOR)
-  async analizarSuperposicion(): Promise<void> {
-    if (!this.view || !this.mapa) return;
-    this.highlightLayer.removeAll();
-
-    let overlay = document.getElementById("loading-overlay") as HTMLDivElement | null;
-    if (!overlay) {
-      overlay = document.createElement("div");
-      overlay.id = "loading-overlay";
-      Object.assign(overlay.style, {
-        position: "absolute",
-        top: "0",
-        left: "0",
-        width: "100%",
-        height: "100%",
-        backgroundColor: "rgba(0,0,0,0.3)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: "9999",
-        color: "#fff",
-        fontSize: "1.2rem",
-      });
-      const spinner = document.createElement("div");
-      spinner.className = "animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-white";
-      const text = document.createElement("div");
-      text.id = "progress-text";
-      text.textContent = "Analizando superposición, por favor espere...";
-      text.style.marginLeft = "10px";
-      const container = document.createElement("div");
-      container.style.display = "flex";
-      container.style.alignItems = "center";
-      container.appendChild(spinner);
-      container.appendChild(text);
-      overlay.appendChild(container);
-      document.body.appendChild(overlay);
-    }
-    overlay.style.display = "flex";
-
-    const progressText = document.getElementById("progress-text")!;
-    let overlaps: __esri.Graphic[] = [];
-    let intersectedFeaturesB: __esri.Graphic[] = []; // <-- Array de polígonos intersectados
-    let capaBTitle = "la capa seleccionada";
-
-    try {
-      // --- Cargar capa SERFOR ---
-      progressText.textContent = "🔹Cargando la capa Bosque Proteccion Permanente (SERFOR)...!";
-      const capaSerfor = new FeatureLayer({
-        url: "https://geo.serfor.gob.pe/geoservicios/rest/services/Visor/Ordenamiento_Forestal/MapServer/1",
-      });
-      await capaSerfor.load();
-
-      const featuresA: __esri.Graphic[] = [];
-      const num = 2000;
-      for (let startA = 0; ; startA += num) {
-        const res = await capaSerfor.queryFeatures({
-          where: "1=1",
-          outFields: ["*"],
-          returnGeometry: true,
-          start: startA,
-          num,
-
-        });
-        featuresA.push(...res.features);
-        if (res.features.length < num) break;
-      }
-
-      const validGeometriesA = featuresA
-        .map(f => f.geometry)
-        .filter((g): g is __esri.Polygon => !!g && ["polygon", "multipolygon"].includes(g.type.toLowerCase()));
-
-      if (!validGeometriesA.length) {
-        this.showToast("⚠️ No hay geometrías válidas en BPP-SERFOR.", "error");
-        overlay.style.display = "none";
-        return;
-      }
-
-      const geomA = await geometryEngineAsync.union(validGeometriesA) as __esri.GeometryUnion;
-      if (!geomA) {
-        this.showToast("⚠️ No se pudieron unir las geometrías de SERFOR.", "error");
-        overlay.style.display = "none";
-        return;
-      }
-
-      // --- Obtener capa seleccionada ---
-      const selectEl = document.querySelector<HTMLSelectElement>(".file-upload-widget select");
-      if (!selectEl) { overlay.style.display = "none"; return; }
-      const selectedId = selectEl.value;
-      if (!selectedId) {
-        this.showToast("⚠️ Selecciona una capa para analizar.", "error");
-        overlay.style.display = "none";
-        return;
-      }
-
-      let capaB: __esri.Layer | undefined = this.mapa.layers.find(l => l.id === selectedId);
-      if (!capaB) {
-        for (const l of this.mapa.layers.toArray()) {
-          if (l.type === "map-image") {
-            const mapImg = l as __esri.MapImageLayer;
-            const sub = mapImg.sublayers?.find(s => s.id.toString() === selectedId);
-            if (sub) { capaB = sub as unknown as __esri.Layer; break; }
+        if (!layer && geojson) {
+          const validFeatures =
+            geojson.features?.filter((f: any) => f.geometry) || [];
+          if (validFeatures.length === 0) {
+            await this.showModal(
+              'El archivo no contiene geometrías válidas para mostrar en el mapa.',
+              '⚠️ Error'
+            );
+            return;
+          }
+          // --- contar polígonos ---
+          const polygonCount = validFeatures.filter(
+            (f: any) =>
+              f.geometry.type === 'Polygon' || f.geometry.type === 'MultiPolygon'
+          ).length;
+          const featuresProcesadas = validFeatures.map((f: any) => ({
+            ...f,
+            geometry: reproyectarGeoJSONGeometry(f.geometry),
+          }));
+          const blob = new Blob(
+            [
+              JSON.stringify({
+                type: 'FeatureCollection',
+                features: featuresProcesadas,
+              }),
+            ],
+            { type: 'application/json' }
+          );
+          const blobUrl = URL.createObjectURL(blob);
+          const sampleGeom = featuresProcesadas[0].geometry;
+          let renderer: any;
+          if (!sampleGeom) {
+            renderer = undefined;
+          } else if (
+            sampleGeom.type === 'Point' ||
+            sampleGeom.type === 'MultiPoint'
+          ) {
+            renderer = {
+              type: 'simple',
+              symbol: {
+                type: 'simple-marker',
+                color: [0, 128, 255, 0.8],
+                size: 8,
+                outline: { color: [0, 0, 0, 0.8], width: 1 },
+              },
+            };
+          } else if (
+            sampleGeom.type === 'LineString' ||
+            sampleGeom.type === 'MultiLineString'
+          ) {
+            renderer = {
+              type: 'simple',
+              symbol: {
+                type: 'simple-line',
+                color: [0, 255, 0, 0.8],
+                width: 2,
+              },
+            };
+          } else if (
+            sampleGeom.type === 'Polygon' ||
+            sampleGeom.type === 'MultiPolygon'
+          ) {
+            renderer = {
+              type: 'simple',
+              symbol: {
+                type: 'simple-fill',
+                color: [0, 0, 255, 0.3],
+                outline: { color: [255, 0, 0, 1], width: 1 },
+              },
+            };
+          }
+          layer = new GeoJSONLayer({ url: blobUrl, title: file.name, renderer });
+          // --- mostrar cantidad de polígonos ---
+          if (polygonCount > 0) {
+            //console.log(`📌 Se importaron ${polygonCount} polígonos`);
+            await this.showModal(
+              `Se importaron ${polygonCount} polígonos.`,
+              '✅ Importación exitosa'
+            );
           }
         }
+        if (!layer) return;
+        this.mapa.add(layer);
+        layer
+          .when(() => {
+            if (layer!.fullExtent && this.view) {
+              this.view
+                .goTo(layer!.fullExtent)
+                .catch((err) =>
+                  console.warn('No se pudo hacer zoom a la capa:', err)
+                );
+            }
+            this.showModal(
+              `Capa "${file.name}" cargada correctamente.`,
+              '✅ Éxito'
+            );
+          })
+          .catch((err) => {
+            console.error('Error cargando la capa:', err);
+            this.showModal(
+              'Ocurrió un error cargando la capa. Revisa la consola.',
+              '⚠️ Error'
+            );
+          });
+      } catch (err) {
+        console.error('Error procesando el archivo:', err);
+        this.showModal(
+          'Ocurrió un error procesando el archivo. Revisa la consola.',
+          '⚠️ Error'
+        );
       }
-      if (!capaB) {
-        this.showToast("⚠️ No se encontró la capa seleccionada en el mapa.", "error");
-        overlay.style.display = "none";
-        return;
+    }
+    private showModal(
+      message: string,
+      typeOrTitle?: 'success' | 'error' | 'info' | string,
+      title?: string
+    ): Promise<void> {
+      return new Promise<void>((resolve) => {
+        // mapa de iconos y títulos por defecto
+        const icons: Record<'success' | 'error' | 'info', string> = {
+          success: '✅',
+          error: '⚠️',
+          info: 'ℹ️',
+        };
+        const defaultTitles: Record<'success' | 'error' | 'info', string> = {
+          success: 'Éxito',
+          error: 'Error',
+          info: 'Aviso',
+        };
+        // determinar type y título final según lo que se pase
+        let type: 'success' | 'error' | 'info' = 'info';
+        let finalTitle: string | undefined = title;
+        if (typeof typeOrTitle === 'string') {
+          // si es exactamente uno de los tipos
+          if (
+            typeOrTitle === 'success' ||
+            typeOrTitle === 'error' ||
+            typeOrTitle === 'info'
+          ) {
+            type = typeOrTitle;
+          } else if (typeOrTitle.includes('✅')) {
+            type = 'success';
+            finalTitle = typeOrTitle;
+          } else if (typeOrTitle.includes('⚠️')) {
+            type = 'error';
+            finalTitle = typeOrTitle;
+          } else if (typeOrTitle.includes('ℹ️')) {
+            type = 'info';
+            finalTitle = typeOrTitle;
+          } else {
+            // si no contiene emoji ni es literal tipo, lo tratamos como título personalizado
+            finalTitle = typeOrTitle;
+          }
+        }
+        const icon = icons[type];
+        const header = finalTitle || defaultTitles[type];
+        const wrapper = document.createElement('div');
+        wrapper.className =
+          'modal-overlay fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50';
+        wrapper.innerHTML = `
+          <div class="bg-white rounded-lg shadow-lg p-6 w-96">
+            <div class="flex items-center mb-4">
+              <span class="text-2xl mr-3">${icon}</span>
+              <h2 class="text-lg font-bold">${header}</h2>
+            </div>
+            <p class="mb-4">${message}</p>
+            <div class="flex justify-end">
+              <button id="modalOk" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Aceptar</button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(wrapper);
+        const btn = wrapper.querySelector<HTMLButtonElement>('#modalOk')!;
+        btn.onclick = () => {
+          wrapper.remove();
+          resolve();
+        };
+        // opcional: cerrar con ESC
+        const onKey = (e: KeyboardEvent) => {
+          if (e.key === 'Escape') {
+            wrapper.remove();
+            window.removeEventListener('keydown', onKey);
+            resolve();
+          }
+        };
+        window.addEventListener('keydown', onKey);
+      });
+    }
+    private showSelect<T extends string>(
+      label: string,
+      options: { value: T; label: string }[]
+    ): Promise<T | undefined> {
+      return new Promise<T | undefined>((resolve) => {
+        const wrapper = document.createElement('div');
+        wrapper.className =
+          'modal-overlay fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50';
+        wrapper.innerHTML = `
+          <div class="bg-white rounded-lg shadow-lg p-6 w-96">
+            <div class="flex items-center mb-4">
+              <span class="text-2xl mr-2">📌</span>
+              <h2 class="text-lg font-bold">Seleccione una opción</h2>
+            </div>
+            <p class="mb-2">${label}</p>
+            <select id="modalSelect" class="p-2 border rounded w-full mb-4">
+              <option value="">-- Seleccione --</option>
+              ${options
+            .map((o) => `<option value="${o.value}">${o.label}</option>`)
+            .join('')}
+            </select>
+            <button id="modalOk" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Aceptar</button>
+          </div>
+        `;
+        document.body.appendChild(wrapper);
+        const select = wrapper.querySelector<HTMLSelectElement>('#modalSelect')!;
+        const btn = wrapper.querySelector<HTMLButtonElement>('#modalOk')!;
+        btn.onclick = () => {
+          const value = select.value as T;
+          wrapper.remove();
+          resolve(value || undefined);
+        };
+      });
+    }
+    //Funcion que analiza la superposicion de una capa con la capa BPP(SERFOR)
+    async analizarSuperposicion(): Promise<void> {
+      if (!this.view || !this.mapa) return;
+      this.highlightLayer.removeAll();
+
+      let overlay = document.getElementById("loading-overlay") as HTMLDivElement | null;
+      if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.id = "loading-overlay";
+        Object.assign(overlay.style, {
+          position: "absolute",
+          top: "0",
+          left: "0",
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0,0,0,0.3)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: "9999",
+          color: "#fff",
+          fontSize: "1.2rem",
+        });
+        const spinner = document.createElement("div");
+        spinner.className = "animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-white";
+        const text = document.createElement("div");
+        text.id = "progress-text";
+        text.textContent = "Analizando superposición, por favor espere...";
+        text.style.marginLeft = "10px";
+        const container = document.createElement("div");
+        container.style.display = "flex";
+        container.style.alignItems = "center";
+        container.appendChild(spinner);
+        container.appendChild(text);
+        overlay.appendChild(container);
+        document.body.appendChild(overlay);
       }
-      capaBTitle = capaB.title || capaB.id;
-      progressText.textContent = `⏳ Analizando superposición con la capa: ${capaBTitle}`;
-      await capaB.load?.();
+      overlay.style.display = "flex";
 
+      const progressText = document.getElementById("progress-text")!;
+      let overlaps: __esri.Graphic[] = [];
+      let intersectedFeaturesB: __esri.Graphic[] = []; // <-- Array de polígonos intersectados
+      let capaBTitle = "la capa seleccionada";
 
-      let featuresB: __esri.Graphic[] = [];
-      if ("queryFeatures" in capaB) {
-        for (let startB = 0; ; startB += num) {
-          const resB = await (capaB as __esri.FeatureLayer).queryFeatures({
+      try {
+        // --- Cargar capa SERFOR ---
+        progressText.textContent = "🔹Cargando la capa Bosque Proteccion Permanente (SERFOR)...!";
+        const capaSerfor = new FeatureLayer({
+          url: "https://geo.serfor.gob.pe/geoservicios/rest/services/Visor/Ordenamiento_Forestal/MapServer/1",
+        });
+        await capaSerfor.load();
+
+        const featuresA: __esri.Graphic[] = [];
+        const num = 2000;
+        for (let startA = 0; ; startA += num) {
+          const res = await capaSerfor.queryFeatures({
             where: "1=1",
             outFields: ["*"],
             returnGeometry: true,
-            start: startB,
-            num: num
+            start: startA,
+            num,
+
           });
-          featuresB.push(...resB.features);
-          if (resB.features.length < num) break;
+          featuresA.push(...res.features);
+          if (res.features.length < num) break;
         }
-      } else if ("source" in capaB) {
-        featuresB = ((capaB as any).source as __esri.Collection<__esri.Graphic>).toArray();
-      }
 
-      if (!featuresB.length) {
-        this.showToast("⚠️ La capa seleccionada no contiene geometrías.", "error");
-        overlay.style.display = "none";
-        return;
-      }
+        const validGeometriesA = featuresA
+          .map(f => f.geometry)
+          .filter((g): g is __esri.Polygon => !!g && ["polygon", "multipolygon"].includes(g.type.toLowerCase()));
 
-      const blockSize = 25;
-      overlaps = [];
-      intersectedFeaturesB = [];
-      for (let i = 0; i < featuresB.length; i += blockSize) {
-        const block = featuresB.slice(i, i + blockSize);
-        const promises = block.map(fB => (async () => {
-          if (!fB.geometry || !["polygon", "multipolygon"].includes(fB.geometry.type.toLowerCase())) return null;
-          const intersecta = await geometryEngineAsync.intersects(fB.geometry as __esri.GeometryUnion, geomA);
-          if (intersecta) {
-            intersectedFeaturesB.push(fB); // <-- guardamos la feature de B
-            return new Graphic({
-              geometry: fB.geometry,
-              attributes: { capaA: "Ordenamiento Forestal", capaB: capaB.title || capaB.id, ...fB.attributes },
-              symbol: { type: "simple-fill", color: [255, 0, 0, 0.4], outline: { color: [255, 0, 0], width: 2 } } as any,
-              popupTemplate: {
-                title: "Superposición detectada",
-                content: `Polígono de <b>${capaB.title || capaB.id}</b> se superpone con <b>Bosque de produccion permanente</b>.`
-              }
-            });
+        if (!validGeometriesA.length) {
+          this.showToast("⚠️ No hay geometrías válidas en BPP-SERFOR.", "error");
+          overlay.style.display = "none";
+          return;
+        }
+
+        const geomA = await geometryEngineAsync.union(validGeometriesA) as __esri.GeometryUnion;
+        if (!geomA) {
+          this.showToast("⚠️ No se pudieron unir las geometrías de SERFOR.", "error");
+          overlay.style.display = "none";
+          return;
+        }
+
+        // --- Obtener capa seleccionada ---
+        const selectEl = document.querySelector<HTMLSelectElement>(".file-upload-widget select");
+        if (!selectEl) { overlay.style.display = "none"; return; }
+        const selectedId = selectEl.value;
+        if (!selectedId) {
+          this.showToast("⚠️ Selecciona una capa para analizar.", "error");
+          overlay.style.display = "none";
+          return;
+        }
+
+        let capaB: __esri.Layer | undefined = this.mapa.layers.find(l => l.id === selectedId);
+        if (!capaB) {
+          for (const l of this.mapa.layers.toArray()) {
+            if (l.type === "map-image") {
+              const mapImg = l as __esri.MapImageLayer;
+              const sub = mapImg.sublayers?.find(s => s.id.toString() === selectedId);
+              if (sub) { capaB = sub as unknown as __esri.Layer; break; }
+            }
           }
-          return null;
-        })());
-        const results = await Promise.all(promises);
-        overlaps.push(...results.filter(r => r !== null) as __esri.Graphic[]);
-        progressText.innerHTML = `Procesadas ${Math.min(i + blockSize, featuresB.length)} de ${featuresB.length} features<br>Superposiciones detectadas: ${overlaps.length}`;
-        await new Promise(r => setTimeout(r, 0));
-      }
+        }
+        if (!capaB) {
+          this.showToast("⚠️ No se encontró la capa seleccionada en el mapa.", "error");
+          overlay.style.display = "none";
+          return;
+        }
+        capaBTitle = capaB.title || capaB.id;
+        progressText.textContent = `⏳ Analizando superposición con la capa: ${capaBTitle}`;
+        await capaB.load?.();
 
-      this.highlightLayer.addMany(overlaps);
 
-    } catch (error) {
-      console.error("Error analizando superposiciones:", error);
-      this.showToast("❌ Ocurrió un error al analizar superposiciones.", "error");
-    } finally {
-      const overlapsCount = overlaps.length;
+        let featuresB: __esri.Graphic[] = [];
+        if ("queryFeatures" in capaB) {
+          for (let startB = 0; ; startB += num) {
+            const resB = await (capaB as __esri.FeatureLayer).queryFeatures({
+              where: "1=1",
+              outFields: ["*"],
+              returnGeometry: true,
+              start: startB,
+              num: num
+            });
+            featuresB.push(...resB.features);
+            if (resB.features.length < num) break;
+          }
+        } else if ("source" in capaB) {
+          featuresB = ((capaB as any).source as __esri.Collection<__esri.Graphic>).toArray();
+        }
 
-      // 🔹 Ocultar overlay
-      if (overlay) overlay.style.display = "none";
+        if (!featuresB.length) {
+          this.showToast("⚠️ La capa seleccionada no contiene geometrías.", "error");
+          overlay.style.display = "none";
+          return;
+        }
 
-      // 🔹 Modal interactivo con exportación CSV
-      const modal = document.createElement("div");
-      modal.id = "resultado-modal";
-      Object.assign(modal.style, {
-        position: "fixed",
-        top: "0", left: "0",
-        width: "100%", height: "100%",
-        backgroundColor: "rgba(0,0,0,0.5)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: "10001",
-      });
+        const blockSize = 25;
+        overlaps = [];
+        intersectedFeaturesB = [];
+        for (let i = 0; i < featuresB.length; i += blockSize) {
+          const block = featuresB.slice(i, i + blockSize);
+          const promises = block.map(fB => (async () => {
+            if (!fB.geometry || !["polygon", "multipolygon"].includes(fB.geometry.type.toLowerCase())) return null;
+            const intersecta = await geometryEngineAsync.intersects(fB.geometry as __esri.GeometryUnion, geomA);
+            if (intersecta) {
+              intersectedFeaturesB.push(fB); // <-- guardamos la feature de B
+              return new Graphic({
+                geometry: fB.geometry,
+                attributes: { capaA: "Ordenamiento Forestal", capaB: capaB.title || capaB.id, ...fB.attributes },
+                symbol: { type: "simple-fill", color: [255, 0, 0, 0.4], outline: { color: [255, 0, 0], width: 2 } } as any,
+                popupTemplate: {
+                  title: "Superposición detectada",
+                  content: `Polígono de <b>${capaB.title || capaB.id}</b> se superpone con <b>Bosque de produccion permanente</b>.`
+                }
+              });
+            }
+            return null;
+          })());
+          const results = await Promise.all(promises);
+          overlaps.push(...results.filter(r => r !== null) as __esri.Graphic[]);
+          progressText.innerHTML = `Procesadas ${Math.min(i + blockSize, featuresB.length)} de ${featuresB.length} features<br>Superposiciones detectadas: ${overlaps.length}`;
+          await new Promise(r => setTimeout(r, 0));
+        }
 
-      const csvButton = intersectedFeaturesB.length > 0
-        ? `<button id="export-csv"
-            style="
-              margin-top:10px;
-              padding:6px 12px;
-              background-color:#16A34A;
-              color:white;
-              border:none;
-              border-radius:6px;
-              font-weight:bold;
-              cursor:pointer;
-              transition: background-color 0.3s;
-            "
-            onmouseover="this.style.backgroundColor='#15803D'"
-            onmouseout="this.style.backgroundColor='#16A34A'">
-            Exportar CSV
-          </button>`
-        : '';
+        this.highlightLayer.addMany(overlaps);
 
-      modal.innerHTML = `
-        <div style="background:white;padding:20px;border-radius:8px;max-width:450px;text-align:center;">
-          <h2>Resultado del análisis</h2>
-          <p>${overlapsCount > 0 ? `Se encontraron ${overlapsCount} superposiciones en ${capaBTitle}.` : `No se encontraron superposiciones.`}</p>
-          ${csvButton}
-          <button id="modal-close"
+      } catch (error) {
+        console.error("Error analizando superposiciones:", error);
+        this.showToast("❌ Ocurrió un error al analizar superposiciones.", "error");
+      } finally {
+        const overlapsCount = overlaps.length;
+
+        // 🔹 Ocultar overlay
+        if (overlay) overlay.style.display = "none";
+
+        // 🔹 Modal interactivo con exportación CSV
+        const modal = document.createElement("div");
+        modal.id = "resultado-modal";
+        Object.assign(modal.style, {
+          position: "fixed",
+          top: "0", left: "0",
+          width: "100%", height: "100%",
+          backgroundColor: "rgba(0,0,0,0.5)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: "10001",
+        });
+
+        const csvButton = intersectedFeaturesB.length > 0
+          ? `<button id="export-csv"
               style="
                 margin-top:10px;
                 padding:6px 12px;
-                background-color:#2563EB;
+                background-color:#16A34A;
                 color:white;
                 border:none;
                 border-radius:6px;
@@ -1880,335 +1801,355 @@ export class GeovisorSharedService {
                 cursor:pointer;
                 transition: background-color 0.3s;
               "
-              onmouseover="this.style.backgroundColor='#1D4ED8'"
-              onmouseout="this.style.backgroundColor='#2563EB'">
-              Cerrar
-          </button>
-        </div>
-      `;
-      document.body.appendChild(modal);
+              onmouseover="this.style.backgroundColor='#15803D'"
+              onmouseout="this.style.backgroundColor='#16A34A'">
+              Exportar CSV
+            </button>`
+          : '';
 
-      const closeBtn = modal.querySelector<HTMLButtonElement>("#modal-close");
-      if (closeBtn) {
-        closeBtn.addEventListener("click", () => {
-          modal.remove();
-          this.highlightLayer.removeAll();
-        });
+        modal.innerHTML = `
+          <div style="background:white;padding:20px;border-radius:8px;max-width:450px;text-align:center;">
+            <h2>Resultado del análisis</h2>
+            <p>${overlapsCount > 0 ? `Se encontraron ${overlapsCount} superposiciones en ${capaBTitle}.` : `No se encontraron superposiciones.`}</p>
+            ${csvButton}
+            <button id="modal-close"
+                style="
+                  margin-top:10px;
+                  padding:6px 12px;
+                  background-color:#2563EB;
+                  color:white;
+                  border:none;
+                  border-radius:6px;
+                  font-weight:bold;
+                  cursor:pointer;
+                  transition: background-color 0.3s;
+                "
+                onmouseover="this.style.backgroundColor='#1D4ED8'"
+                onmouseout="this.style.backgroundColor='#2563EB'">
+                Cerrar
+            </button>
+          </div>
+        `;
+        document.body.appendChild(modal);
+
+        const closeBtn = modal.querySelector<HTMLButtonElement>("#modal-close");
+        if (closeBtn) {
+          closeBtn.addEventListener("click", () => {
+            modal.remove();
+            this.highlightLayer.removeAll();
+          });
+        }
+
+        const exportBtn = modal.querySelector<HTMLButtonElement>("#export-csv");
+        if (exportBtn) {
+          exportBtn.addEventListener("click", () => {
+            if (!intersectedFeaturesB.length) return;
+
+            const keys = Object.keys(intersectedFeaturesB[0].attributes);
+            const csvContent = [
+              keys.join(","), // encabezado
+              ...intersectedFeaturesB.map(f =>
+                keys.map(k => `"${(f.attributes[k] ?? '').toString().replace(/"/g, '""')}"`).join(",")
+              )
+            ].join("\n");
+
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `superposiciones_${capaBTitle}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+          });
+        }
+
+        // 🔹 Toast resumen
+        const toastMessage = overlapsCount > 0
+          ? `✅ Se encontraron ${overlapsCount} superposiciones en ${capaBTitle}.`
+          : `✅ No se encontraron superposiciones en la capa seleccionada.`;
+        this.showToast(toastMessage, "success", false);
       }
-
-      const exportBtn = modal.querySelector<HTMLButtonElement>("#export-csv");
-      if (exportBtn) {
-        exportBtn.addEventListener("click", () => {
-          if (!intersectedFeaturesB.length) return;
-
-          const keys = Object.keys(intersectedFeaturesB[0].attributes);
-          const csvContent = [
-            keys.join(","), // encabezado
-            ...intersectedFeaturesB.map(f =>
-              keys.map(k => `"${(f.attributes[k] ?? '').toString().replace(/"/g, '""')}"`).join(",")
-            )
-          ].join("\n");
-
-          const blob = new Blob([csvContent], { type: 'text/csv' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `superposiciones_${capaBTitle}.csv`;
-          a.click();
-          URL.revokeObjectURL(url);
-        });
-      }
-
-      // 🔹 Toast resumen
-      const toastMessage = overlapsCount > 0
-        ? `✅ Se encontraron ${overlapsCount} superposiciones en ${capaBTitle}.`
-        : `✅ No se encontraron superposiciones en la capa seleccionada.`;
-      this.showToast(toastMessage, "success", false);
     }
-  }
-  //*Funcion para analizar la superposicion en la capa Cultivo
+    //Funcion para analizar la superposicion en la capa Cultivo
+    async analizarSuperposicionCultivo(): Promise<void> {
+      console.log("🔍 Iniciando analizarSuperposicionCultivo...");
 
-  async analizarSuperposicionCultivo(): Promise<void> {
-    console.log("🔍 Iniciando analizarSuperposicionCultivo...");
-
-    if (!this.view || !this.mapa) {
-      console.log("⛔ No hay view o mapa inicializado.");
-      return;
-    }
-    this.highlightLayer.removeAll();
-    console.log("✅ highlightLayer limpiado.");
-
-    // --- Overlay ---
-    let overlay = document.getElementById("loading-overlay-cultivo") as HTMLDivElement | null;
-    if (!overlay) {
-      overlay = document.createElement("div");
-      overlay.id = "loading-overlay-cultivo";
-      Object.assign(overlay.style, {
-        position: "absolute",
-        top: "0", left: "0",
-        width: "100%", height: "100%",
-        backgroundColor: "rgba(0,0,0,0.3)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: "9999",
-        color: "#fff",
-        fontSize: "1.2rem",
-      });
-      const container = document.createElement("div");
-      container.style.display = "flex";
-      container.style.alignItems = "center";
-      const spinner = document.createElement("div");
-      spinner.className = "animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-white";
-      const text = document.createElement("div");
-      text.id = "progress-text-cultivo";
-      text.textContent = "Analizando superposición de Cultivo...";
-      text.style.marginLeft = "10px";
-      container.appendChild(spinner);
-      container.appendChild(text);
-      overlay.appendChild(container);
-      document.body.appendChild(overlay);
-    }
-    overlay.style.display = "flex";
-    const progressText = document.getElementById("progress-text-cultivo")!;
-
-    let overlaps: __esri.Graphic[] = [];
-    let intersectados: __esri.Graphic[] = [];
-    let capaBSelTitle = "capa seleccionada";
-
-    try {
-      console.log("📡 Cargando capa PIRDAIS...");
-      const capaDevida = new FeatureLayer({
-        url: "https://siscod.devida.gob.pe/server/rest/services/DPM_LIMITES_PIRDAIS/MapServer/0"
-      });
-      await capaDevida.load();
-
-      // --- Capa seleccionada ---
-      const selectEl = document.querySelector<HTMLSelectElement>("#analisis-cultivo-widget select");
-      if (!selectEl?.value) {
-        this.showToast("⚠️ Selecciona una capa para analizar.", "error");
-        overlay.style.display = "none";
+      if (!this.view || !this.mapa) {
+        console.log("⛔ No hay view o mapa inicializado.");
         return;
       }
+      this.highlightLayer.removeAll();
+      console.log("✅ highlightLayer limpiado.");
 
-      let capaBSel: __esri.Layer | undefined = this.mapa.layers.find(l => l.id === selectEl.value);
-      if (!capaBSel) {
-        for (const l of this.mapa.layers.toArray()) {
-          if (l.type === "map-image") {
-            const sub = (l as __esri.MapImageLayer).sublayers?.find(s => s.id.toString() === selectEl.value);
-            if (sub) { capaBSel = sub as unknown as __esri.Layer; break; }
+      // --- Overlay ---
+      let overlay = document.getElementById("loading-overlay-cultivo") as HTMLDivElement | null;
+      if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.id = "loading-overlay-cultivo";
+        Object.assign(overlay.style, {
+          position: "absolute",
+          top: "0", left: "0",
+          width: "100%", height: "100%",
+          backgroundColor: "rgba(0,0,0,0.3)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: "9999",
+          color: "#fff",
+          fontSize: "1.2rem",
+        });
+        const container = document.createElement("div");
+        container.style.display = "flex";
+        container.style.alignItems = "center";
+        const spinner = document.createElement("div");
+        spinner.className = "animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-white";
+        const text = document.createElement("div");
+        text.id = "progress-text-cultivo";
+        text.textContent = "Analizando superposición de Cultivo...";
+        text.style.marginLeft = "10px";
+        container.appendChild(spinner);
+        container.appendChild(text);
+        overlay.appendChild(container);
+        document.body.appendChild(overlay);
+      }
+      overlay.style.display = "flex";
+      const progressText = document.getElementById("progress-text-cultivo")!;
+
+      let overlaps: __esri.Graphic[] = [];
+      let intersectados: __esri.Graphic[] = [];
+      let capaBSelTitle = "capa seleccionada";
+
+      try {
+        console.log("📡 Cargando capa PIRDAIS...");
+        const capaDevida = new FeatureLayer({
+          url: "https://siscod.devida.gob.pe/server/rest/services/DPM_LIMITES_PIRDAIS/MapServer/0"
+        });
+        await capaDevida.load();
+
+        // --- Capa seleccionada ---
+        const selectEl = document.querySelector<HTMLSelectElement>("#analisis-cultivo-widget select");
+        if (!selectEl?.value) {
+          this.showToast("⚠️ Selecciona una capa para analizar.", "error");
+          overlay.style.display = "none";
+          return;
+        }
+
+        let capaBSel: __esri.Layer | undefined = this.mapa.layers.find(l => l.id === selectEl.value);
+        if (!capaBSel) {
+          for (const l of this.mapa.layers.toArray()) {
+            if (l.type === "map-image") {
+              const sub = (l as __esri.MapImageLayer).sublayers?.find(s => s.id.toString() === selectEl.value);
+              if (sub) { capaBSel = sub as unknown as __esri.Layer; break; }
+            }
           }
         }
-      }
-      if (!capaBSel) {
-        this.showToast("⚠️ No se encontró la capa seleccionada.", "error");
-        overlay.style.display = "none";
-        return;
-      }
-      capaBSelTitle = capaBSel.title || capaBSel.id;
-      await capaBSel.load?.();
+        if (!capaBSel) {
+          this.showToast("⚠️ No se encontró la capa seleccionada.", "error");
+          overlay.style.display = "none";
+          return;
+        }
+        capaBSelTitle = capaBSel.title || capaBSel.id;
+        await capaBSel.load?.();
 
-      // --- Obtener features de la capa seleccionada ---
-      let featuresB: __esri.Graphic[] = [];
-      if ("queryFeatures" in capaBSel) {
-        const res = await (capaBSel as __esri.FeatureLayer).queryFeatures({
-          where: "1=1",
-          outFields: ["*"],
-          returnGeometry: true
-        });
-        featuresB = res.features;
-      } else if ("source" in capaBSel) {
-        featuresB = ((capaBSel as any).source as __esri.Collection<__esri.Graphic>).toArray();
-      }
+        // --- Obtener features de la capa seleccionada ---
+        let featuresB: __esri.Graphic[] = [];
+        if ("queryFeatures" in capaBSel) {
+          const res = await (capaBSel as __esri.FeatureLayer).queryFeatures({
+            where: "1=1",
+            outFields: ["*"],
+            returnGeometry: true
+          });
+          featuresB = res.features;
+        } else if ("source" in capaBSel) {
+          featuresB = ((capaBSel as any).source as __esri.Collection<__esri.Graphic>).toArray();
+        }
 
-      if (!featuresB.length) {
-        this.showToast("⚠️ La capa seleccionada no tiene geometrías.", "error");
-        overlay.style.display = "none";
-        return;
-      }
+        if (!featuresB.length) {
+          this.showToast("⚠️ La capa seleccionada no tiene geometrías.", "error");
+          overlay.style.display = "none";
+          return;
+        }
 
-      // --- Analizar superposición polígono por polígono ---
-      const tamBloque = 25;
-      overlaps = [];
-      intersectados = [];
+        // --- Analizar superposición polígono por polígono ---
+        const tamBloque = 25;
+        overlaps = [];
+        intersectados = [];
 
-      for (let i = 0; i < featuresB.length; i += tamBloque) {
-        const block = featuresB.slice(i, i + tamBloque);
-        const promises = block.map(async (fB) => {
-          if (!fB.geometry || !["polygon", "multipolygon"].includes(fB.geometry.type.toLowerCase())) return null;
+        for (let i = 0; i < featuresB.length; i += tamBloque) {
+          const block = featuresB.slice(i, i + tamBloque);
+          const promises = block.map(async (fB) => {
+            if (!fB.geometry || !["polygon", "multipolygon"].includes(fB.geometry.type.toLowerCase())) return null;
 
-          const res = await capaDevida.queryFeatures({
-            geometry: fB.geometry,
-            spatialRelationship: "intersects",
-            returnGeometry: false,
-            outFields: ["*"]
+            const res = await capaDevida.queryFeatures({
+              geometry: fB.geometry,
+              spatialRelationship: "intersects",
+              returnGeometry: false,
+              outFields: ["*"]
+            });
+
+            if (res.features.length > 0) {
+              intersectados.push(fB);
+              return new Graphic({
+                geometry: fB.geometry,
+                attributes: { ...fB.attributes, capa: capaBSelTitle },
+                symbol: {
+                  type: "simple-fill",
+                  color: [0, 150, 255, 0.4],
+                  outline: { color: [255, 0, 0], width: 2 }
+                } as any,
+                popupTemplate: {
+                  title: "Superposición detectada",
+                  content: `Polígono de <b>${capaBSelTitle}</b> se superpone con PIRDAIS.`
+                }
+              });
+            }
+            return null;
           });
 
-          if (res.features.length > 0) {
-            intersectados.push(fB);
-            return new Graphic({
-              geometry: fB.geometry,
-              attributes: { ...fB.attributes, capa: capaBSelTitle },
-              symbol: {
-                type: "simple-fill",
-                color: [0, 150, 255, 0.4],
-                outline: { color: [255, 0, 0], width: 2 }
-              } as any,
-              popupTemplate: {
-                title: "Superposición detectada",
-                content: `Polígono de <b>${capaBSelTitle}</b> se superpone con PIRDAIS.`
-              }
-            });
-          }
-          return null;
+          const results = await Promise.all(promises);
+          overlaps.push(...results.filter(r => r !== null) as __esri.Graphic[]);
+          progressText.innerHTML = `Procesadas ${Math.min(i + tamBloque, featuresB.length)} de ${featuresB.length} features<br>Superposiciones: ${overlaps.length}`;
+          await new Promise(r => setTimeout(r, 0));
+        }
+
+        this.highlightLayer.addMany(overlaps);
+
+      } catch (err) {
+        console.error("💥 Error en analizarSuperposicionCultivo:", err);
+        this.showToast("❌ Error en análisis de superposición.", "error");
+      } finally {
+        overlay.style.display = "none";
+        const overlapsCount = overlaps.length;
+
+        // 🔹 Modal interactivo con exportación CSV
+        const modal = document.createElement("div");
+        modal.id = "resultado-modal-cultivo";
+        Object.assign(modal.style, {
+          position: "fixed",
+          top: "0", left: "0",
+          width: "100%", height: "100%",
+          backgroundColor: "rgba(0,0,0,0.5)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: "10001",
         });
 
-        const results = await Promise.all(promises);
-        overlaps.push(...results.filter(r => r !== null) as __esri.Graphic[]);
-        progressText.innerHTML = `Procesadas ${Math.min(i + tamBloque, featuresB.length)} de ${featuresB.length} features<br>Superposiciones: ${overlaps.length}`;
-        await new Promise(r => setTimeout(r, 0));
+        const csvButton = intersectados.length > 0
+          ? `<button id="export-csv-cultivo"
+                      style="margin-top:10px;padding:6px 12px;background-color:#16A34A;color:white;border:none;border-radius:6px;font-weight:bold;cursor:pointer;">
+                      Exportar CSV
+                    </button>`
+          : '';
+
+        modal.innerHTML = `
+                  <div style="background:white;padding:20px;border-radius:8px;max-width:450px;text-align:center;">
+                    <h2>Resultado del análisis</h2>
+                    <p>${overlapsCount > 0 ? `Se encontraron ${overlapsCount} superposiciones en ${capaBSelTitle}.` : `No se encontraron superposiciones.`}</p>
+                    ${csvButton}
+                    <button id="modal-close-cultivo"
+                        style="margin-top:10px;padding:6px 12px;background-color:#2563EB;color:white;border:none;border-radius:6px;font-weight:bold;cursor:pointer;">
+                        Cerrar
+                    </button>
+                  </div>
+                `;
+        document.body.appendChild(modal);
+
+        // Cerrar modal
+        const closeBtn = modal.querySelector<HTMLButtonElement>("#modal-close-cultivo");
+        if (closeBtn) {
+          closeBtn.addEventListener("click", () => {
+            modal.remove();
+            this.highlightLayer.removeAll();
+          });
+        }
+
+        // Exportar CSV
+        const exportBtn = modal.querySelector<HTMLButtonElement>("#export-csv-cultivo");
+        if (exportBtn) {
+          exportBtn.addEventListener("click", () => {
+            if (!intersectados.length) return;
+            const keys = Object.keys(intersectados[0].attributes);
+            const csvContent = [
+              keys.join(","), // encabezado
+              ...intersectados.map(f =>
+                keys.map(k => `"${(f.attributes[k] ?? '').toString().replace(/"/g, '""')}"`).join(",")
+              )
+            ].join("\n");
+
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `superposiciones_${capaBSelTitle}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+          });
+        }
+
+        // 🔹 Toast resumen
+        const resumenMsg = overlapsCount > 0
+          ? `✅ Se encontraron ${overlapsCount} superposiciones en ${capaBSelTitle}.`
+          : `✅ No se encontraron superposiciones en ${capaBSelTitle}.`;
+        this.showToast(resumenMsg, "success", false);
       }
-
-      this.highlightLayer.addMany(overlaps);
-
-    } catch (err) {
-      console.error("💥 Error en analizarSuperposicionCultivo:", err);
-      this.showToast("❌ Error en análisis de superposición.", "error");
-    } finally {
-      overlay.style.display = "none";
-      const overlapsCount = overlaps.length;
-
-      // 🔹 Modal interactivo con exportación CSV
-      const modal = document.createElement("div");
-      modal.id = "resultado-modal-cultivo";
-      Object.assign(modal.style, {
-        position: "fixed",
-        top: "0", left: "0",
-        width: "100%", height: "100%",
-        backgroundColor: "rgba(0,0,0,0.5)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: "10001",
-      });
-
-      const csvButton = intersectados.length > 0
-        ? `<button id="export-csv-cultivo"
-                    style="margin-top:10px;padding:6px 12px;background-color:#16A34A;color:white;border:none;border-radius:6px;font-weight:bold;cursor:pointer;">
-                    Exportar CSV
-                  </button>`
-        : '';
-
-      modal.innerHTML = `
-                <div style="background:white;padding:20px;border-radius:8px;max-width:450px;text-align:center;">
-                  <h2>Resultado del análisis</h2>
-                  <p>${overlapsCount > 0 ? `Se encontraron ${overlapsCount} superposiciones en ${capaBSelTitle}.` : `No se encontraron superposiciones.`}</p>
-                  ${csvButton}
-                  <button id="modal-close-cultivo"
-                      style="margin-top:10px;padding:6px 12px;background-color:#2563EB;color:white;border:none;border-radius:6px;font-weight:bold;cursor:pointer;">
-                      Cerrar
-                  </button>
-                </div>
-              `;
-      document.body.appendChild(modal);
-
-      // Cerrar modal
-      const closeBtn = modal.querySelector<HTMLButtonElement>("#modal-close-cultivo");
-      if (closeBtn) {
-        closeBtn.addEventListener("click", () => {
-          modal.remove();
-          this.highlightLayer.removeAll();
-        });
-      }
-
-      // Exportar CSV
-      const exportBtn = modal.querySelector<HTMLButtonElement>("#export-csv-cultivo");
-      if (exportBtn) {
-        exportBtn.addEventListener("click", () => {
-          if (!intersectados.length) return;
-          const keys = Object.keys(intersectados[0].attributes);
-          const csvContent = [
-            keys.join(","), // encabezado
-            ...intersectados.map(f =>
-              keys.map(k => `"${(f.attributes[k] ?? '').toString().replace(/"/g, '""')}"`).join(",")
-            )
-          ].join("\n");
-
-          const blob = new Blob([csvContent], { type: 'text/csv' });
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `superposiciones_${capaBSelTitle}.csv`;
-          a.click();
-          URL.revokeObjectURL(url);
-        });
-      }
-
-      // 🔹 Toast resumen
-      const resumenMsg = overlapsCount > 0
-        ? `✅ Se encontraron ${overlapsCount} superposiciones en ${capaBSelTitle}.`
-        : `✅ No se encontraron superposiciones en ${capaBSelTitle}.`;
-      this.showToast(resumenMsg, "success", false);
     }
-  }
+    //Funcion para actualizar las capas del Visor
+    actualizarSelectCapas() {
+      const selectEl = document.querySelector<HTMLSelectElement>(
+        '.file-upload-widget select'
+      );
+      const selectElCultivo = document.querySelector<HTMLSelectElement>(
+        '#analisis-cultivo-widget select'
+      );
 
+      if (!selectEl && !selectElCultivo) return;
 
-  //*Funcion para actualizar las capas del Visor
-  actualizarSelectCapas() {
-    const selectEl = document.querySelector<HTMLSelectElement>(
-      '.file-upload-widget select'
-    );
-    const selectElCultivo = document.querySelector<HTMLSelectElement>(
-      '#analisis-cultivo-widget select'
-    );
+      // Limpiar opciones en ambos selects (si existen)
+      if (selectEl) selectEl.innerHTML = '';
+      if (selectElCultivo) selectElCultivo.innerHTML = '';
 
-    if (!selectEl && !selectElCultivo) return;
+      const capasExcluir = [
+        'DISTRITO',
+        'PROVINCIA',
+        'DEPARTAMENTO',
+        'PERU',
+        'OFICINAS ZONALES',
+        'BPP-BOSQUE DE PRODUCCION PERMANENTE',
+        'ANP - AREAS NATURALES PROTEGIDAS',
+        'MONITOREO DEFORESTACION',
+        'COMUNIDADES NATIVAS',
+        'ZA-ZONAS DE AMORTIGUAMIENTO',
+        'ACR-AREAS DE CONSERVACION REGIONAL',
+        'VISITAS DE MONITOREO',
+        'POLIGONOS DE CULTIVO' // excluido solo si no quieres analizarlo
+      ];
 
-    // Limpiar opciones en ambos selects (si existen)
-    if (selectEl) selectEl.innerHTML = '';
-    if (selectElCultivo) selectElCultivo.innerHTML = '';
+      this.mapa.layers.toArray().forEach((lyr) => {
+        const tituloLyr = lyr.title?.toUpperCase() || '';
+        if (capasExcluir.includes(tituloLyr)) return;
 
-    const capasExcluir = [
-      'DISTRITO',
-      'PROVINCIA',
-      'DEPARTAMENTO',
-      'PERU',
-      'OFICINAS ZONALES',
-      'BPP-BOSQUE DE PRODUCCION PERMANENTE',
-      'ANP - AREAS NATURALES PROTEGIDAS',
-      'MONITOREO DEFORESTACION',
-      'COMUNIDADES NATIVAS',
-      'ZA-ZONAS DE AMORTIGUAMIENTO',
-      'ACR-AREAS DE CONSERVACION REGIONAL',
-      'VISITAS DE MONITOREO',
-      'POLIGONOS DE CULTIVO' // excluido solo si no quieres analizarlo
-    ];
-
-    this.mapa.layers.toArray().forEach((lyr) => {
-      const tituloLyr = lyr.title?.toUpperCase() || '';
-      if (capasExcluir.includes(tituloLyr)) return;
-
-      if (
-        lyr.type === 'feature' ||
-        lyr.type === 'geojson' ||
-        lyr.type === 'csv'
-      ) {
-        const opt = document.createElement('option');
-        opt.value = lyr.id;
-        opt.text = lyr.title || lyr.id;
-        if (selectEl) selectEl.appendChild(opt.cloneNode(true));
-        if (selectElCultivo) selectElCultivo.appendChild(opt);
-      } else if (lyr.type === 'map-image') {
-        (lyr as __esri.MapImageLayer).sublayers?.forEach((sub) => {
-          const tituloSub = (sub as any).title?.toUpperCase() || '';
-          if (capasExcluir.includes(tituloSub)) return;
+        if (
+          lyr.type === 'feature' ||
+          lyr.type === 'geojson' ||
+          lyr.type === 'csv'
+        ) {
           const opt = document.createElement('option');
-          opt.value = sub.id.toString();
-          opt.text = (sub as any).title || `${lyr.title}`;
+          opt.value = lyr.id;
+          opt.text = lyr.title || lyr.id;
           if (selectEl) selectEl.appendChild(opt.cloneNode(true));
           if (selectElCultivo) selectElCultivo.appendChild(opt);
-        });
-      }
-    });
-  }
+        } else if (lyr.type === 'map-image') {
+          (lyr as __esri.MapImageLayer).sublayers?.forEach((sub) => {
+            const tituloSub = (sub as any).title?.toUpperCase() || '';
+            if (capasExcluir.includes(tituloSub)) return;
+            const opt = document.createElement('option');
+            opt.value = sub.id.toString();
+            opt.text = (sub as any).title || `${lyr.title}`;
+            if (selectEl) selectEl.appendChild(opt.cloneNode(true));
+            if (selectElCultivo) selectElCultivo.appendChild(opt);
+          });
+        }
+      });
+    }
 }
