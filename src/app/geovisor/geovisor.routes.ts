@@ -4,31 +4,31 @@ import { privateGuard, publicGuard } from '../core/auth.guard';
 export default [
 			{
 				path: 'map',
-        title:'Geo : PIRDAIS',
+        title:'GeoVisor',
         canActivate: [privateGuard()],
 				loadComponent: () => import('./pages/map/map.component').then(m => m.MapComponent),
 			},
       {
 				path: 'dashboard',
-        title:'Dashboard : PIRDAS',
+        title:'Dashboard',
         canActivate: [publicGuard()],
 				loadComponent: () => import('./pages/dashboard/dashboard.component').then ( m => m.DashboardComponent),
 			},
       {
 				path: 'reportes',
-        title:'Reportes : PIRDAIS',
+        title:'Reportes',
         canActivate: [publicGuard()],
 				loadComponent: () => import('./pages/report/report.component').then ( m => m.ReportComponent),
 			},
 			{
 				path: 'repositorio',
-        title:'Repositorio : PIRDAIS',
+        title:'Repositorio',
         canActivate: [publicGuard()],
 				loadComponent: () => import('./pages/repositorio/repositorio.component'),
 			},
 			{
 				path: 'metadata',
-        title:'Metadata : PIRDAIS',
+        title:'Metadata',
         canActivate: [publicGuard()],
 				loadComponent: () => import('./pages/metadata/metadata.component'),
 			},
