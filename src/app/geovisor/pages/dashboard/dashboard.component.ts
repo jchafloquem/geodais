@@ -32,16 +32,58 @@ export class DashboardComponent implements AfterViewInit {
   public areaPorCultivo: { cultivo: string; total_area: number }[] = [];
   public totalAreaCafe = 0;
   public totalAreaCacao = 0;
+  public availableYears: number[] = [];
+  public selectedYear: number = new Date().getFullYear();
+  private charts: Chart[] = [];
 
   async ngAfterViewInit(): Promise<void> {
     const dashboardCultivos = new FeatureLayer({ url: this.SERVICIO_PIRDAIS });
     try {
         await dashboardCultivos.load();
+        this.availableYears = await this.getAvailableYears(dashboardCultivos);
+        if (this.availableYears.includes(2025)) {
+            this.selectedYear = 2025; // Selecciona 2025 por defecto
+        } else if (this.availableYears.length > 0) {
+            this.selectedYear = this.availableYears[0]; // Fallback al año más reciente
+        }
+        await this.loadDashboardData();
+    } catch (err) {
+        console.error('Error durante la inicialización del dashboard:', err);
+    }
+  }
+
+  async getAvailableYears(layer: FeatureLayer): Promise<number[]> {
+    // De acuerdo a la solicitud, ahora usamos una lista fija de años del 2024 al 2030.
+    const years = [];
+    for (let year = 2030; year >= 2024; year--) {
+      years.push(year);
+    }
+    // El parámetro 'layer' ya no se usa, pero se mantiene por consistencia en la firma del método.
+    return Promise.resolve(years);
+  }
+
+  public onYearChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    this.selectedYear = Number(selectElement.value);
+    this.loadDashboardData();
+  }
+
+  private clearCharts(): void {
+    this.charts.forEach(chart => chart.destroy());
+    this.charts = [];
+  }
+
+  async loadDashboardData(): Promise<void> {
+    this.clearCharts();
+    const dashboardCultivos = new FeatureLayer({ url: this.SERVICIO_PIRDAIS });
+    const yearFilter = `EXTRACT(YEAR FROM fecha_levantamiento) = ${this.selectedYear}`;
+
+    try {
         const [totalArea, cafeCacao, areaPorCultivo, totalDNIResult] = await Promise.all([
-            this.sumarAreaCultivoTotal(dashboardCultivos),
-            this.contarCafeCacao(dashboardCultivos),
-            this.sumarAreaPorCultivo(dashboardCultivos),
-            this.contarRegistrosUnicosPorDNI(dashboardCultivos),
+            this.sumarAreaCultivoTotal(dashboardCultivos, yearFilter),
+            this.contarCafeCacao(dashboardCultivos, yearFilter),
+            this.sumarAreaPorCultivo(dashboardCultivos, yearFilter),
+            this.contarRegistrosUnicosPorDNI(dashboardCultivos, yearFilter),
         ]);
         this.totalAreaCultivo = totalArea;
         this.totalCafe = cafeCacao.cafe;
@@ -49,30 +91,30 @@ export class DashboardComponent implements AfterViewInit {
         this.areaPorCultivo = areaPorCultivo;
         this.crearGraficoProgresoporHectareas(totalArea);
         this.crearGraficoProgresoporDNI(totalDNIResult["total"]);
-        this.crearGraficoProgresoporHectareasOZ();
-        this.crearGraficoProgresoporHectareasOZCacao();
-        this.crearGraficoProgresoporHectareasOZCAFE();
-        this.crearGraficoCantidadPoligonosOZCacao();
-        this.crearGraficoCantidadPoligonosOZCafe();
-        this.crearGraficoProgresoporFamiliasOZ();
-        this.crearGraficoCantidadFamiliasOZCacao();
-        this.crearGraficoCantidadFamiliasOZCafe();
-        this.generarGraficoCultivosPorTipo(dashboardCultivos);
+        this.crearGraficoProgresoporHectareasOZ(yearFilter);
+        this.crearGraficoProgresoporHectareasOZCacao(yearFilter);
+        this.crearGraficoProgresoporHectareasOZCAFE(yearFilter);
+        this.crearGraficoCantidadPoligonosOZCacao(yearFilter);
+        this.crearGraficoCantidadPoligonosOZCafe(yearFilter);
+        this.crearGraficoProgresoporFamiliasOZ(yearFilter);
+        this.crearGraficoCantidadFamiliasOZCacao(yearFilter);
+        this.crearGraficoCantidadFamiliasOZCafe(yearFilter);
+        this.generarGraficoCultivosPorTipo(dashboardCultivos, yearFilter);
 
     } catch (err) {
-        console.error('Error durante la inicialización del dashboard:', err);
+        console.error(`Error al cargar datos para el año ${this.selectedYear}:`, err);
     }
   }
 
   //Tarjetas sobre la Meta & Avance
-  async sumarAreaCultivoTotal(layer: FeatureLayer): Promise<number> {
+  async sumarAreaCultivoTotal(layer: FeatureLayer, whereClause: string = '1=1'): Promise<number> {
     const statDef = new StatisticDefinition({
       onStatisticField: 'area_cultivo',
       outStatisticFieldName: 'sum_area',
       statisticType: 'sum',
     });
     const query = layer.createQuery();
-    query.where = '1=1';
+    query.where = whereClause;
     query.outStatistics = [statDef];
     query.returnGeometry = false;
     try {
@@ -87,7 +129,7 @@ export class DashboardComponent implements AfterViewInit {
       return 0;
     }
   }
-  async sumarAreaPorCultivo(layer: FeatureLayer): Promise<any[]> {
+  async sumarAreaPorCultivo(layer: FeatureLayer, whereClause: string = '1=1'): Promise<any[]> {
     const statDef = new StatisticDefinition({
       onStatisticField: 'area_cultivo',
       outStatisticFieldName: 'total_area',
@@ -95,7 +137,7 @@ export class DashboardComponent implements AfterViewInit {
     });
 
     const query = layer.createQuery();
-    query.where = '1=1';
+    query.where = whereClause;
     query.outStatistics = [statDef];
     query.groupByFieldsForStatistics = ['tipo_cultivo'];
     query.returnGeometry = false;
@@ -129,7 +171,7 @@ export class DashboardComponent implements AfterViewInit {
     const restante = Math.max(meta - total, 0);
     const ctx = document.getElementById('graficoMeta') as HTMLCanvasElement;
 
-    new Chart(ctx, {
+    this.charts.push(new Chart(ctx, {
       type: 'doughnut',
       data: {
         labels: ['AVANCE', 'RESTANTE'],
@@ -185,10 +227,10 @@ export class DashboardComponent implements AfterViewInit {
         }
       },
       plugins: [ChartDataLabels]
-    });
+    }));
   }
   //Grafico sobre la Meta por Oficina Zonal
-  async crearGraficoProgresoporHectareasOZ() {
+  async crearGraficoProgresoporHectareasOZ(whereClause: string = '1=1') {
     const baseUrl = this.QUERY_SERVICIO;
     interface Cultivo {
       org: string;
@@ -201,7 +243,7 @@ export class DashboardComponent implements AfterViewInit {
 
     while (hasMore) {
       const url =
-        `${baseUrl}?where=1%3D1&outFields=oficina_zonal,area_cultivo` +
+        `${baseUrl}?where=${encodeURIComponent(whereClause)}&outFields=oficina_zonal,area_cultivo` +
         `&returnGeometry=false&f=json&resultRecordCount=${pageSize}&resultOffset=${offset}`;
 
       const res = await fetch(url);
@@ -244,7 +286,7 @@ export class DashboardComponent implements AfterViewInit {
     const ctx = document.getElementById('graficoMetaOZ') as HTMLCanvasElement;
     if (!ctx) return;
 
-    new Chart(ctx, {
+    this.charts.push(new Chart(ctx, {
       type: 'bar',
       data: {
         labels,
@@ -308,11 +350,11 @@ export class DashboardComponent implements AfterViewInit {
         },
       },
       plugins: [ChartDataLabels],
-    });
+    }));
   }
 
   //Grafico sobre la Meta por Oficina Zonal - CACAO
-  async crearGraficoProgresoporHectareasOZCacao() {
+  async crearGraficoProgresoporHectareasOZCacao(whereClause: string = '1=1') {
     const baseUrl = this.QUERY_SERVICIO;
 
     interface Cultivo { org: string; area_cultivo: number; cultivo: string; }
@@ -323,9 +365,9 @@ export class DashboardComponent implements AfterViewInit {
     let hasMore = true;
 
     while (hasMore) {
-      // CAMBIO: 'cultivo' -> 'tipo_cultivo', 'org' -> 'oficina_zonal'
+      const finalWhere = `tipo_cultivo='CACAO' AND ${whereClause}`;
       const url =
-        `${baseUrl}?where=tipo_cultivo='CACAO'&outFields=oficina_zonal,area_cultivo,tipo_cultivo` +
+        `${baseUrl}?where=${encodeURIComponent(finalWhere)}&outFields=oficina_zonal,area_cultivo,tipo_cultivo` +
         `&returnGeometry=false&f=json&resultRecordCount=${pageSize}&resultOffset=${offset}`;
       const res = await fetch(url);
       const data = await res.json();
@@ -383,7 +425,7 @@ export class DashboardComponent implements AfterViewInit {
     const ctx = document.getElementById('graficoMetaOZCACAO') as HTMLCanvasElement;
     if (!ctx) return;
 
-    new Chart(ctx, {
+    this.charts.push(new Chart(ctx, {
       type: 'bar', // ✅ barras verticales
       data: {
         labels,
@@ -473,10 +515,10 @@ export class DashboardComponent implements AfterViewInit {
         },
       },
       plugins: [ChartDataLabels],
-    });
+    }));
   }
   //Grafico sobre la Meta por Oficina Zonal - CAFE
-  async crearGraficoProgresoporHectareasOZCAFE() {
+  async crearGraficoProgresoporHectareasOZCAFE(whereClause: string = '1=1') {
     const baseUrl = this.QUERY_SERVICIO;
     interface Cultivo { org: string; area_cultivo: number; cultivo: string; }
     let allFeatures: any[] = [];
@@ -485,8 +527,9 @@ export class DashboardComponent implements AfterViewInit {
     let hasMore = true;
 
     while (hasMore) {
+      const finalWhere = `tipo_cultivo='CAFE' AND ${whereClause}`;
       const url =
-        `${baseUrl}?where=tipo_cultivo='CAFE'&outFields=oficina_zonal,area_cultivo,tipo_cultivo` +
+        `${baseUrl}?where=${encodeURIComponent(finalWhere)}&outFields=oficina_zonal,area_cultivo,tipo_cultivo` +
         `&returnGeometry=false&f=json&resultRecordCount=${pageSize}&resultOffset=${offset}`;
       const res = await fetch(url);
       const data = await res.json();
@@ -544,7 +587,7 @@ export class DashboardComponent implements AfterViewInit {
     const ctx = document.getElementById('graficoMetaOZCAFE') as HTMLCanvasElement;
     if (!ctx) return;
 
-    new Chart(ctx, {
+    this.charts.push(new Chart(ctx, {
       type: 'bar', // ✅ barras verticales
       data: {
         labels,
@@ -634,7 +677,7 @@ export class DashboardComponent implements AfterViewInit {
         },
       },
       plugins: [ChartDataLabels],
-    });
+    }));
   }
 
 
@@ -642,7 +685,7 @@ export class DashboardComponent implements AfterViewInit {
   //Grafico sobre total participantes
   public totalRegistrosUnicosDNI: Record<string, number> = {};
   public async contarTotalDNIUnicos(layer: FeatureLayer): Promise<number> {
-    try {
+    try { // NOTA: Esta función no se está utilizando actualmente.
       const pageSize = 2000;
       const dnisTotales = new Set<string>();
 
@@ -677,7 +720,7 @@ export class DashboardComponent implements AfterViewInit {
     const restante = Math.max(meta - totalDNI, 0);
     const ctx = document.getElementById('graficoMetaDNI') as HTMLCanvasElement;
 
-    new Chart(ctx, {
+    this.charts.push(new Chart(ctx, {
       type: 'doughnut',
       data: {
         labels: ['AVANCE', 'RESTANTE'],
@@ -728,10 +771,10 @@ export class DashboardComponent implements AfterViewInit {
         }
       },
       plugins: [ChartDataLabels]
-    });
+    }));
   }
 
-  async contarRegistrosUnicosPorDNI(layer: FeatureLayer): Promise<Record<string, number>> {
+  async contarRegistrosUnicosPorDNI(layer: FeatureLayer, whereClause: string = '1=1'): Promise<Record<string, number>> {
     try {
       const pageSize = 2000;
       const dnisPorCultivo: Record<string, Set<string>> = {
@@ -739,12 +782,12 @@ export class DashboardComponent implements AfterViewInit {
         cacao: new Set<string>()
       };
       const dnisTotales = new Set<string>();
-      const total = await layer.queryFeatureCount({ where: '1=1' });
+      const total = await layer.queryFeatureCount({ where: whereClause });
       let fetched = 0;
 
       while (fetched < total) {
         const result = await layer.queryFeatures({
-          where: '1=1',
+          where: whereClause,
           outFields: ['dni_participante', 'tipo_cultivo'], // CAMBIO: 'dni' -> 'dni_participante', 'cultivo' -> 'tipo_cultivo'
           returnGeometry: false,
           start: fetched,
@@ -790,7 +833,7 @@ export class DashboardComponent implements AfterViewInit {
       return { cafe: 0, cacao: 0, cafe_y_cacao: 0, total: 0 };
     }
   }
-  async crearGraficoProgresoporFamiliasOZ() {
+  async crearGraficoProgresoporFamiliasOZ(whereClause: string = '1=1') {
     const baseUrl = this.QUERY_SERVICIO;
     interface Participante {
       org: string;
@@ -803,7 +846,7 @@ export class DashboardComponent implements AfterViewInit {
     let hasMore = true;
     while (hasMore) {
       const url =
-        `${baseUrl}?where=1%3D1&outFields=oficina_zonal,dni_participante` +
+        `${baseUrl}?where=${encodeURIComponent(whereClause)}&outFields=oficina_zonal,dni_participante` +
         `&returnGeometry=false&f=json&resultRecordCount=${pageSize}&resultOffset=${offset}`;
 
       const res = await fetch(url);
@@ -860,7 +903,7 @@ export class DashboardComponent implements AfterViewInit {
     const ctx = document.getElementById('graficoMetaParticipantes') as HTMLCanvasElement;
     if (!ctx) return;
 
-    new Chart(ctx, {
+    this.charts.push(new Chart(ctx, {
       type: 'bar',
       data: {
         labels,
@@ -927,22 +970,22 @@ export class DashboardComponent implements AfterViewInit {
         },
       },
       plugins: [ChartDataLabels],
-    });
+    }));
   }
 
   //Grafico sobre total poligonos
-  contarCafeCacao(layer: FeatureLayer) {
+  contarCafeCacao(layer: FeatureLayer, whereClause: string = '1=1') {
     const pageSize = 2000;
     let conteoCafe = 0;
     let conteoCacao = 0;
 
     const getAllData = async () => {
-      const total = await layer.queryFeatureCount({ where: '1=1' });
+      const total = await layer.queryFeatureCount({ where: whereClause });
       let fetched = 0;
 
       while (fetched < total) {
         const result = await layer.queryFeatures({
-          where: '1=1',
+          where: whereClause,
           outFields: ['tipo_cultivo'], // CAMBIO: 'cultivo' -> 'tipo_cultivo'
           returnGeometry: false,
           start: fetched,
@@ -966,17 +1009,17 @@ export class DashboardComponent implements AfterViewInit {
       return { cafe: 0, cacao: 0 };
     });
   }
-  generarGraficoCultivosPorTipo(layer: FeatureLayer) {
+  generarGraficoCultivosPorTipo(layer: FeatureLayer, whereClause: string = '1=1') {
     const pageSize = 2000;
     const conteo: Record<string, number> = {};
 
     const getAllCultivoData = async () => {
-      const total = await layer.queryFeatureCount({ where: '1=1' });
+      const total = await layer.queryFeatureCount({ where: whereClause });
       let fetched = 0;
 
       while (fetched < total) {
         const result = await layer.queryFeatures({
-          where: '1=1',
+          where: whereClause,
           outFields: ['tipo_cultivo'], // CAMBIO: 'cultivo' -> 'tipo_cultivo'
           returnGeometry: false,
           start: fetched,
@@ -999,7 +1042,7 @@ export class DashboardComponent implements AfterViewInit {
       const ctx = document.getElementById('graficoCultivoTipo') as HTMLCanvasElement;
       if (!ctx) return;
 
-      new Chart(ctx.getContext('2d')!, {
+      this.charts.push(new Chart(ctx.getContext('2d')!, {
         type: 'pie',
         data: {
           labels,
@@ -1042,14 +1085,14 @@ export class DashboardComponent implements AfterViewInit {
           },
         },
         plugins: [ChartDataLabels],
-      });
+      }));
     };
 
     getAllCultivoData().catch((err) => console.error('❌ Error al consultar todos los cultivos:', err));
   }
   // Grafico de barra por cantidad de familias por Oficina Zonal - Cacao
-  async crearGraficoCantidadFamiliasOZCacao() {
-    const baseUrl =this.QUERY_SERVICIO;
+  async crearGraficoCantidadFamiliasOZCacao(whereClause: string = '1=1') {
+    const baseUrl = this.QUERY_SERVICIO;
     interface Cultivo {
       org: string;
       cultivo: string;
@@ -1063,9 +1106,9 @@ export class DashboardComponent implements AfterViewInit {
 
     // 🔹 Paginación para traer TODOS los registros SOLO de CACAO
     while (hasMore) {
-      // CAMBIO: 'cultivo' -> 'tipo_cultivo', 'org' -> 'oficina_zonal', 'dni' -> 'dni_participante'
+      const finalWhere = `tipo_cultivo='CACAO' AND ${whereClause}`;
       const url =
-        `${baseUrl}?where=tipo_cultivo='CACAO'&outFields=oficina_zonal,tipo_cultivo,dni_participante` +
+        `${baseUrl}?where=${encodeURIComponent(finalWhere)}&outFields=oficina_zonal,tipo_cultivo,dni_participante` +
         `&returnGeometry=false&f=json&resultRecordCount=${pageSize}&resultOffset=${offset}`;
 
       const res = await fetch(url);
@@ -1121,7 +1164,7 @@ export class DashboardComponent implements AfterViewInit {
     const ctx = document.getElementById('graficoCantidadDNIOZCACAO') as HTMLCanvasElement;
     if (!ctx) return;
 
-    new Chart(ctx, {
+    this.charts.push(new Chart(ctx, {
       type: 'bar',
       data: {
         labels,
@@ -1186,12 +1229,12 @@ export class DashboardComponent implements AfterViewInit {
         },
       },
       plugins: [ChartDataLabels],
-    });
+    }));
   }
 
   //Participantes por oficina Zonal
-  async crearGraficoCantidadFamiliasOZCafe() {
-    const baseUrl =this.QUERY_SERVICIO;
+  async crearGraficoCantidadFamiliasOZCafe(whereClause: string = '1=1') {
+    const baseUrl = this.QUERY_SERVICIO;
     interface Cultivo {
       org: string;
       cultivo: string;
@@ -1205,9 +1248,9 @@ export class DashboardComponent implements AfterViewInit {
 
     // 🔹 Paginación para traer TODOS los registros SOLO de CAFÉ
     while (hasMore) {
-      // CAMBIO: 'cultivo' -> 'tipo_cultivo', 'org' -> 'oficina_zonal', 'dni' -> 'dni_participante'
+      const finalWhere = `tipo_cultivo='CAFE' AND ${whereClause}`;
       const url =
-        `${baseUrl}?where=tipo_cultivo='CAFE'&outFields=oficina_zonal,tipo_cultivo,dni_participante` +
+        `${baseUrl}?where=${encodeURIComponent(finalWhere)}&outFields=oficina_zonal,tipo_cultivo,dni_participante` +
         `&returnGeometry=false&f=json&resultRecordCount=${pageSize}&resultOffset=${offset}`;
 
       const res = await fetch(url);
@@ -1263,7 +1306,7 @@ export class DashboardComponent implements AfterViewInit {
     const ctx = document.getElementById('graficoCantidadDNIOZCAFE') as HTMLCanvasElement;
     if (!ctx) return;
 
-    new Chart(ctx, {
+    this.charts.push(new Chart(ctx, {
       type: 'bar',
       data: {
         labels,
@@ -1328,12 +1371,12 @@ export class DashboardComponent implements AfterViewInit {
         },
       },
       plugins: [ChartDataLabels],
-    });
+    }));
   }
 
 
   //Grafico por poligonos de cultivos de cacao por Oficina Zonal
-   async crearGraficoCantidadPoligonosOZCacao() {
+   async crearGraficoCantidadPoligonosOZCacao(whereClause: string = '1=1') {
     const baseUrl = this.QUERY_SERVICIO;
     interface Cultivo {
       org: string;
@@ -1347,9 +1390,9 @@ export class DashboardComponent implements AfterViewInit {
 
     // 🔹 Paginación para traer TODOS los registros SOLO de CACAO
     while (hasMore) {
-      // CAMBIO: 'cultivo' -> 'tipo_cultivo', 'org' -> 'oficina_zonal'
+      const finalWhere = `tipo_cultivo='CACAO' AND ${whereClause}`;
       const url =
-        `${baseUrl}?where=tipo_cultivo='CACAO'&outFields=oficina_zonal,tipo_cultivo` +
+        `${baseUrl}?where=${encodeURIComponent(finalWhere)}&outFields=oficina_zonal,tipo_cultivo` +
         `&returnGeometry=false&f=json&resultRecordCount=${pageSize}&resultOffset=${offset}`;
 
       const res = await fetch(url);
@@ -1400,7 +1443,7 @@ export class DashboardComponent implements AfterViewInit {
     const ctx = document.getElementById('graficoCantidadOZCACAO') as HTMLCanvasElement;
     if (!ctx) return;
 
-    new Chart(ctx, {
+    this.charts.push(new Chart(ctx, {
       type: 'bar',
       data: {
         labels,
@@ -1465,10 +1508,10 @@ export class DashboardComponent implements AfterViewInit {
         },
       },
       plugins: [ChartDataLabels],
-    });
+    }));
   }
   //Grafico por poligonos de cultivos de cafe por Oficina Zonal
-  async crearGraficoCantidadPoligonosOZCafe() {
+  async crearGraficoCantidadPoligonosOZCafe(whereClause: string = '1=1') {
     const baseUrl = this.QUERY_SERVICIO;
     interface Cultivo {
       org: string;
@@ -1482,9 +1525,9 @@ export class DashboardComponent implements AfterViewInit {
 
     // 🔹 Paginación para traer TODOS los registros SOLO de CAFÉ
     while (hasMore) {
-      // CAMBIO: 'cultivo' -> 'tipo_cultivo', 'org' -> 'oficina_zonal'
+      const finalWhere = `tipo_cultivo='CAFE' AND ${whereClause}`;
       const url =
-        `${baseUrl}?where=tipo_cultivo='CAFE'&outFields=oficina_zonal,tipo_cultivo` +
+        `${baseUrl}?where=${encodeURIComponent(finalWhere)}&outFields=oficina_zonal,tipo_cultivo` +
         `&returnGeometry=false&f=json&resultRecordCount=${pageSize}&resultOffset=${offset}`;
 
       const res = await fetch(url);
@@ -1535,7 +1578,7 @@ export class DashboardComponent implements AfterViewInit {
     const ctx = document.getElementById('graficoCantidadOZCAFE') as HTMLCanvasElement;
     if (!ctx) return;
 
-    new Chart(ctx, {
+    this.charts.push(new Chart(ctx, {
       type: 'bar',
       data: {
         labels,
@@ -1600,7 +1643,7 @@ export class DashboardComponent implements AfterViewInit {
         },
       },
       plugins: [ChartDataLabels],
-    });
+    }));
   }
 
 }
