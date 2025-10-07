@@ -24,14 +24,7 @@ export default class WelcomeComponent implements AfterViewInit {
 
   constructor() { }
 
-  ngAfterViewInit(): void {
-    // Opcional: Iniciar el tour automáticamente la primera vez que un usuario visita la página.
-    // Podrías usar localStorage para controlar esto.
-    // if (!localStorage.getItem('welcomeTourCompleted')) {
-    //   this.startTour();
-    //   localStorage.setItem('welcomeTourCompleted', 'true');
-    // }
-  }
+  ngAfterViewInit(): void {}
 
   startTour() {
     const driverObj = driver({
