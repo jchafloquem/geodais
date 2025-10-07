@@ -26,6 +26,7 @@
   <div class="relative z-10 text-white text-center px-6">
     <!-- Título -->
     <h1
+      id="welcome-title"
       class="mt-2 text-4xl md:text-6xl font-bold flex items-center justify-center gap-3 flex-wrap"
     >
       <img
@@ -53,12 +54,20 @@
       rápida.
     </p>
 
+    <!-- Botón para iniciar el tour -->
+    <div class="mt-8">
+      <button (click)="startTour()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition-all duration-300">
+        ✨ Iniciar Tour Virtual
+      </button>
+    </div>
+
     <!-- Contenedor de botones -->
     <div
-    class="mt-8 bg-opacity-60 rounded-lg mx-auto p-6 flex flex-wrap justify-center gap-6"
-  >
-    <div *ngFor="let boton of botones" class="flex flex-col items-center">
-      <a
+      id="main-buttons"
+      class="mt-8 bg-opacity-60 rounded-lg mx-auto p-6 flex flex-wrap justify-center gap-6"
+    >
+      <div *ngFor="let boton of botones" class="flex flex-col items-center" [id]="'button-' + boton.texto.toLowerCase()">
+        <a
         [routerLink]="boton.link"
         class="flex w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 justify-center items-center bg-[#0D9BD7] text-white rounded-full border-2 border-white shadow-lg hover:scale-110 transition-transform duration-300 focus:ring-4 focus:ring-blue-500"
       >
@@ -76,7 +85,7 @@
 
 
     <!-- Redes Sociales -->
-    <div class="mt-8 flex justify-center gap-6 text-2xl">
+    <div id="social-media-links" class="mt-8 flex justify-center gap-6 text-2xl">
       <a
         href="https://web.facebook.com/PCMDEVIDA"
         target="_blank"

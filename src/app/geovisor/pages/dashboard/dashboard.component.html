@@ -1,12 +1,11 @@
-<app-navbarmenu></app-navbarmenu>
-<div class="flex flex-col md:flex-row w-screen bg-slate-100 text-black antialiased
-  selection:bg-blue-600 selection:text-white overflow-hidden
-  pt-16 h-screen">
-  <!-- 📚 Menú lateral -->
-  <app-sidemenu *ngIf="isMenuOpen || isDesktop" class="w-full md:w-64 bg-[#323232] md:h-full"></app-sidemenu>
-  <!-- 📊 Contenido principal -->
-  <div class="flex-1 min-w-0 pt-4 pr-6 pb-6 pl-6 overflow-y-auto space-y-4">
-    <h1 class="text-base sm:text-lg md:text-xl font-normal text-white bg-[#0DA642] px-3 py-1.5 rounded-lg shadow-md text-center">
+<div class="h-screen w-screen bg-slate-100 antialiased selection:bg-blue-600 selection:text-white">
+  <app-navbarmenu></app-navbarmenu> <!-- This component is assumed to have a fixed position and a height of h-16 (4rem) -->
+  <div class="flex h-full pt-16"> <!-- pt-16 creates space for the fixed navbar above -->
+    <!-- 📚 Menú lateral -->
+    <app-sidemenu *ngIf="isMenuOpen || isDesktop" class="w-full md:w-64 bg-[#323232] flex-shrink-0"></app-sidemenu>
+    <!-- 📊 Contenido principal -->
+    <main class="flex-1 min-w-0 p-6 overflow-y-auto space-y-4">
+    <h1 id="dashboard-title" class="text-base sm:text-lg md:text-xl font-normal text-white bg-[#0DA642] px-3 py-1.5 rounded-lg shadow-md text-center">
       <ng-container [ngSwitch]="selectedYear">
         <ng-container *ngSwitchCase="0">
           Información Acumulada (Todos los años)
@@ -23,17 +22,23 @@
       </ng-container>
     </h1>
     <!-- Agrega esto donde quieras que aparezca el selector de año -->
-    <div class="year-selector-container inline-flex items-center bg-white rounded-lg shadow-sm border border-gray-300 p-1">
-      <label for="year-select" class="px-3 text-sm font-semibold text-gray-600">Seleccionar Año:</label>
-      <select id="year-select" (change)="onYearChange($event)" class="rounded-md border-transparent bg-transparent py-2 pl-2 pr-8 text-sm font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-        <option [value]="0" [selected]="selectedYear === 0">Todos</option>
-        <option *ngFor="let year of availableYears" [value]="year" [selected]="year === selectedYear">
-          {{ year }}
-        </option>
-      </select>
+    <div class="flex items-center gap-4">
+      <div id="year-selector-container" class="year-selector-container inline-flex items-center bg-white rounded-lg shadow-sm border border-gray-300 p-1">
+        <label for="year-select" class="px-3 text-sm font-semibold text-gray-600">Seleccionar Año:</label>
+        <select id="year-select" (change)="onYearChange($event)" class="rounded-md border-transparent bg-transparent py-2 pl-2 pr-8 text-sm font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+          <option [value]="0" [selected]="selectedYear === 0">Todos</option>
+          <option *ngFor="let year of availableYears" [value]="year" [selected]="year === selectedYear">
+            {{ year }}
+          </option>
+        </select>
+      </div>
+      <!-- Botón para iniciar el tour -->
+      <button (click)="startDashboardTour()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition-all duration-300">
+          ✨ Iniciar Tour
+      </button>
     </div>
     <!-- ESTADISTICA SOBRE HECTAREAS -->
-    <div class="rounded-2xl bg-[#0D9BD7] p-6 shadow-md ring-1 ring-gray-200">
+    <div id="hectareas-section" class="rounded-2xl bg-[#0D9BD7] p-6 shadow-md ring-1 ring-gray-200">
       <!-- Título de la tarjeta principal -->
       <h2 class="text-2xl font-semibold text-black mb-6">
         HECTAREAS (CACAO & CAFE)
@@ -109,7 +114,7 @@
       </div>
     </div> -->
     <!-- ESTADISTICA SOBRE FAMILIAS -->
-    <div class="rounded-2xl bg-[#0D9BD7] p-6 shadow-md ring-1 ring-gray-200">
+    <div id="familias-section" class="rounded-2xl bg-[#0D9BD7] p-6 shadow-md ring-1 ring-gray-200">
       <h2 class="text-2xl font-bold text-black mb-6">
         FAMILIAS PARTICIPANTES EN CULTIVOS DE CACAO & CAFE
       </h2>
@@ -190,7 +195,7 @@
       </div>
     </div>
     <!-- ESTADISTICA POLIGONOS -->
-    <div class="rounded-2xl bg-[#0D9BD7] p-6 shadow-md ring-1 ring-gray-200">
+    <div id="poligonos-section" class="rounded-2xl bg-[#0D9BD7] p-6 shadow-md ring-1 ring-gray-200">
       <h2 class="text-2xl font-bold text-black mb-6">
         POLIGONOS DE CACAO & CAFE
       </h2>
@@ -247,7 +252,7 @@
       </div>
     </div>
     <!-- NUEVO GRÁFICO POR DEPARTAMENTO -->
-    <div class="bg-white rounded-2xl shadow-lg border p-6">
+    <div id="departamento-section" class="bg-white rounded-2xl shadow-lg border p-6">
       <h2 class="text-2xl font-bold text-black mb-6 text-center">
         CANTIDAD DE POLÍGONOS POR DEPARTAMENTO
       </h2>
@@ -255,8 +260,7 @@
         <canvas id="graficoPorDepartamento" class="w-full h-full"></canvas>
       </div>
     </div>
-    <br>
-    <br>
+    <app-footer/>
+    </main>
   </div>
-  <app-footer/>
 </div>

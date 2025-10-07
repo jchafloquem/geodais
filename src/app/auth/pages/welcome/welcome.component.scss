@@ -1,36 +1,22 @@
 @keyframes zoomInOut {
-  0%, 100% {
-    transform: scale(1);
-  }
-  25%, 75% {
-    transform: scale(1.2);
-  }
-  50% {
-    transform: scale(1.4);
-  }
+  0%, 100% { transform: scale(1); }
+  25%, 75% { transform: scale(1.2); }
+  50% { transform: scale(1.4); }
 }
+
 .animate-zoom {
   animation: zoomInOut 20s ease-in-out infinite;
   transform-origin: center center;
 }
 
 @keyframes backgroundChange {
-  0% {
-    background-image: url('/assets/images/welcome/welcome1.jpg');
-  }
-  25% {
-    background-image: url('/assets/images/welcome/welcome2.avif');
-  }
-  50% {
-    background-image: url('/assets/images/welcome/welcome3.jpg');
-  }
-  75% {
-    background-image: url('/assets/images/welcome/welcome2.avif');
-  }
-  100% {
-    background-image: url('/assets/images/welcome/welcome1.jpg');
-  }
+  0% { background-image: url('/assets/images/welcome/welcome1.jpg'); }
+  25% { background-image: url('/assets/images/welcome/welcome2.avif'); }
+  50% { background-image: url('/assets/images/welcome/welcome3.jpg'); }
+  75% { background-image: url('/assets/images/welcome/welcome2.avif'); }
+  100% { background-image: url('/assets/images/welcome/welcome1.jpg'); }
 }
+
 .animate-background {
   animation: backgroundChange 10s ease-in-out infinite;
 }

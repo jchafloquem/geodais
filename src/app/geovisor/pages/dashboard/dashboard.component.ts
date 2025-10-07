@@ -8,6 +8,8 @@ import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { NavbarmenuComponent } from '../../components/navbarmenu/navbarmenu.component';
 import { FooterComponent } from '../../components/footer/footer.component';
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 import localeEsPE from '@angular/common/locales/es-PE';
 
 
@@ -1989,5 +1991,65 @@ export class DashboardComponent implements AfterViewInit {
           context.fillText('Error al cargar los datos del gráfico', ctx.width / 2, ctx.height / 2);
       }
     }
+  }
+
+  /**
+   * @method startDashboardTour
+   * @description
+   * Inicia un tour guiado por la página del dashboard utilizando driver.js.
+   */
+  public startDashboardTour(): void {
+    const driverObj = driver({
+      showProgress: true,
+      nextBtnText: 'Siguiente →',
+      prevBtnText: '← Anterior',
+      doneBtnText: 'Finalizar',
+      steps: [
+        {
+          element: '#dashboard-title',
+          popover: {
+            title: 'Bienvenido al Dashboard',
+            description: 'Este es el centro de control estadístico. Aquí puedes ver el progreso de las metas y los datos recopilados.'
+          }
+        },
+        {
+          element: '#year-selector-container',
+          popover: {
+            title: 'Filtro por Año',
+            description: 'Usa este selector para filtrar toda la información del dashboard por un año específico o ver el acumulado de "Todos" los años.'
+          }
+        },
+        {
+          element: '#hectareas-section',
+          popover: {
+            title: 'Sección de Hectáreas',
+            description: 'Aquí encontrarás un resumen del avance en hectáreas de Cacao y Café, comparado con la meta anual.'
+          }
+        },
+        {
+          element: '#familias-section',
+          popover: {
+            title: 'Sección de Familias Participantes',
+            description: 'Visualiza el número de familias involucradas en los cultivos, su distribución y el avance frente a la meta.'
+          }
+        },
+        {
+          element: '#poligonos-section',
+          popover: {
+            title: 'Sección de Polígonos',
+            description: 'Consulta la cantidad total de polígonos (registros) de Cacao y Café que han sido levantados.'
+          }
+        },
+        {
+          element: '#departamento-section',
+          popover: {
+            title: 'Distribución por Departamento',
+            description: 'Este gráfico muestra cómo se distribuyen los polígonos registrados a lo largo de los diferentes departamentos del país.'
+          }
+        }
+      ]
+    });
+
+    driverObj.drive();
   }
 }
