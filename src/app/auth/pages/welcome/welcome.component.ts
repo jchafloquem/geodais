@@ -24,7 +24,7 @@ export default class WelcomeComponent implements AfterViewInit {
 
   constructor() { }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   startTour() {
     const driverObj = driver({
@@ -35,7 +35,7 @@ export default class WelcomeComponent implements AfterViewInit {
       steps: [
         {
           element: '#welcome-title',
-          popover: { title: '¡Bienvenido a GeoVisor!', description: 'Esta es nuestra plataforma central. Te daremos un breve recorrido por sus funciones principales.' }
+          popover: { title: '¡Bienvenido al GeoVisor!', description: 'Esta es nuestra plataforma central. Te daremos un breve recorrido por sus funciones principales.' }
         },
         {
           element: '#main-buttons',
@@ -51,7 +51,7 @@ export default class WelcomeComponent implements AfterViewInit {
         },
         {
           element: '#button-reportes',
-          popover: { title: 'Generador de Reportes', description: 'Crea y descarga reportes personalizados en formato PDF con la información que necesites.' }
+          popover: { title: 'Generador de Reportes', description: 'Crea y descarga reportes personalizados en formato PDF con la información que necesites. En este momento se encuentra en elaboración.' }
         },
         {
           element: '#button-repositorio',

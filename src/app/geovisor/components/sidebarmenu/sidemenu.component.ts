@@ -28,8 +28,6 @@ export class SidemenuComponent {
         r => r.path && !excluded.includes(r.path) && r.loadComponent
       );
     }
-
-    console.log('Rutas hijas de /geovisor:', this.menuRoutes);
   }
 
   toggleMenu() {
