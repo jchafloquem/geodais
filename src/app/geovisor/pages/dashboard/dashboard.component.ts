@@ -39,7 +39,7 @@ export class DashboardComponent implements AfterViewInit {
   private readonly QUERY_SERVICIO = `${this.SERVICIO_PIRDAIS}/query`;
 
   /** Estado de visibilidad del menú lateral. */
-  isMenuOpen = true;   // Estado inicial del menú
+  isMenuOpen = false;   // Estado inicial del menú
   /** Flag para detectar si la vista es de escritorio (pantalla grande). */
   isDesktop = false;   // Detecta si es pantalla grande
 

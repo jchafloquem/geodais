@@ -1,17 +1,30 @@
-<div class="h-screen w-screen bg-slate-100 antialiased selection:bg-blue-600 selection:text-white">
-  <app-navbarmenu></app-navbarmenu> <!-- This component is assumed to have a fixed position and a height of h-16 (4rem) -->
-  <div class="flex h-full pt-16"> <!-- pt-16 creates space for the fixed navbar above -->
-    <!-- 📚 Menú lateral -->
-    <app-sidemenu *ngIf="isMenuOpen || isDesktop" class="w-full md:w-64 bg-[#323232] flex-shrink-0"></app-sidemenu>
-    <!-- 📊 Contenido principal -->
-    <main class="flex-1 min-w-0 p-6 overflow-y-auto space-y-4">
-    <h1 id="dashboard-title" class="text-base sm:text-lg md:text-xl font-normal text-white bg-[#0DA642] px-3 py-1.5 rounded-lg shadow-md text-center">
+<div class="h-screen w-full bg-slate-100 antialiased selection:bg-blue-600 selection:text-white">
+  <!-- Navbar: Se asume que tiene una altura de h-16 (4rem) y es fixed -->
+  <app-navbarmenu (menuToggle)="isMenuOpen = !isMenuOpen"></app-navbarmenu>
+
+  <div class="flex h-full pt-16">
+    <!-- 📚 Menú Lateral (Sidebar) -->
+    <!-- En móvil es un overlay que se desliza. En desktop es estático. -->
+    <!-- La lógica de isDesktop y isMenuOpen es crucial y debe venir del TS (BreakpointObserver) -->
+    <app-sidemenu
+      class="fixed inset-y-0 left-0 z-30 w-64 bg-[#323232] transition-transform duration-300 ease-in-out pt-16 md:static md:translate-x-0 md:pt-0"
+      [class.translate-x-0]="isMenuOpen"
+      [class.-translate-x-full]="!isMenuOpen && !isDesktop">
+    </app-sidemenu>
+
+    <!-- Fondo oscuro para el overlay en móvil -->
+    <div *ngIf="isMenuOpen && !isDesktop" (click)="isMenuOpen = false" class="fixed inset-0 z-20 bg-black/50 md:hidden"></div>
+
+    <!-- 📊 Contenido Principal -->
+    <main class="flex-1 min-w-0 p-4 sm:p-6 overflow-y-auto space-y-6">
+
+    <h1 id="dashboard-title" class="text-base sm:text-lg md:text-xl font-semibold text-white bg-[#0DA642] px-3 py-2 rounded-lg shadow-md text-center">
       <ng-container [ngSwitch]="selectedYear">
         <ng-container *ngSwitchCase="0">
           Información Acumulada (Todos los años)
         </ng-container>
         <ng-container *ngSwitchCase="2024">
-          Información vigente al 30 de julio del 2025
+          Información de la Meta 2024
         </ng-container>
         <ng-container *ngSwitchCase="2025">
           Información vigente al {{ currentDate | date:'longDate' }}
@@ -22,8 +35,8 @@
       </ng-container>
     </h1>
     <!-- Agrega esto donde quieras que aparezca el selector de año -->
-    <div class="flex items-center gap-4">
-      <div id="year-selector-container" class="year-selector-container inline-flex items-center bg-white rounded-lg shadow-sm border border-gray-300 p-1">
+    <div class="flex flex-wrap items-center justify-center gap-4">
+      <div id="year-selector-container" class="inline-flex items-center bg-white rounded-lg shadow-sm border border-gray-300 p-1">
         <label for="year-select" class="px-3 text-sm font-semibold text-gray-600">Seleccionar Año:</label>
         <select id="year-select" (change)="onYearChange($event)" class="rounded-md border-transparent bg-transparent py-2 pl-2 pr-8 text-sm font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
           <option [value]="0" [selected]="selectedYear === 0">Todos</option>
@@ -33,7 +46,7 @@
         </select>
       </div>
       <!-- Botón para iniciar el tour -->
-      <button (click)="startDashboardTour()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition-all duration-300">
+      <button (click)="startDashboardTour()" class="flex items-center gap-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition-all duration-300">
           ✨ Iniciar Tour
       </button>
     </div>
@@ -43,7 +56,7 @@
       <h2 class="text-2xl font-semibold text-black mb-6">
         HECTAREAS (CACAO & CAFE)
       </h2>
-      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 text-white">
         <!-- Meta Total -->
         <div
           class="flex items-center justify-between rounded-2xl bg-gray-800 p-6 shadow ring-1 ring-white/10 cursor-pointer">
@@ -59,7 +72,7 @@
         <div
           class="flex items-center justify-between rounded-2xl bg-gray-900 p-6 shadow ring-1 ring-white/10 cursor-pointer">
           <div>
-            <p class="text-xl font-medium leading-6 text-white">AVANCE CAFE & CACAO</p>
+            <p class="text-xl font-medium leading-6">AVANCE CAFE & CACAO</p>
             <p class="mt-2 text-4xl font-semibold tracking-tight text-green-400">{{ totalAreaCultivo | number : "1.0-0"
               }}</p>
           </div>
@@ -70,7 +83,7 @@
         <div
           class="flex items-center justify-between rounded-2xl bg-gray-900 p-6 shadow ring-1 ring-white/10 cursor-pointer">
           <div>
-            <p class="text-xl font-medium leading-6 text-white">AVANCE CACAO</p>
+            <p class="text-xl font-medium leading-6">AVANCE CACAO</p>
             <p class="mt-2 text-4xl font-semibold tracking-tight text-green-400">{{ totalAreaCacao | number : "1.0-0"
               }}</p>
           </div>
@@ -81,7 +94,7 @@
         <div
           class="flex items-center justify-between rounded-2xl bg-gray-900 p-6 shadow ring-1 ring-white/10 cursor-pointer">
           <div>
-            <p class="text-xl font-medium leading-6 text-white">AVANCE CAFE</p>
+            <p class="text-xl font-medium leading-6">AVANCE CAFE</p>
             <p class="mt-2 text-4xl font-semibold tracking-tight text-green-400">{{ totalAreaCafe | number : "1.0-0"
               }}</p>
           </div>
@@ -91,14 +104,14 @@
       </div>
     </div>
     <div class="bg-white rounded-2xl shadow-lg border p-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-1">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Gráfico 1 -->
-        <div class="w-full h-[280px] sm:h-[380px] md:h-[450px] lg:h-[500px] 3xl:h-[650px] max-w-full mx-auto">
-          <canvas id="graficoMeta" class="w-full h-full"></canvas>
+        <div class="relative h-80 md:h-96">
+          <canvas id="graficoMeta"></canvas>
         </div>
         <!-- Gráfico 2 (barras horizontales) -->
-        <div class="w-full h-[280px] sm:h-[380px] md:h-[450px] lg:h-[500px] 3xl:h-[650px] max-w-full mx-auto">
-          <canvas id="graficoMetaOZ" class="w-full h-full"></canvas>
+        <div class="relative h-80 md:h-96">
+          <canvas id="graficoMetaOZ"></canvas>
         </div>
       </div>
     </div>
@@ -118,7 +131,7 @@
       <h2 class="text-2xl font-bold text-black mb-6">
         FAMILIAS PARTICIPANTES EN CULTIVOS DE CACAO & CAFE
       </h2>
-      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5 cursor-pointer">
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5 text-white">
         <div
           class="flex items-center justify-between rounded-2xl bg-gray-900 p-6 shadow ring-1 ring-white/10 cursor-pointer">
           <div>
@@ -132,7 +145,7 @@
         <div
           class="flex items-center justify-between rounded-2xl bg-gray-900 p-6 shadow ring-1 ring-white/10 cursor-pointer">
           <div>
-            <p class="text-xl font-medium leading-6 text-white">AVANCE</p>
+            <p class="text-xl font-medium leading-6">AVANCE</p>
             <p class="mt-2 text-4xl font-semibold tracking-tight text-green-400">{{ totalRegistrosUnicosDNI["total"] |
               number : "1.0-0" }}</p>
           </div>
@@ -142,7 +155,7 @@
         <div
           class="flex items-center justify-between rounded-2xl bg-gray-900 p-6 shadow ring-1 ring-white/10 cursor-pointer">
           <div>
-            <p class="text-xl font-medium leading-6 text-white">AVANCE CACAO</p>
+            <p class="text-xl font-medium leading-6">AVANCE CACAO</p>
             <p class="mt-2 text-4xl font-semibold tracking-tight text-green-400">{{ totalRegistrosUnicosDNI["cacao"] |
               number : "1.0-0" }}</p>
           </div>
@@ -152,7 +165,7 @@
         <div
           class="flex items-center justify-between rounded-2xl bg-gray-900 p-6 shadow ring-1 ring-white/10 cursor-pointer">
           <div>
-            <p class="text-xl font-medium leading-6 text-white">AVANCE CAFE</p>
+            <p class="text-xl font-medium leading-6">AVANCE CAFE</p>
             <p class="mt-2 text-4xl font-semibold tracking-tight text-green-400">{{ totalRegistrosUnicosDNI["cafe"] |
               number : "1.0-0" }}</p>
           </div>
@@ -160,7 +173,7 @@
             class="w-16 h-16 opacity-80 rounded-full drop-shadow-[0_0_10px_white]">
         </div>
         <div class="rounded-2xl bg-gray-900 p-6 shadow ring-1 ring-white/10">
-          <p class="text-sm font-medium leading-6 text-white">TOTAL DE PARTICIPANTES - CAFE & CACAO</p>
+          <p class="text-sm font-medium leading-6">PARTICIPANTES EN AMBOS</p>
           <p class="mt-2 flex items-baseline gap-x-2">
             <span class="text-4xl font-semibold tracking-tight text-green-400">
               {{ totalRegistrosUnicosDNI["cafe_y_cacao"] | number : "1.0-0" }}
@@ -170,27 +183,27 @@
       </div>
     </div>
     <div class="bg-white rounded-2xl shadow-lg border p-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-1">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Gráfico 1 -->
-        <div class="w-full h-[280px] sm:h-[380px] md:h-[450px] lg:h-[500px] 3xl:h-[650px] max-w-full mx-auto">
-          <canvas id="graficoMetaDNI" class="w-full h-full"></canvas>
+        <div class="relative h-80 md:h-96">
+          <canvas id="graficoMetaDNI"></canvas>
         </div>
         <!-- Gráfico 2 (barras horizontales) -->
-        <div class="w-full h-[280px] sm:h-[380px] md:h-[450px] lg:h-[500px] 3xl:h-[650px] max-w-full mx-auto">
-          <canvas id="graficoMetaParticipantes" class="w-full h-full"></canvas>
+        <div class="relative h-80 md:h-96">
+          <canvas id="graficoMetaParticipantes"></canvas>
         </div>
       </div>
     </div>
     <!-- FIN ESTADISTICA SOBRE FAMILIAS -->
     <div class="bg-white rounded-2xl shadow-lg border p-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-1">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Gráfico 2 (barras horizontales) -->
-        <div class="w-full h-[280px] sm:h-[380px] md:h-[450px] lg:h-[500px] 3xl:h-[650px] max-w-full mx-auto">
-          <canvas id="graficoCantidadDNIOZCACAO" class="w-full h-full"></canvas>
+        <div class="relative h-80 md:h-96">
+          <canvas id="graficoCantidadDNIOZCACAO"></canvas>
         </div>
         <!-- Gráfico 1 -->
-        <div class="w-full h-[280px] sm:h-[380px] md:h-[450px] lg:h-[500px] 3xl:h-[650px] max-w-full mx-auto">
-          <canvas id="graficoCantidadDNIOZCAFE" class="w-full h-full"></canvas>
+        <div class="relative h-80 md:h-96">
+          <canvas id="graficoCantidadDNIOZCAFE"></canvas>
         </div>
       </div>
     </div>
@@ -199,7 +212,7 @@
       <h2 class="text-2xl font-bold text-black mb-6">
         POLIGONOS DE CACAO & CAFE
       </h2>
-      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 cursor-pointer">
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 text-white">
         <div
           class="flex items-center justify-between rounded-2xl bg-gray-900 p-6 shadow ring-1 ring-white/10 cursor-pointer">
           <div>
@@ -221,7 +234,7 @@
         <div
           class="flex items-center justify-between rounded-2xl bg-gray-900 p-6 shadow ring-1 ring-white/10 cursor-pointer">
           <div>
-            <p class="text-xl font-medium leading-6 text-white">AVANCE CACAO</p>
+            <p class="text-xl font-medium leading-6">AVANCE CACAO</p>
             <p class="mt-2 text-4xl font-semibold tracking-tight text-green-400">{{ totalCacao | number : "1.0-0"}}</p>
           </div>
           <img src="assets/images/dashboard/grano_cacao.png" alt="icono"
@@ -230,7 +243,7 @@
         <div
           class="flex items-center justify-between rounded-2xl bg-gray-900 p-6 shadow ring-1 ring-white/10 cursor-pointer">
           <div>
-            <p class="text-xl font-medium leading-6 text-white">AVANCE CAFE</p>
+            <p class="text-xl font-medium leading-6">AVANCE CAFE</p>
             <p class="mt-2 text-4xl font-semibold tracking-tight text-green-400">{{ totalCafe | number : "1.0-0"}}</p>
           </div>
           <img src="assets/images/dashboard/grano_cafe.png" alt="icono"
@@ -240,14 +253,14 @@
     </div>
     <!-- FIN ESTADISTICA POLIGONOS -->
     <div class="bg-white rounded-2xl shadow-lg border p-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-1">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Gráfico 2 (barras horizontales) -->
-        <div class="w-full h-[280px] sm:h-[380px] md:h-[450px] lg:h-[500px] 3xl:h-[650px] max-w-full mx-auto">
-          <canvas id="graficoCantidadOZCACAO" class="w-full h-full"></canvas>
+        <div class="relative h-80 md:h-96">
+          <canvas id="graficoCantidadOZCACAO"></canvas>
         </div>
         <!-- Gráfico 1 -->
-        <div class="w-full h-[280px] sm:h-[380px] md:h-[450px] lg:h-[500px] 3xl:h-[650px] max-w-full mx-auto">
-          <canvas id="graficoCantidadOZCAFE" class="w-full h-full"></canvas>
+        <div class="relative h-80 md:h-96">
+          <canvas id="graficoCantidadOZCAFE"></canvas>
         </div>
       </div>
     </div>
@@ -256,8 +269,8 @@
       <h2 class="text-2xl font-bold text-black mb-6 text-center">
         CANTIDAD DE POLÍGONOS POR DEPARTAMENTO
       </h2>
-      <div class="w-full h-[280px] sm:h-[380px] md:h-[450px] lg:h-[500px] 3xl:h-[650px] max-w-full mx-auto">
-        <canvas id="graficoPorDepartamento" class="w-full h-full"></canvas>
+      <div class="relative h-96">
+        <canvas id="graficoPorDepartamento"></canvas>
       </div>
     </div>
     <app-footer/>
