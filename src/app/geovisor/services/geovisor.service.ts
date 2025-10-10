@@ -1156,8 +1156,12 @@ export class GeovisorSharedService {
     ];
     const searchElement = document.querySelector('arcgis-search') as any;
     if (searchElement) {
-      searchElement.view = this.view;
-      searchElement.sources = buscaCapasDEVIDA;
+      // Se espera a que el componente esté definido para evitar race conditions
+      customElements.whenDefined('arcgis-search').then(() => {
+        searchElement.view = this.view;
+        searchElement.sources = buscaCapasDEVIDA;
+        searchElement.activeSourceIndex = 0; // Establece "CULTIVOS" como fuente por defecto
+      });
     }
     //Widgets del Visor
     this.view.ui.add(new Zoom({ view: this.view }), {
