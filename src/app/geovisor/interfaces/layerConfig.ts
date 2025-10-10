@@ -1,7 +1,3 @@
-import PopupTemplate from '@arcgis/core/PopupTemplate';
-import LabelClass from '@arcgis/core/layers/support/LabelClass';
-import Renderer from '@arcgis/core/renderers/Renderer';
-
 export interface LayerConfig {
   type: 'feature' | 'map-image' | 'webtile';
   url: string;
@@ -11,7 +7,6 @@ export interface LayerConfig {
   opacity?: number;
   minScale?: number;
   maxScale?: number;
-
 
   // 🔹 Propios de FeatureLayer
   popupTemplate?: __esri.PopupTemplate;

@@ -3,7 +3,7 @@
 	"version": 1,
 	"newProjectRoot": "projects",
 	"projects": {
-		"geovisor": {
+		"geo-cultivos": {
 			"projectType": "application",
 			"schematics": {
 				"@schematics/angular:component": {
@@ -71,10 +71,10 @@
 					"builder": "@angular-devkit/build-angular:dev-server",
 					"configurations": {
 						"production": {
-							"buildTarget": "geovisor:build:production"
+							"buildTarget": "geo-cultivos:build:production"
 						},
 						"development": {
-							"buildTarget": "geovisor:build:development"
+							"buildTarget": "geo-cultivos:build:development"
 						}
 					},
 					"defaultConfiguration": "development"

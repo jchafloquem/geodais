@@ -2,7 +2,7 @@ import { ElementRef, Injectable } from '@angular/core';
 
 //Libreria actual de ArcGIS 4.33
 import '@arcgis/map-components/components/arcgis-search';
-import { LayerConfig } from '../interface/layerConfig';
+import { LayerConfig } from '../interfaces/layerConfig';
 import * as geometryEngineAsync from '@arcgis/core/geometry/geometryEngineAsync';
 import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
 import CoordinateConversion from '@arcgis/core/widgets/CoordinateConversion.js';
@@ -23,7 +23,7 @@ import SimpleRenderer from '@arcgis/core/renderers/SimpleRenderer';
 import WebTileLayer from '@arcgis/core/layers/WebTileLayer';
 import Zoom from '@arcgis/core/widgets/Zoom.js';
 
-//* POPUP & CLUSTERS
+// Popup & Clusters
 const popupPoligonoCultivo = new PopupTemplate({
   title: 'Tipo de Cultivo: {tipo_cultivo}',
   outFields: ['*'],
@@ -916,25 +916,6 @@ export class GeovisorSharedService {
       ],
     },
     //(Limites Politicos)
-    {
-      type: 'map-image',
-      title: 'DISTRITO',
-      url: this.restApiDevida,
-      visible: true,
-      opacity: 0.9,
-      minScale: 0,
-      maxScale: 0,
-      group: 'LIMITES POLITICOS',
-      sublayers: [
-        {
-          id: 1,
-          visible: true,
-          labelsVisible: true,
-          minScale: 0,
-          maxScale: 0,
-        },
-      ],
-    },
     {
       type: 'map-image',
       title: 'PROVINCIA',
