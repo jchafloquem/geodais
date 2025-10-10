@@ -4,7 +4,7 @@ import { CommonModule, registerLocaleData } from '@angular/common';
 import { SidemenuComponent } from '../../components/sidebarmenu/sidemenu.component';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import StatisticDefinition from '@arcgis/core/rest/support/StatisticDefinition.js';
-import Chart from 'chart.js/auto';
+import Chart, { ChartConfiguration } from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { NavbarmenuComponent } from '../../components/navbarmenu/navbarmenu.component';
 import { FooterComponent } from '../../components/footer/footer.component';
@@ -12,48 +12,101 @@ import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import localeEsPE from '@angular/common/locales/es-PE';
 
-// Plugin personalizado para simular un efecto 3D en las barras del gráfico.
-// Dibuja una "sombra" o "extrusión" para dar una sensación de profundidad.
+// Plugin personalizado para simular un efecto de sombra 3D en las barras.
 const pseudo3DPlugin = {
   id: 'pseudo3D',
   beforeDatasetsDraw: (chart: Chart) => {
+    // Solo aplicar a gráficos de barras
+    const barMeta = chart.getDatasetMeta(0);
+    if (barMeta.type !== 'bar' || !barMeta.data) {
+      return;
+    }
+
     const { ctx } = chart;
-    const offset = 5; // "Profundidad" del efecto 3D en píxeles.
-    const darkerColor = '#6A8A50'; // Usamos el color del borde existente para la sombra.
+    const offset = 4; // "Profundidad" del efecto 3D en píxeles
 
     ctx.save();
-    ctx.fillStyle = darkerColor;
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'; // Color de la sombra, negro semitransparente
 
-    // Itera sobre cada barra del primer dataset para dibujar su extrusión.
-    chart.getDatasetMeta(0).data.forEach(bar => {
-      // Hacemos una aserción de tipo a 'any' para acceder a propiedades específicas del BarElement
-      // ('base' y 'width') que no están presentes en el tipo 'Element' genérico que infiere TypeScript.
-      const { x, y, base, width } = bar as any;
+    const isHorizontal = chart.options.indexAxis === 'y';
 
-      // Dibuja la cara superior de la barra.
-      ctx.beginPath();
-      ctx.moveTo(x - width / 2, y);
-      ctx.lineTo(x - width / 2 + offset, y - offset);
-      ctx.lineTo(x + width / 2 + offset, y - offset);
-      ctx.lineTo(x + width / 2, y);
-      ctx.closePath();
-      ctx.fill();
+    barMeta.data.forEach(bar => {
+      const { x, y, base, width, height } = bar as any;
 
-      // Dibuja la cara lateral de la barra.
-      ctx.beginPath();
-      ctx.moveTo(x + width / 2, y);
-      ctx.lineTo(x + width / 2 + offset, y - offset);
-      ctx.lineTo(x + width / 2 + offset, base - offset);
-      ctx.lineTo(x + width / 2, base);
-      ctx.closePath();
-      ctx.fill();
+      if (isHorizontal) {
+        // Lógica para barras horizontales
+        const barThickness = height; // En horizontal, 'height' es el grosor de la barra
+
+        // Cara inferior
+        ctx.beginPath();
+        ctx.moveTo(base, y + barThickness / 2);
+        ctx.lineTo(base + offset, y + barThickness / 2 + offset);
+        ctx.lineTo(x + offset, y + barThickness / 2 + offset);
+        ctx.lineTo(x, y + barThickness / 2);
+        ctx.closePath();
+        ctx.fill();
+
+        // Cara lateral (derecha)
+        ctx.beginPath();
+        ctx.moveTo(x, y - barThickness / 2);
+        ctx.lineTo(x + offset, y - barThickness / 2 + offset);
+        ctx.lineTo(x + offset, y + barThickness / 2 + offset);
+        ctx.lineTo(x, y + barThickness / 2);
+        ctx.closePath();
+        ctx.fill();
+      } else {
+        // Lógica para barras verticales
+        // Cara superior
+        ctx.beginPath();
+        ctx.moveTo(x - width / 2, y);
+        ctx.lineTo(x - width / 2 + offset, y - offset);
+        ctx.lineTo(x + width / 2 + offset, y - offset);
+        ctx.lineTo(x + width / 2, y);
+        ctx.closePath();
+        ctx.fill();
+
+        // Cara lateral (derecha)
+        ctx.beginPath();
+        ctx.moveTo(x + width / 2, y);
+        ctx.lineTo(x + width / 2 + offset, y - offset);
+        ctx.lineTo(x + width / 2 + offset, base - offset);
+        ctx.lineTo(x + width / 2, base);
+        ctx.closePath();
+        ctx.fill();
+      }
     });
 
     ctx.restore();
   }
 };
 
-Chart.register(ChartDataLabels);
+// Plugin para dar un efecto de sombra a los gráficos circulares (pie/doughnut)
+const pie3DPlugin = {
+  id: 'pie3D',
+  beforeDatasetsDraw: (chart: Chart) => {
+    // Se realiza un cast a 'string' para evitar un error de tipado de TypeScript,
+    // que incorrectamente infiere que 'doughnut' no es un tipo de gráfico posible.
+    const chartType = (chart.config as ChartConfiguration).type;
+    if (chartType !== 'pie' && chartType !== 'doughnut') {
+      return;
+    }
+    const { ctx } = chart;
+    ctx.save();
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.25)';
+    ctx.shadowBlur = 8;
+    ctx.shadowOffsetX = 5;
+    ctx.shadowOffsetY = 5;
+  },
+  afterDatasetsDraw: (chart: Chart) => {
+    const chartType = (chart.config as ChartConfiguration).type;
+    if (chartType !== 'pie' && chartType !== 'doughnut') {
+      return;
+    }
+    chart.ctx.restore();
+  }
+};
+
+// Se registra por instancia para evitar la doble registración que causa etiquetas duplicadas.
 registerLocaleData(localeEsPE, 'es-PE');
 
 /**
@@ -363,11 +416,12 @@ export class DashboardComponent implements AfterViewInit {
           {
             data: [total, restante],
             backgroundColor: [
-              '#2c9c7d ', // azul
+              '#2c9c7d ', // verde
               '#f9edbc'   // verde claro/transparente
             ],
             borderColor: ['#075A73', '#085A25'],
-            borderWidth: 2
+            borderWidth: 2,
+            hoverOffset: 8
           }
         ]
       },
@@ -411,7 +465,7 @@ export class DashboardComponent implements AfterViewInit {
           }
         }
       },
-      plugins: [ChartDataLabels]
+      plugins: [pie3DPlugin, ChartDataLabels]
     }));
   }
 
@@ -499,6 +553,11 @@ export class DashboardComponent implements AfterViewInit {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+          padding: {
+            bottom: 5, // Espacio para que el efecto 3D no se corte en el borde.
+          }
+        },
         indexAxis: 'y',
         scales: {
           x: {
@@ -543,7 +602,7 @@ export class DashboardComponent implements AfterViewInit {
           },
         },
       },
-      plugins: [ChartDataLabels],
+      plugins: [pseudo3DPlugin, ChartDataLabels],
     }));
   }
 
@@ -681,6 +740,11 @@ export class DashboardComponent implements AfterViewInit {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+          padding: {
+            right: 5, // Espacio para que el efecto 3D no se corte en el borde.
+          }
+        },
         scales: {
           y: {
             beginAtZero: true,
@@ -713,7 +777,7 @@ export class DashboardComponent implements AfterViewInit {
           },
         },
       },
-      plugins: [ChartDataLabels],
+      plugins: [pseudo3DPlugin, ChartDataLabels],
     }));
   }
   //Grafico sobre la Meta por Oficina Zonal - CAFE
@@ -848,6 +912,11 @@ export class DashboardComponent implements AfterViewInit {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+          padding: {
+            right: 5, // Espacio para que el efecto 3D no se corte en el borde.
+          }
+        },
         scales: {
           y: {
             beginAtZero: true,
@@ -880,7 +949,7 @@ export class DashboardComponent implements AfterViewInit {
           },
         },
       },
-      plugins: [ChartDataLabels],
+      plugins: [pseudo3DPlugin, ChartDataLabels],
     }));
   }
 
@@ -953,7 +1022,8 @@ export class DashboardComponent implements AfterViewInit {
               '#f9edbc'
             ],
             borderColor: ['#075A73', '#085A25'],
-            borderWidth: 2
+            borderWidth: 2,
+            hoverOffset: 8
           }
         ]
       },
@@ -992,7 +1062,7 @@ export class DashboardComponent implements AfterViewInit {
           }
         }
       },
-      plugins: [ChartDataLabels]
+      plugins: [pie3DPlugin, ChartDataLabels]
     }));
   }
 
@@ -1164,6 +1234,11 @@ export class DashboardComponent implements AfterViewInit {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+          padding: {
+            bottom: 5, // Espacio para que el efecto 3D no se corte en el borde.
+          }
+        },
         indexAxis: 'y', // barras horizontales
         scales: {
           x: {
@@ -1208,7 +1283,7 @@ export class DashboardComponent implements AfterViewInit {
           },
         },
       },
-      plugins: [ChartDataLabels],
+      plugins: [pseudo3DPlugin, ChartDataLabels],
     }));
   }
 
@@ -1341,7 +1416,7 @@ export class DashboardComponent implements AfterViewInit {
             },
           },
         },
-        plugins: [ChartDataLabels],
+        plugins: [pie3DPlugin, ChartDataLabels],
       }));
     };
 
@@ -1449,6 +1524,11 @@ export class DashboardComponent implements AfterViewInit {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+          padding: {
+            bottom: 5, // Espacio para que el efecto 3D no se corte en el borde.
+          }
+        },
         indexAxis: 'y',
         scales: {
           x: {
@@ -1491,7 +1571,7 @@ export class DashboardComponent implements AfterViewInit {
           },
         },
       },
-      plugins: [ChartDataLabels],
+      plugins: [pseudo3DPlugin, ChartDataLabels],
     }));
   }
 
@@ -1596,6 +1676,11 @@ export class DashboardComponent implements AfterViewInit {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+          padding: {
+            bottom: 5, // Espacio para que el efecto 3D no se corte en el borde.
+          }
+        },
         indexAxis: 'y',
         scales: {
           x: {
@@ -1638,7 +1723,7 @@ export class DashboardComponent implements AfterViewInit {
           },
         },
       },
-      plugins: [ChartDataLabels],
+      plugins: [pseudo3DPlugin, ChartDataLabels],
     }));
   }
 
@@ -1738,6 +1823,11 @@ export class DashboardComponent implements AfterViewInit {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+          padding: {
+            bottom: 5, // Espacio para que el efecto 3D no se corte en el borde.
+          }
+        },
         indexAxis: 'y',
         scales: {
           x: {
@@ -1780,7 +1870,7 @@ export class DashboardComponent implements AfterViewInit {
           },
         },
       },
-      plugins: [ChartDataLabels],
+      plugins: [pseudo3DPlugin, ChartDataLabels],
     }));
   }
   //Grafico por poligonos de cultivos de cafe por Oficina Zonal
@@ -1878,6 +1968,11 @@ export class DashboardComponent implements AfterViewInit {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        layout: {
+          padding: {
+            bottom: 5, // Espacio para que el efecto 3D no se corte en el borde.
+          }
+        },
         indexAxis: 'y',
         scales: {
           x: {
@@ -1920,7 +2015,7 @@ export class DashboardComponent implements AfterViewInit {
           },
         },
       },
-      plugins: [ChartDataLabels],
+      plugins: [pseudo3DPlugin, ChartDataLabels],
     }));
   }
 
@@ -1989,7 +2084,8 @@ export class DashboardComponent implements AfterViewInit {
           maintainAspectRatio: false,
           layout: {
             padding: {
-              right: 10 // Espacio para que el efecto 3D no se corte en el borde.
+              right: 5, // Espacio para que el efecto 3D no se corte en el borde.
+              bottom: 5
             }
           },
           scales: {
@@ -2030,7 +2126,7 @@ export class DashboardComponent implements AfterViewInit {
             },
           },
         },
-        plugins: [ChartDataLabels, pseudo3DPlugin], // Se añade el plugin para el efecto 3D.
+      plugins: [pseudo3DPlugin, ChartDataLabels],
       }));
     } catch (err) {
       console.error('Error al crear gráfico por departamento:', err);
