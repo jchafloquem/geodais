@@ -489,7 +489,7 @@ export class GeovisorSharedService {
   > = new Map();
 
   //Método auxiliar para mostrar los mensajes toast.
-    private showToast(
+    public showToast(
       mensaje: string,
       tipo: 'success' | 'error' | 'info' = 'success',
       autoHide: boolean = true
@@ -901,7 +901,7 @@ export class GeovisorSharedService {
       type: 'map-image',
       title: 'OFICINAS ZONALES',
       url: this.restApiDevida,
-      visible: false,
+      visible: false, // Establecer la visibilidad por defecto en false
       opacity: 1,
       minScale: 0,
       maxScale: 0,
@@ -952,6 +952,17 @@ export class GeovisorSharedService {
           labelsVisible: true,
           minScale: 0,
           maxScale: 0,
+          renderer: new SimpleRenderer({
+            symbol: {
+              type: 'simple-fill',
+              color: [0, 0, 0, 0], // Relleno transparente
+              outline: {
+                color: [255, 255, 0, 1], // Borde amarillo
+                width: 2,
+              },
+            } as any,
+          }),
+          popupTemplate: popupLimitesOficinaZonal,
         },
       ],
     },
@@ -971,6 +982,7 @@ export class GeovisorSharedService {
           labelsVisible: true,
           minScale: 0,
           maxScale: 0,
+          popupTemplate: popupLimitesOficinaZonal,
         },
       ],
     },
@@ -1582,6 +1594,92 @@ export class GeovisorSharedService {
     }
     // Elimina los gráficos de la capa de marcadores
     this.coordinateMarkerLayer.removeAll();
+  }
+
+  public async getOficinasZonales(): Promise<{ nombre: string }[]> {
+    const layerUrl = `${this.restApiDevida}/5`;
+    const layer = new FeatureLayer({ url: layerUrl });
+
+    try {
+      const query = layer.createQuery();
+      query.where = "1=1";
+      query.outFields = ["nombre"];
+      query.returnGeometry = false;
+      query.orderByFields = ["nombre"];
+
+      const featureSet = await layer.queryFeatures(query);
+
+      const nombresUnicos = new Set(featureSet.features.map(f => f.attributes.nombre));
+      return Array.from(nombresUnicos).sort().map(nombre => ({ nombre }));
+
+    } catch (error) {
+      console.error("Error al obtener las oficinas zonales:", error);
+      this.showToast("No se pudieron cargar las oficinas zonales.", "error");
+      return [];
+    }
+  }
+
+  public async zoomToOficinaZonal(nombreOficina: string): Promise<void> {
+    if (!this.view) {
+      this.showToast("El mapa no está listo.", "error");
+      return;
+    }
+
+    const layer = this.mapa.layers.find(lyr => lyr.title === 'OFICINAS ZONALES') as __esri.MapImageLayer;
+    if (!layer) {
+      this.showToast("La capa 'Oficinas Zonales' no está en el mapa.", "error");
+      return;
+    }
+    if (!layer.visible) {
+      layer.visible = true;
+      this.showToast("Capa 'Oficinas Zonales' activada.", "info");
+    }
+
+    const sublayer = layer.sublayers?.find(sl => sl.id === 5);
+    if (!sublayer || !('queryFeatures' in sublayer)) {
+      this.showToast("No se encontró la subcapa de Oficinas Zonales.", "error");
+      return;
+    }
+
+    this.highlightLayer.removeAll();
+
+    try {
+      const featureSet = await sublayer.queryFeatures({
+        where: `nombre = '${nombreOficina}'`,
+        outFields: ["*"],
+        returnGeometry: true,
+      });
+
+      if (featureSet.features.length > 0) {
+        const feature = featureSet.features[0];
+        const highlightGraphic = new Graphic({
+          geometry: feature.geometry,
+          symbol: { type: "simple-fill", color: [255, 255, 0, 0.4], outline: { color: [255, 255, 0, 1], width: 2 } } as any
+        });
+        this.highlightLayer.add(highlightGraphic);
+
+        // Ocultar la capa temporalmente
+        layer.visible = false;
+
+        // Hacer zoom a la oficina zonal
+
+        this.view.goTo(feature.geometry);
+      } else {
+        this.showToast(`No se encontró la oficina zonal: ${nombreOficina}`, "info");
+      }
+    } catch (error) {
+      console.error(`Error al buscar la oficina zonal ${nombreOficina}:`, error);
+      this.showToast("Ocurrió un error al buscar la oficina.", "error");
+    }
+  }
+
+  public clearHighlights(): void {
+    this.highlightLayer.removeAll();
+    if (this.view) this.view.closePopup();
+
+    // Restablecer la visibilidad de la capa
+    const layer = this.mapa.layers.find(lyr => lyr.title === 'OFICINAS ZONALES') as __esri.MapImageLayer;
+    if (layer) layer.visible = false;
   }
 
     destroyMap(): void {if (this.view) {this.view.container = null;}}
