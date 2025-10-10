@@ -479,7 +479,7 @@ export class DashboardComponent implements AfterViewInit {
         plugins: {
           title: {
             display: true,
-            text: 'AVANCE: HECTAREAS (CACAO & CAFE)',
+            text: 'AVANCE: HECTÁREAS (CACAO & CAFÉ)',
             font: { size: 18, weight: 'bold' },
             color: '#333',
             padding: { top: 10, bottom: 20 }
@@ -820,7 +820,7 @@ export class DashboardComponent implements AfterViewInit {
         plugins: {
           title: {
             display: true,
-            text: 'OFICINA ZONAL / HECTÁREAS CAFE vs META',
+            text: 'OFICINA ZONAL / HECTÁREAS CAFÉ vs META',
             font: { size: 18, weight: 'bold' },
             color: '#333',
             padding: { top: 10, bottom: 20 },
@@ -1576,7 +1576,7 @@ export class DashboardComponent implements AfterViewInit {
         plugins: {
           title: {
             display: true,
-            text: 'FAMILIAS PARTICIPANTES CAFE',
+            text: 'FAMILIAS PARTICIPANTES CAFÉ',
             font: { size: 18, weight: 'bold' },
             color: '#333',
             padding: { top: 10, bottom: 20 }
@@ -1718,7 +1718,7 @@ export class DashboardComponent implements AfterViewInit {
         plugins: {
           title: {
             display: true,
-            text: 'POLIGONOS DE CACAO',
+            text: 'POLÍGONOS DE CACAO',
             font: { size: 18, weight: 'bold' },
             color: '#333',
             padding: { top: 10, bottom: 20 }
@@ -1858,7 +1858,7 @@ export class DashboardComponent implements AfterViewInit {
         plugins: {
           title: {
             display: true,
-            text: 'POLIGONOS DE CAFE',
+            text: 'POLÍGONOS DE CAFÉ',
             font: { size: 18, weight: 'bold' },
             color: '#333',
             padding: { top: 10, bottom: 20 }
@@ -2066,7 +2066,7 @@ export class DashboardComponent implements AfterViewInit {
    * @method showCafeYCacaoReport
    * @description
    * Inicia la carga de datos y muestra el modal con el reporte de participantes
-   * que tienen cultivos de Café y Cacao.
+   * que tienen cultivos de Cacao y Café.
    * @async
    */
   public async showCafeYCacaoReport(): Promise<void> {
@@ -2087,7 +2087,7 @@ export class DashboardComponent implements AfterViewInit {
   /**
    * @method getCafeYCacaoParticipantsDetails
    * @description
-   * Obtiene la lista detallada de los registros de participantes que tienen tanto cultivos de Café como de Cacao.
+   * Obtiene la lista detallada de los registros de participantes que tienen tanto cultivos de Cacao como de Café.
    * @param {FeatureLayer} layer - La capa de features a consultar.
    * @param {string} whereClause - El filtro WHERE para la consulta (ej. por año).
    * @returns {Promise<any[]>} Una promesa que resuelve a un array con los atributos de los participantes.
