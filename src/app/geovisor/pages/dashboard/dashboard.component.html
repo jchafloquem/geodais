@@ -37,8 +37,8 @@
     <!-- Agrega esto donde quieras que aparezca el selector de año -->
     <div class="flex flex-wrap items-center justify-center gap-4">
       <div id="year-selector-container" class="inline-flex items-center bg-white rounded-lg shadow-sm border border-gray-300 p-1">
-        <label for="year-select" class="px-3 text-sm font-semibold text-gray-600">Seleccionar Año:</label>
-        <select id="year-select" (change)="onYearChange($event)" class="rounded-md border-transparent bg-transparent py-2 pl-2 pr-8 text-sm font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        <label for="year-select" class="px-3 text-lg font-semibold text-gray-600">Seleccionar Año:</label>
+        <select id="year-select" (change)="onYearChange($event)" class="rounded-md border-transparent bg-transparent py-2 pl-2 pr-8 text-lg font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
           <option [value]="0" [selected]="selectedYear === 0">Todos</option>
           <option *ngFor="let year of availableYears" [value]="year" [selected]="year === selectedYear">
             {{ year }}
