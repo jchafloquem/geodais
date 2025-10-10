@@ -536,7 +536,6 @@ export class DashboardComponent implements AfterViewInit {
       'OZ IQUITOS': '#CAFEDA',
     };
     const backgroundColors = labels.map(org => colorMap[org] || '#cccccc');
-    const borderColors = backgroundColors.map(c => c);
     const ctx = document.getElementById('graficoMetaOZ') as HTMLCanvasElement;
     if (!ctx) return;
 
@@ -549,8 +548,8 @@ export class DashboardComponent implements AfterViewInit {
             label: 'Área cultivada (ha)',
             data: values,
             backgroundColor: backgroundColors,
-            borderColor: borderColors,
-            borderWidth: 1,
+            borderColor: '#4A5568',
+            borderWidth: 2,
             barThickness: 25,
             maxBarThickness: 50,
           },
@@ -687,8 +686,6 @@ export class DashboardComponent implements AfterViewInit {
       'OZ IQUITOS': '#CAFEDA',
     };
     const backgroundColors = labels.map(org => colorMap[org] || '#cccccc');
-    const borderColors = backgroundColors.map(c => c);
-
     const ctx = document.getElementById('graficoMetaOZCACAO') as HTMLCanvasElement;
     if (!ctx) return;
 
@@ -701,8 +698,8 @@ export class DashboardComponent implements AfterViewInit {
             label: 'Área cultivada de CACAO (ha)',
             data: values,
             backgroundColor: backgroundColors,
-            borderColor: borderColors,
-            borderWidth: 1,
+            borderColor: '#4A5568',
+            borderWidth: 2,
             barThickness: 25,
             maxBarThickness: 50,
             order: 1,
@@ -859,8 +856,6 @@ export class DashboardComponent implements AfterViewInit {
       'OZ IQUITOS': '#CAFEDA',
     };
     const backgroundColors = labels.map(org => colorMap[org] || '#cccccc');
-    const borderColors = backgroundColors.map(c => c);
-
     const ctx = document.getElementById('graficoMetaOZCAFE') as HTMLCanvasElement;
     if (!ctx) return;
 
@@ -873,8 +868,8 @@ export class DashboardComponent implements AfterViewInit {
             label: 'Área cultivada de CAFE (ha)',
             data: values,
             backgroundColor: backgroundColors,
-            borderColor: borderColors,
-            borderWidth: 1,
+            borderColor: '#4A5568',
+            borderWidth: 2,
             barThickness: 25,
             maxBarThickness: 50,
             order: 1,
@@ -1216,8 +1211,6 @@ export class DashboardComponent implements AfterViewInit {
 
     // Asignar colores según el ORG, si no existe usar gris
     const backgroundColors = labels.map(org => colorMap[org] || '#cccccc');
-    const borderColors = backgroundColors.map(c => c);
-
     const ctx = document.getElementById('graficoMetaParticipantes') as HTMLCanvasElement;
     if (!ctx) return;
 
@@ -1230,8 +1223,8 @@ export class DashboardComponent implements AfterViewInit {
             label: 'Participantes únicos (DNI)',
             data: values,
             backgroundColor: backgroundColors,
-            borderColor: borderColors,
-            borderWidth: 1,
+            borderColor: '#4A5568',
+            borderWidth: 2,
             barThickness: 25,
             maxBarThickness: 50,
           },
@@ -1506,8 +1499,6 @@ export class DashboardComponent implements AfterViewInit {
     };
 
     const backgroundColors = labels.map(org => colorMap[org] || '#cccccc');
-    const borderColors = backgroundColors.map(c => c);
-
     const ctx = document.getElementById('graficoCantidadDNIOZCACAO') as HTMLCanvasElement;
     if (!ctx) return;
 
@@ -1520,8 +1511,8 @@ export class DashboardComponent implements AfterViewInit {
             label: 'Participantes unicos con CACAO',
             data: values,
             backgroundColor: backgroundColors,
-            borderColor: borderColors,
-            borderWidth: 1,
+            borderColor: '#4A5568',
+            borderWidth: 2,
             barThickness: 25,
             maxBarThickness: 50,
           },
@@ -1658,8 +1649,6 @@ export class DashboardComponent implements AfterViewInit {
     };
 
     const backgroundColors = labels.map(org => colorMap[org] || '#cccccc');
-    const borderColors = backgroundColors.map(c => c);
-
     const ctx = document.getElementById('graficoCantidadDNIOZCAFE') as HTMLCanvasElement;
     if (!ctx) return;
 
@@ -1672,8 +1661,8 @@ export class DashboardComponent implements AfterViewInit {
             label: 'Participantes únicos con CAFE',
             data: values,
             backgroundColor: backgroundColors,
-            borderColor: borderColors,
-            borderWidth: 1,
+            borderColor: '#4A5568',
+            borderWidth: 2,
             barThickness: 25,
             maxBarThickness: 50,
           },
@@ -1805,8 +1794,6 @@ export class DashboardComponent implements AfterViewInit {
     };
 
     const backgroundColors = labels.map(org => colorMap[org] || '#cccccc');
-    const borderColors = backgroundColors.map(c => c);
-
     const ctx = document.getElementById('graficoCantidadOZCACAO') as HTMLCanvasElement;
     if (!ctx) return;
 
@@ -1819,8 +1806,8 @@ export class DashboardComponent implements AfterViewInit {
             label: 'Cantidad de polígonos de CACAO',
             data: values,
             backgroundColor: backgroundColors,
-            borderColor: borderColors,
-            borderWidth: 1,
+            borderColor: '#4A5568',
+            borderWidth: 2,
             barThickness: 25,
             maxBarThickness: 50,
           },
@@ -1950,8 +1937,6 @@ export class DashboardComponent implements AfterViewInit {
     };
 
     const backgroundColors = labels.map(org => colorMap[org] || '#cccccc');
-    const borderColors = backgroundColors.map(c => c);
-
     const ctx = document.getElementById('graficoCantidadOZCAFE') as HTMLCanvasElement;
     if (!ctx) return;
 
@@ -1964,8 +1949,8 @@ export class DashboardComponent implements AfterViewInit {
             label: 'Cantidad de polígonos de CAFÉ',
             data: values,
             backgroundColor: backgroundColors,
-            borderColor: borderColors,
-            borderWidth: 1,
+            borderColor: '#4A5568',
+            borderWidth: 2,
             barThickness: 25,
             maxBarThickness: 50,
           },
@@ -2081,7 +2066,7 @@ export class DashboardComponent implements AfterViewInit {
               data: values,
               backgroundColor: '#88B268',
               borderColor: '#6A8A50',
-              borderWidth: 1,
+              borderWidth: 2,
             },
           ],
         },
