@@ -11,6 +11,9 @@ import { FooterComponent } from '../../components/footer/footer.component';
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 import localeEsPE from '@angular/common/locales/es-PE';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 // Plugin personalizado para simular un efecto de sombra 3D en las barras.
 const pseudo3DPlugin = {
@@ -2285,5 +2288,67 @@ export class DashboardComponent implements AfterViewInit {
   public closeModal(): void {
     this.isModalVisible = false;
     this.modalData = [];
+  }
+
+  /**
+   * @method exportToExcel
+   * @description
+   * Exporta los datos del modal a un archivo de Excel (.xlsx).
+   */
+  public exportToExcel(): void {
+    if (!this.modalData.length) {
+      return;
+    }
+
+    // Mapea los datos a un formato con cabeceras amigables
+    const dataToExport = this.modalData.map(item => ({
+      'DNI': item.dni_participante,
+      'Nombres': item.nombres,
+      'Código del Plan': item.codigo_plan,
+      'Tipo de Cultivo': item.tipo_cultivo,
+      'Fecha de Levantamiento': new Date(item.fecha_levantamiento).toLocaleDateString('es-PE'),
+      'Oficina Zonal': item.oficina_zonal,
+      'Departamento': item.departamento,
+      'Provincia': item.provincia,
+      'Distrito': item.distrito
+    }));
+
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Participantes');
+
+    const year = this.selectedYear === 0 ? 'Todos' : this.selectedYear;
+    XLSX.writeFile(wb, `reporte_cacao_y_cafe_${year}.xlsx`);
+  }
+
+  /**
+   * @method exportToPDF
+   * @description
+   * Exporta los datos del modal a un archivo PDF.
+   */
+  public exportToPDF(): void {
+    if (!this.modalData.length) {
+      return;
+    }
+
+    const doc = new jsPDF({ orientation: 'landscape' });
+    const head = [['DNI', 'Nombres', 'Plan', 'Cultivo', 'Fecha', 'Oficina', 'Dpto', 'Prov', 'Distrito']];
+    const body = this.modalData.map(item => [
+      item.dni_participante,
+      item.nombres,
+      item.codigo_plan,
+      item.tipo_cultivo,
+      new Date(item.fecha_levantamiento).toLocaleDateString('es-PE'),
+      item.oficina_zonal,
+      item.departamento,
+      item.provincia,
+      item.distrito
+    ]);
+
+    doc.text('Reporte: Participantes en Cacao y Café', 14, 15);
+    autoTable(doc, { head, body, startY: 20, styles: { fontSize: 8 }, headStyles: { fillColor: [22, 160, 133] } });
+
+    const year = this.selectedYear === 0 ? 'Todos' : this.selectedYear;
+    doc.save(`reporte_cacao_y_cafe_${year}.pdf`);
   }
 }
