@@ -93,6 +93,13 @@ export class DashboardComponent implements AfterViewInit {
   /** Almacena las instancias de los gráficos de Chart.js para su posterior destrucción. */
   private charts: Chart[] = [];
 
+  // --- Propiedades para el Modal de Reporte ---
+  /** Controla la visibilidad del modal de reporte. */
+  public isModalVisible = false;
+  /** Almacena los datos para mostrar en la tabla del modal. */
+  public modalData: any[] = [];
+  /** Flag para mostrar el indicador de carga en el modal. */
+  public isModalLoading = false;
   /**
    * @method ngAfterViewInit
    * @description
@@ -2051,5 +2058,91 @@ export class DashboardComponent implements AfterViewInit {
     });
 
     driverObj.drive();
+  }
+
+  // --- Funcionalidad del Modal de Reporte ---
+
+  /**
+   * @method showCafeYCacaoReport
+   * @description
+   * Inicia la carga de datos y muestra el modal con el reporte de participantes
+   * que tienen cultivos de Café y Cacao.
+   * @async
+   */
+  public async showCafeYCacaoReport(): Promise<void> {
+    this.isModalVisible = true;
+    this.isModalLoading = true;
+    try {
+      const layer = new FeatureLayer({ url: this.SERVICIO_PIRDAIS });
+      const yearFilter = this.selectedYear === 0 ? '1=1' : `EXTRACT(YEAR FROM fecha_levantamiento) = ${this.selectedYear}`;
+      this.modalData = await this.getCafeYCacaoParticipantsDetails(layer, yearFilter);
+    } catch (error) {
+      console.error("Error generando el reporte de participantes en ambos cultivos:", error);
+      // Opcional: Mostrar un toast o mensaje de error al usuario.
+    } finally {
+      this.isModalLoading = false;
+    }
+  }
+
+  /**
+   * @method getCafeYCacaoParticipantsDetails
+   * @description
+   * Obtiene la lista detallada de los registros de participantes que tienen tanto cultivos de Café como de Cacao.
+   * @param {FeatureLayer} layer - La capa de features a consultar.
+   * @param {string} whereClause - El filtro WHERE para la consulta (ej. por año).
+   * @returns {Promise<any[]>} Una promesa que resuelve a un array con los atributos de los participantes.
+   * @private
+   * @async
+   */
+  private async getCafeYCacaoParticipantsDetails(layer: FeatureLayer, whereClause: string): Promise<any[]> {
+    // Paso 1: Obtener los DNIs de los participantes en ambos cultivos (lógica similar a contarRegistrosUnicosPorDNI)
+    const pageSize = 2000;
+    const dnisPorCultivo: Record<string, Set<string>> = { cafe: new Set<string>(), cacao: new Set<string>() };
+    const total = await layer.queryFeatureCount({ where: whereClause });
+    let fetched = 0;
+
+    while (fetched < total) {
+      const result = await layer.queryFeatures({
+        where: whereClause,
+        outFields: ['dni_participante', 'tipo_cultivo'],
+        returnGeometry: false,
+        start: fetched,
+        num: pageSize,
+      });
+
+      result.features.forEach((f) => {
+        const dni = f.attributes['dni_participante'];
+        if (!dni) return;
+        const cultivoRaw = (f.attributes['tipo_cultivo'] || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+        if (cultivoRaw.includes('cafe')) dnisPorCultivo['cafe'].add(dni);
+        if (cultivoRaw.includes('cacao')) dnisPorCultivo['cacao'].add(dni);
+      });
+      fetched += result.features.length;
+    }
+
+    const dnisEnAmbos = [...dnisPorCultivo['cafe']].filter((dni) => dnisPorCultivo['cacao'].has(dni));
+
+    if (dnisEnAmbos.length === 0) {
+      return []; // No hay participantes en ambos, devolvemos un array vacío.
+    }
+
+    // Paso 2: Consultar los detalles completos de esos DNI
+    const dniListString = dnisEnAmbos.map(dni => `'${dni}'`).join(',');
+    const finalWhereClause = `${whereClause} AND dni_participante IN (${dniListString})`;
+
+    const query = layer.createQuery();
+    query.where = finalWhereClause;
+    query.outFields = ['dni_participante', 'nombres', 'codigo_plan', 'tipo_cultivo', 'fecha_levantamiento', 'oficina_zonal', 'departamento', 'provincia', 'distrito'];
+    query.returnGeometry = false;
+    query.orderByFields = ["nombres ASC", "tipo_cultivo ASC"];
+
+    const detailedResult = await layer.queryFeatures(query);
+    return detailedResult.features.map(f => f.attributes);
+  }
+
+  /** Cierra el modal de reporte y limpia sus datos. */
+  public closeModal(): void {
+    this.isModalVisible = false;
+    this.modalData = [];
   }
 }
