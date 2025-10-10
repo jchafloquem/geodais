@@ -359,7 +359,7 @@ export class DashboardComponent implements AfterViewInit {
                 return 'N/A';
               }
               const porcentaje = (value as number / meta) * 100;
-              return `${porcentaje.toLocaleString('es-PE', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%`;
+              return `${porcentaje.toLocaleString('es-PE', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}%`;
             }
           }
         }
@@ -940,7 +940,7 @@ export class DashboardComponent implements AfterViewInit {
                 return 'N/A';
               }
               const porcentaje = (value as number / meta) * 100;
-              return `${porcentaje.toLocaleString('es-PE', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%`;
+              return `${porcentaje.toLocaleString('es-PE', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}%`;
             }
           }
         }
