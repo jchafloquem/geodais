@@ -779,7 +779,7 @@ export class GeovisorSharedService {
     {
       type: 'feature',
       title: 'POLIGONOS DE CULTIVO',
-      url: this.restApiDevida,
+      url: 'https://siscod.devida.gob.pe/server/rest/services/LIMITES_CULTIVOS/MapServer',
       visible: true,
       opacity: 1,
       minScale: 0,
@@ -1156,7 +1156,7 @@ export class GeovisorSharedService {
     const buscaCapasDEVIDA = [
       {
         layer: new FeatureLayer({
-          url: `${this.restApiDevida}/0`,
+          url: `https://siscod.devida.gob.pe/server/rest/services/LIMITES_CULTIVOS/MapServer/0`,
         }),
         searchFields: ['dni_participante', 'nombres'],
         displayField: 'nombres',
