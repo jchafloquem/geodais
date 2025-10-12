@@ -1540,7 +1540,7 @@ export class GeovisorSharedService {
     }
     return this.view.when();
   }
-  
+
 
   public goToCoordinates(lat: number, lon: number): void {
     if (!this.view) {
@@ -2572,7 +2572,7 @@ export class GeovisorSharedService {
       try {
         console.log("📡 Cargando capa PIRDAIS...");
         const capaDevida = new FeatureLayer({
-          url: "https://siscod.devida.gob.pe/server/rest/services/DPM_LIMITES_PIRDAIS/MapServer/0"
+          url: "https://siscod.devida.gob.pe/server/rest/services/DPM_PIRDAIS_CULTIVOS_PRODUCCION/MapServer/1"
         });
         await capaDevida.load();
 
@@ -2760,7 +2760,7 @@ export class GeovisorSharedService {
       if (selectElCultivo) selectElCultivo.innerHTML = '';
 
       const capasExcluir = [
-        'DISTRITO',
+        'DISTRITOS',
         'PROVINCIA',
         'DEPARTAMENTO',
         'PERU',

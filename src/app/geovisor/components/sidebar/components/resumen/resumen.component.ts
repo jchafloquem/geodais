@@ -51,7 +51,7 @@ registerLocaleData(localeEsPE, 'es-PE');
   providers: [{ provide: LOCALE_ID, useValue: 'es-PE' }],
 })
 export class ResumenComponent implements AfterViewInit {
-  private readonly SERVICIO_PIRDAIS = 'https://siscod.devida.gob.pe/server/rest/services/DPM_LIMITES_PIRDAIS/MapServer/0';
+  private readonly SERVICIO_PIRDAIS = 'https://siscod.devida.gob.pe/server/rest/services/DPM_PIRDAIS_CULTIVOS_PRODUCCION/MapServer/1';
   public totalRegistrosCultivos = 0;
   public totalCafe = 0;
   public totalCacao = 0;
