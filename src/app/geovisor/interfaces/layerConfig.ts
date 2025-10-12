@@ -1,7 +1,7 @@
 export interface LayerConfig {
   type: 'feature' | 'map-image' | 'webtile';
   url: string;
-  title: string;
+  title?: string;
   group: string;
   visible?: boolean;
   opacity?: number;
