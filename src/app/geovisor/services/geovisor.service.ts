@@ -993,7 +993,6 @@ export class GeovisorSharedService {
               },
             } as any,
           }),
-          popupTemplate: popupLimitesOficinaZonal,
         },
       ],
     },
@@ -1013,7 +1012,6 @@ export class GeovisorSharedService {
           labelsVisible: true,
           minScale: 0,
           maxScale: 0,
-          popupTemplate: popupLimitesOficinaZonal,
         },
       ],
     },
@@ -1352,7 +1350,7 @@ export class GeovisorSharedService {
         });
         buttonEl.onclick = async () => {
           try {
-            await this.analizarSuperposicion();
+            await this.analizarSuperposicionSERFOR();
           } catch (err) {
             console.error('Error en el análisis:', err);
           }
@@ -2249,7 +2247,7 @@ export class GeovisorSharedService {
       });
     }
     //Funcion que analiza la superposicion de una capa con la capa BPP(SERFOR)
-    async analizarSuperposicion(): Promise<void> {
+    async analizarSuperposicionSERFOR(): Promise<void> {
       if (!this.view || !this.mapa) return;
       this.highlightLayer.removeAll();
 
