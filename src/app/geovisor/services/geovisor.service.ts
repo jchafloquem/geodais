@@ -1155,7 +1155,7 @@ export class GeovisorSharedService {
     const buscaCapasDEVIDA = [
       {
         layer: new FeatureLayer({
-          url: `https://siscod.devida.gob.pe/server/rest/services/LIMITES_CULTIVOS/MapServer/0`,
+          url: `https://siscod.devida.gob.pe/server/rest/services/DPM_PIRDAIS_CULTIVOS_PRODUCCION/MapServer/1`,
         }),
         searchFields: ['dni_participante', 'nombres'],
         displayField: 'nombres',
@@ -1192,7 +1192,7 @@ export class GeovisorSharedService {
         exactMatch: false,
         outFields: ['*'],
         name: 'OFICINA ZONAL',
-        placeholder: 'Nombre OZ',
+        placeholder: 'Nombre',
         maxResults: 5,
         maxSuggestions: 5,
         suggestionsEnabled: true,
@@ -1540,7 +1540,7 @@ export class GeovisorSharedService {
     }
     return this.view.when();
   }
-  //FIN <InitializeMap>
+  
 
   public goToCoordinates(lat: number, lon: number): void {
     if (!this.view) {
