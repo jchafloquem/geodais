@@ -820,7 +820,7 @@ export class GeovisorSharedService {
   public layers: LayerConfig[] = [
     {
       type: 'map-image',
-      //title: 'POLIGONOS DE CULTIVO',
+      title: 'POLIGONOS DE CULTIVO',
       url: `${this.restSISCOD}`,
       visible: true,
       opacity: 0.8,
@@ -842,7 +842,7 @@ export class GeovisorSharedService {
     },
     {
       type: 'map-image',
-      //title: 'ANP - AREAS NATURALES PROTEGIDAS',
+      title: 'ANP - AREAS NATURALES PROTEGIDAS',
       url: `https://geo.serfor.gob.pe/geoservicios/rest/services/Visor/OCAPAS_SERNANP/MapServer`,
       visible: false,
       opacity: 0.5,
@@ -860,7 +860,7 @@ export class GeovisorSharedService {
     },
     {
       type: 'map-image',
-      //title: 'MONITOREO DEFORESTACION',
+      title: 'MONITOREO DEFORESTACION',
       url: `https://geo.serfor.gob.pe/geoservicios/rest/services/Visor/Monitoreo_Deforestacion_Tala/MapServer`,
       visible: false,
       opacity: 0.5,
@@ -879,7 +879,7 @@ export class GeovisorSharedService {
     },
     {
       type: 'map-image',
-      //title: 'COMUNIDADES NATIVAS',
+      title: 'COMUNIDADES NATIVAS',
       url: `https://geo.serfor.gob.pe/geoservicios/rest/services/Visor/OCAPAS_SERNANP/MapServer`,
       visible: false,
       opacity: 0.5,
@@ -898,7 +898,7 @@ export class GeovisorSharedService {
     },
     {
       type: 'map-image',
-      //title: 'ZA-ZONAS DE AMORTIGUAMIENTO',
+      title: 'ZA-ZONAS DE AMORTIGUAMIENTO',
       url: `https://geo.serfor.gob.pe/geoservicios/rest/services/Visor/OCAPAS_SERNANP/MapServer`,
       visible: false,
       opacity: 0.5,
@@ -917,7 +917,7 @@ export class GeovisorSharedService {
     },
     {
       type: 'map-image',
-      //title: 'ACR-AREAS DE CONSERVACION REGIONAL',
+      title: 'ACR-AREAS DE CONSERVACION REGIONAL',
       url: `https://geo.serfor.gob.pe/geoservicios/rest/services/Visor/OCAPAS_SERNANP/MapServer`,
       visible: false,
       opacity: 0.5,
@@ -936,7 +936,7 @@ export class GeovisorSharedService {
     },
     {
       type: 'map-image',
-      //title: 'BPP-BOSQUE DE PRODUCCION PERMANENTE',
+      title: 'BPP-BOSQUE DE PRODUCCION PERMANENTE',
       url: `https://geo.serfor.gob.pe/geoservicios/rest/services/Visor/Ordenamiento_Forestal/MapServer`,
       visible: true,
       opacity: 0.5,
@@ -955,7 +955,7 @@ export class GeovisorSharedService {
     },
     {
       type: 'map-image',
-      //title: 'OFICINAS ZONALES',
+      title: 'OFICINAS ZONALES',
       url: this.restSISCOD,
       visible: false, // Establecer la visibilidad por defecto en false
       opacity: 1,
@@ -975,7 +975,7 @@ export class GeovisorSharedService {
     //(Limites Politicos)
     {
       type: 'map-image',
-      //title: 'DISTRITOS',
+      title: 'DISTRITOS',
       url: this.restSISCOD,
       visible: true,
       opacity: 0.9,
@@ -994,7 +994,7 @@ export class GeovisorSharedService {
     },
     {
       type: 'map-image',
-      //title: 'PROVINCIA',
+      title: 'PROVINCIA',
       url: this.restSISCOD,
       visible: true,
       opacity: 0.9,
@@ -1013,7 +1013,7 @@ export class GeovisorSharedService {
     },
     {
       type: 'map-image',
-      //title: 'DEPARTAMENTO',
+      title: 'DEPARTAMENTO',
       url: this.restSISCOD,
       visible: true,
       opacity: 0.9,
@@ -1042,7 +1042,7 @@ export class GeovisorSharedService {
     },
     {
       type: 'map-image',
-      //title: 'PERU',
+      title: 'PERU',
       url: this.restSISCOD,
       visible: true,
       opacity: 0.9,
@@ -1061,7 +1061,7 @@ export class GeovisorSharedService {
     },
     {
       type: 'feature',
-      //title: 'VISITAS DE MONITOREO',
+      title: 'VISITAS DE MONITOREO',
       url: `${this.restCaribSurvey.serviceBase}/${this.restCaribSurvey.capas.recopilacion}`,
       labelingInfo: [],
       popupTemplate: restCaribRecopilacion,
