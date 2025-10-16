@@ -3,27 +3,30 @@ import { ElementRef, Injectable } from '@angular/core';
 //Libreria actual de ArcGIS 4.33
 import '@arcgis/map-components/components/arcgis-search';
 import { LayerConfig } from '../interfaces/layerConfig';
-import * as geometryEngineAsync from '@arcgis/core/geometry/geometryEngineAsync';
-import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
-import CoordinateConversion from '@arcgis/core/widgets/CoordinateConversion.js';
-import CSVLayer from '@arcgis/core/layers/CSVLayer';
-import Expand from '@arcgis/core/widgets/Expand.js';
-import FeatureLayer from '@arcgis/core/layers/FeatureLayer.js';
-import GeoJSONLayer from '@arcgis/core/layers/GeoJSONLayer';
-import Graphic from '@arcgis/core/Graphic';
-import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
-import Legend from '@arcgis/core/widgets/Legend';
-import EsriMap from '@arcgis/core/Map';
-import MapImageLayer from '@arcgis/core/layers/MapImageLayer';
-import MapView from '@arcgis/core/views/MapView.js';
-import PopupTemplate from '@arcgis/core/PopupTemplate.js';
 import proj4 from 'proj4';
-import StatisticDefinition from '@arcgis/core/rest/support/StatisticDefinition.js';
-import SimpleMarkerSymbol from '@arcgis/core/symbols/SimpleMarkerSymbol';
-import SimpleRenderer from '@arcgis/core/renderers/SimpleRenderer';
-import UniqueValueRenderer from '@arcgis/core/renderers/UniqueValueRenderer';
-import WebTileLayer from '@arcgis/core/layers/WebTileLayer';
-import Zoom from '@arcgis/core/widgets/Zoom.js';
+
+import {
+  EsriMap,
+  Graphic,
+  PopupTemplate,
+  reactiveUtils,
+  geometryEngineAsync,
+  MapView,
+  CSVLayer,
+  FeatureLayer,
+  GeoJSONLayer,
+  GraphicsLayer,
+  MapImageLayer,
+  WebTileLayer,
+  SimpleRenderer,
+  UniqueValueRenderer,
+  SimpleMarkerSymbol,
+  CoordinateConversion,
+  Expand,
+  Legend,
+  Zoom,
+  StatisticDefinition
+} from './arcgis-imports';
 
 // Popup & Clusters
 const popupPoligonoCultivo = new PopupTemplate({
@@ -470,8 +473,6 @@ const restCaribRecopilacion = new PopupTemplate({
     },
   ],
 });
-
-// Renderer para la capa de polígonos de cultivo basado en el campo 'tipo_cultivo'
 const cultivosRenderer = new UniqueValueRenderer({
   field: 'tipo_cultivo',
   // Símbolo por defecto para cualquier cultivo que no sea Cacao o Café
