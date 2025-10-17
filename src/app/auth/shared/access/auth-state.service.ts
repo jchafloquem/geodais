@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Auth, authState, signOut, User } from '@angular/fire/auth';
 import { Observable, map } from 'rxjs';
-import { Usuario } from '../../interface/usuario';
+import { Usuario } from '../../interfaces/usuario';
 import { GeovisorSharedService } from '../../../geovisor/services/geovisor.service';
 
 

@@ -6,7 +6,7 @@ import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { FabContainerTopComponent } from '../../components/fab-container-top/fab-container-top.component';
 import { InfoCoordenadasComponent } from '../../components/info-coordenadas/info-coordenadas.component';
-import { Usuario } from '../../../auth/interface/usuario';
+import { Usuario } from '../../../auth/interfaces/usuario';
 import { AuthStateService } from '../../../auth/shared/access/auth-state.service';
 
 

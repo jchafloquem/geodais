@@ -2,7 +2,7 @@ import "driver.js/dist/driver.css";
 import { CommonModule, registerLocaleData } from '@angular/common';
 import { Component, AfterViewInit, LOCALE_ID } from '@angular/core';
 import { driver } from "driver.js";
-import { FooterComponent } from '../../components/footer/footer.component';
+import { FooterComponent } from './components/footer/footer.component';
 import { NavbarmenuComponent } from './components/navbar/navbarmenu.component';
 import { RouterModule } from '@angular/router';
 import { SidemenuComponent } from './components/sidebar/sidemenu.component';
