@@ -1,7 +1,6 @@
 <div class="h-screen w-full bg-slate-100 antialiased selection:bg-blue-600 selection:text-white">
   <!-- Navbar: Se asume que tiene una altura de h-16 (4rem) y es fixed -->
   <app-navbarmenu (menuToggle)="isMenuOpen = !isMenuOpen"></app-navbarmenu>
-
   <div class="flex h-full pt-16">
     <!-- 📚 Menú Lateral (Sidebar) -->
     <!-- En móvil es un overlay que se desliza. En desktop es estático. -->
@@ -11,13 +10,10 @@
       [class.translate-x-0]="isMenuOpen"
       [class.-translate-x-full]="!isMenuOpen && !isDesktop">
     </app-sidemenu>
-
     <!-- Fondo oscuro para el overlay en móvil -->
     <div *ngIf="isMenuOpen && !isDesktop" (click)="isMenuOpen = false" class="fixed inset-0 z-20 bg-black/50 md:hidden"></div>
-
     <!-- 📊 Contenido Principal -->
     <main class="flex-1 min-w-0 p-4 sm:p-6 overflow-y-auto space-y-6">
-
     <h1 id="dashboard-title" class="text-base sm:text-lg md:text-xl font-semibold text-white bg-[#0DA642] px-3 py-2 rounded-lg shadow-md text-center">
       <ng-container [ngSwitch]="selectedYear">
         <ng-container *ngSwitchCase="0">
@@ -70,7 +66,7 @@
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 text-white">
         <!-- Meta Total -->
         <div
-          class="flex items-center justify-between rounded-2xl bg-gray-800 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
+          class="flex items-start justify-between rounded-2xl bg-gray-800 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
           <div>
             <p class="text-base sm:text-lg font-medium leading-6 text-white">META</p>
             <p class="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight text-green-400">{{ currentMetaHectareas | number :
@@ -81,7 +77,7 @@
         </div>
         <!-- Hectáreas Total en Cultivos -->
         <div
-          class="flex items-center justify-between rounded-2xl bg-gray-900 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
+          class="flex items-start justify-between rounded-2xl bg-gray-900 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
           <div>
             <p class="text-base sm:text-lg font-medium leading-6">AVANCE CACAO & CAFÉ</p>
             <p class="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight text-green-400">{{ totalAreaCultivo | number : "1.0-0"
@@ -92,7 +88,7 @@
         </div>
         <!-- Hectáreas de Cacao -->
         <div
-          class="flex items-center justify-between rounded-2xl bg-gray-900 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
+          class="flex items-start justify-between rounded-2xl bg-gray-900 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
           <div>
             <p class="text-base sm:text-lg font-medium leading-6">AVANCE CACAO</p>
             <p class="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight text-green-400">{{ totalAreaCacao | number : "1.0-0"
@@ -103,7 +99,7 @@
         </div>
         <!-- Hectáreas de Café -->
         <div
-          class="flex items-center justify-between rounded-2xl bg-gray-900 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
+          class="flex items-start justify-between rounded-2xl bg-gray-900 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
           <div>
             <p class="text-base sm:text-lg font-medium leading-6">AVANCE CAFÉ</p>
             <p class="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight text-green-400">{{ totalAreaCafe | number : "1.0-0"
@@ -144,7 +140,7 @@
       </h2>
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5 text-white">
         <div
-          class="flex items-center justify-between rounded-2xl bg-gray-900 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
+          class="flex items-start justify-between rounded-2xl bg-gray-900 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
           <div>
             <p class="text-base sm:text-lg font-medium leading-6 text-white">META</p>
             <p class="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight text-green-400">{{ currentMetaFamilias | number :
@@ -154,7 +150,7 @@
             class="w-16 h-16 opacity-80 rounded-full drop-shadow-[0_0_10px_white] flex-shrink-0">
         </div>
         <div
-          class="flex items-center justify-between rounded-2xl bg-gray-900 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
+          class="flex items-start justify-between rounded-2xl bg-gray-900 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
           <div>
             <p class="text-base sm:text-lg font-medium leading-6">AVANCE</p>
             <p class="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight text-green-400">{{ totalRegistrosUnicosDNI["total"] |
@@ -164,7 +160,7 @@
             class="w-16 h-16 opacity-80 rounded-full drop-shadow-[0_0_10px_white] flex-shrink-0">
         </div>
         <div
-          class="flex items-center justify-between rounded-2xl bg-gray-900 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
+          class="flex items-start justify-between rounded-2xl bg-gray-900 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
           <div>
             <p class="text-base sm:text-lg font-medium leading-6">AVANCE CACAO</p>
             <p class="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight text-green-400">{{ totalRegistrosUnicosDNI["cacao"] |
@@ -174,7 +170,7 @@
             class="w-16 h-16 opacity-80 rounded-full drop-shadow-[0_0_10px_white] flex-shrink-0">
         </div>
         <div
-          class="flex items-center justify-between rounded-2xl bg-gray-900 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
+          class="flex items-start justify-between rounded-2xl bg-gray-900 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
           <div>
             <p class="text-base sm:text-lg font-medium leading-6">AVANCE CAFÉ</p>
             <p class="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight text-green-400">{{ totalRegistrosUnicosDNI["cafe"] |
@@ -225,7 +221,7 @@
       </h2>
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 text-white">
         <div
-          class="flex items-center justify-between rounded-2xl bg-gray-900 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
+          class="flex items-start justify-between rounded-2xl bg-gray-900 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
           <div>
             <p class="text-base sm:text-lg font-medium leading-6 text-white">AVANCE</p>
             <p class="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight text-green-400">{{ totalRegistrosCultivos | number :
@@ -243,7 +239,7 @@
           </p>
         </div> -->
         <div
-          class="flex items-center justify-between rounded-2xl bg-gray-900 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
+          class="flex items-start justify-between rounded-2xl bg-gray-900 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
           <div>
             <p class="text-base sm:text-lg font-medium leading-6">AVANCE CACAO</p>
             <p class="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight text-green-400">{{ totalCacao | number : "1.0-0"}}</p>
@@ -252,7 +248,7 @@
             class="w-16 h-16 opacity-80 rounded-full drop-shadow-[0_0_10px_white] flex-shrink-0">
         </div>
         <div
-          class="flex items-center justify-between rounded-2xl bg-gray-900 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
+          class="flex items-start justify-between rounded-2xl bg-gray-900 p-4 sm:p-6 shadow ring-1 ring-white/10 cursor-pointer">
           <div>
             <p class="text-base sm:text-lg font-medium leading-6">AVANCE CAFÉ</p>
             <p class="mt-2 text-3xl sm:text-4xl font-semibold tracking-tight text-green-400">{{ totalCafe | number : "1.0-0"}}</p>
@@ -287,7 +283,6 @@
     <br>
     <br>
     <app-footer/>
-
     <!-- Modal para el Reporte de Participantes en Ambos Cultivos -->
     <div *ngIf="isModalVisible" class="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center p-4" (click)="closeModal()">
       <div class="bg-white rounded-lg shadow-2xl w-full max-w-6xl max-h-[90vh] flex flex-col" (click)="$event.stopPropagation()">
@@ -296,7 +291,6 @@
           <h3 class="text-xl font-bold text-gray-800">Reporte: Participantes en Cacao y Café</h3>
           <button (click)="closeModal()" class="text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
         </div>
-
         <!-- Contenido del Modal -->
         <div class="p-6 overflow-auto">
           <!-- Estado de Carga -->
@@ -304,7 +298,6 @@
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             <p class="mt-4 text-gray-600">Cargando reporte...</p>
           </div>
-
           <!-- Tabla de Datos -->
           <div *ngIf="!isModalLoading && modalData.length > 0" class="overflow-x-auto border border-gray-200 rounded-lg">
             <table class="min-w-full border-collapse">
@@ -336,13 +329,11 @@
               </tbody>
             </table>
           </div>
-
           <!-- Sin Datos -->
           <div *ngIf="!isModalLoading && modalData.length === 0" class="text-center text-gray-500 py-16">
             <p>No se encontraron participantes en ambos cultivos para el período seleccionado.</p>
           </div>
         </div>
-
         <!-- Pie del Modal con botones de exportación -->
         <div class="flex justify-end items-center p-4 border-t bg-gray-50 rounded-b-lg">
           <button (click)="exportToExcel()" [disabled]="isModalLoading || modalData.length === 0"
@@ -364,10 +355,9 @@
     </div>
     </main>
   </div>
-
   <!-- Botón Flotante de WhatsApp -->
-  <button (click)="shareDashboardViaWhatsApp()" title="Compartir en WhatsApp" class="fixed bottom-30 right-3 md:bottom-8 md:right-8 z-40 flex h-14 w-14 md:h-16 md:w-16 items-center justify-center rounded-full bg-green-500 text-white shadow-2xl transition-all duration-300 hover:bg-green-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 md:h-8 md:w-8" fill="currentColor" viewBox="0 0 16 16">
+  <button (click)="shareDashboardViaWhatsApp()" title="Compartir en WhatsApp" class="fixed bottom-14 right-1 md:bottom-14 md:right-2 z-40 flex h-12 w-12 md:h-16 md:w-16 items-center justify-center rounded-full bg-green-500 text-white shadow-2xl transition-all duration-300 hover:bg-green-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 md:h-8 md:w-8" fill="currentColor" viewBox="0 0 16 16">
       <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.89 7.89 0 0 0 13.6 2.326zM7.994 14.521a6.57 6.57 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.1-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232"/>
     </svg>
   </button>
