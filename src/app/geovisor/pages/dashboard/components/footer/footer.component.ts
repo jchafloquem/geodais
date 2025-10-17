@@ -1,16 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core'; // 1. Importa 'Input'
 
 @Component({
   selector: 'app-footer',
+  standalone: true,
   imports: [],
   templateUrl: './footer.component.html',
-  styleUrl: './footer.component.scss'
+  styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent {
-  public anioencurso : number;
 
-  constructor() {
-    this.anioencurso = new Date().getFullYear();
-    }
+  @Input() isMenuOpen: boolean = false; // 2. Añade esta línea para recibir la propiedad
+
+  anioencurso: number = new Date().getFullYear();
+
+  constructor() { }
 
 }
