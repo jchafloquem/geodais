@@ -11,7 +11,7 @@ export default [
       {
 				path: 'dashboard',
         title:'Dashboard',
-        canActivate: [publicGuard()],
+        canActivate: [privateGuard()],
 				loadComponent: () => import('./pages/dashboard/dashboard.component').then ( m => m.DashboardComponent),
 			},
       {
@@ -23,13 +23,13 @@ export default [
 			{
 				path: 'repositorio',
         title:'Repositorio',
-        canActivate: [publicGuard()],
+        canActivate: [privateGuard()],
 				loadComponent: () => import('./pages/repositorio/repositorio.component'),
 			},
 			{
 				path: 'metadata',
         title:'Metadata',
-        canActivate: [publicGuard()],
+        canActivate: [privateGuard()],
 				loadComponent: () => import('./pages/metadata/metadata.component'),
 			},
 			{

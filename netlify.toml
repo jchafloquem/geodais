@@ -1,6 +1,0 @@
-# netlify.toml
-
-[[redirects]]
-  from = "/api/*" # Captura cualquier petición que empiece con /api/
-  to = "https://wsautenticacionside.devida.gob.pe/api/:splat" # Reenvía a la API de desarrollo/staging
-  status = 200
