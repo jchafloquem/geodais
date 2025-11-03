@@ -2,5 +2,5 @@
 
 [[redirects]]
   from = "/api/*" # Captura cualquier petición que empiece con /api/
-  to = "https://wsautenticacionside.devida.gob.pe/:splat" # Reenvía a la URL base de la API + lo que fue capturado
+  to = "https://wsautenticacionside.devida.gob.pe/api/:splat" # Reconstruye la ruta /api/ en el destino
   status = 200
