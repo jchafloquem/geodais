@@ -59,6 +59,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
           const tokenParts = authToken.split('.');
           if (tokenParts.length > 1) {
             this.usuario = JSON.parse(atob(tokenParts[1]));
+            // --- INICIO DE CAMBIO: Diagnóstico ---
+            // Imprimimos el contenido real del token en la consola del navegador (F12)
+            // para ver qué propiedades tiene y usar el nombre correcto en el HTML.
+            console.log('Datos decodificados del token:', this.usuario);
+            // --- FIN DE CAMBIO ---
             this.iniciarContadorSesion();
           }
         } catch (error) {
