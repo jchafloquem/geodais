@@ -16,8 +16,6 @@ function checkFile(filePath) {
     lines.forEach((line, i) => {
       // Buscar líneas que tienen solo "%" como selector
       if (/^\s*%\s*\{/.test(line)) {
-        console.log(`⚠️  Selector inválido en ${filePath}:${i + 1}:`);
-        console.log("   " + line.trim());
       }
     });
   }
@@ -35,6 +33,5 @@ function walkDir(dir) {
 }
 
 // Ejecutar
-console.log("🔎 Buscando errores en @keyframes...");
 walkDir(baseDir);
-console.log("✅ Revisión terminada");
+

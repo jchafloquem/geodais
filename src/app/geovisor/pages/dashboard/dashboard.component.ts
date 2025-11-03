@@ -220,7 +220,6 @@ export class DashboardComponent implements AfterViewInit {
         // Carga todos los datos y gráficos del dashboard.
         await this.loadDashboardData();
     } catch (err) {
-        console.error('Error durante la inicialización del dashboard:', err);
     }
   }
 
@@ -316,9 +315,7 @@ export class DashboardComponent implements AfterViewInit {
         this.crearGraficoPorDepartamento(yearFilter);
         this.generarGraficoCultivosPorTipo(dashboardCultivos, yearFilter);
 
-    } catch (err) {
-        console.error(`Error al cargar datos para el año ${this.selectedYear}:`, err);
-    }
+    } catch (err) {}
   }
 
   //Tarjetas sobre la Meta & Avance
@@ -349,7 +346,6 @@ export class DashboardComponent implements AfterViewInit {
       }
       return 0;
     } catch (err) {
-      console.error('❌ Error al calcular suma de área:', err);
       return 0;
     }
   }
@@ -394,7 +390,6 @@ export class DashboardComponent implements AfterViewInit {
 
       return data;
     } catch (err) {
-      console.error('❌ Error al calcular área por cultivo:', err);
       this.totalAreaCafe = 0;
       this.totalAreaCacao = 0;
       return [];
@@ -997,7 +992,6 @@ export class DashboardComponent implements AfterViewInit {
 
       return dnisTotales.size;
     } catch (err) {
-      console.error('❌ Error al contar DNIs únicos:', err);
       return 0;
     }
   }
@@ -1135,7 +1129,6 @@ export class DashboardComponent implements AfterViewInit {
       this.totalRegistrosUnicosDNI = conteoFinal;
       return conteoFinal;
     } catch (err) {
-      console.error('❌ Error al contar registros únicos por DNI por cultivo:', err);
       this.totalRegistrosUnicosDNI = { cafe: 0, cacao: 0, cafe_y_cacao: 0, total: 0 };
       return { cafe: 0, cacao: 0, cafe_y_cacao: 0, total: 0 };
     }
@@ -1331,7 +1324,6 @@ export class DashboardComponent implements AfterViewInit {
     };
 
     return getAllData().catch((err) => {
-      console.error('❌ Error al consultar CAFE y CACAO:', err);
       return { cafe: 0, cacao: 0 };
     });
   }
@@ -1423,7 +1415,7 @@ export class DashboardComponent implements AfterViewInit {
       }));
     };
 
-    getAllCultivoData().catch((err) => console.error('❌ Error al consultar todos los cultivos:', err));
+    getAllCultivoData();
   }
 
   // Grafico de barra por cantidad de familias por Oficina Zonal - Cacao
@@ -2049,7 +2041,6 @@ export class DashboardComponent implements AfterViewInit {
 
       // Valida si se obtuvieron resultados
       if (!result.features || result.features.length === 0) {
-        console.warn(`No se encontraron datos de departamento para el filtro: ${whereClause}.`);
         const context = ctx.getContext('2d');
         if (context) {
             context.clearRect(0, 0, ctx.width, ctx.height);
@@ -2128,7 +2119,6 @@ export class DashboardComponent implements AfterViewInit {
       plugins: [pseudo3DPlugin, ChartDataLabels],
       }));
     } catch (err) {
-      console.error('Error al crear gráfico por departamento:', err);
       const context = ctx.getContext('2d');
       if (context) {
           context.clearRect(0, 0, ctx.width, ctx.height);
@@ -2217,8 +2207,6 @@ export class DashboardComponent implements AfterViewInit {
       const yearFilter = this.selectedYear === 0 ? '1=1' : `EXTRACT(YEAR FROM fecha_levantamiento) = ${this.selectedYear}`;
       this.modalData = await this.getCafeYCacaoParticipantsDetails(layer, yearFilter);
     } catch (error) {
-      console.error("Error generando el reporte de participantes en ambos cultivos:", error);
-      // Opcional: Mostrar un toast o mensaje de error al usuario.
     } finally {
       this.isModalLoading = false;
     }
@@ -2387,7 +2375,6 @@ export class DashboardComponent implements AfterViewInit {
       const addElementToPdf = async (elementId: string) => {
         const element = document.getElementById(elementId);
         if (!element) {
-          console.warn(`Elemento ${elementId} no encontrado para exportar a PDF.`);
           return;
         }
 
@@ -2466,7 +2453,6 @@ export class DashboardComponent implements AfterViewInit {
       doc.save(`reporte_dashboard_${this.selectedYear === 0 ? 'todos' : this.selectedYear}.pdf`);
 
     } catch (error) {
-      console.error('Error al exportar el dashboard a PDF:', error);
       // Aquí podrías añadir una notificación de error para el usuario.
     } finally {
       this.isExportingPDF = false;

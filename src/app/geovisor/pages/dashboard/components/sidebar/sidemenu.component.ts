@@ -32,6 +32,5 @@ export class SidemenuComponent {
 
   toggleMenu() {
     this.menuVisible = !this.menuVisible;
-    console.log('Menu toggled:', this.menuVisible);
   }
 }

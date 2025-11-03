@@ -79,7 +79,6 @@ export class ResumenComponent implements AfterViewInit {
       }
       await this.loadDashboardData();
     } catch (err) {
-      console.error('Error durante la inicialización del resumen:', err);
     }
   }
 
@@ -129,7 +128,6 @@ export class ResumenComponent implements AfterViewInit {
       this.totalRegistrosCultivos = this.totalCafe + this.totalCacao;
       this.crearGraficoPorDepartamento(yearFilter);
     } catch (err) {
-      console.error(`Error al cargar datos para el resumen del año ${this.selectedYear}:`, err);
     }
   }
 
@@ -247,7 +245,6 @@ export class ResumenComponent implements AfterViewInit {
         plugins: [pseudo3DPlugin, ChartDataLabels],
       }));
     } catch (err) {
-      console.error('Error al crear gráfico por departamento en resumen:', err);
     }
   }
 }

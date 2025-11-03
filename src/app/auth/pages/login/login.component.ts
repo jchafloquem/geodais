@@ -68,7 +68,6 @@ export default class LoginComponent {
         toast.error(response.Mensaje || 'Credenciales incorrectas.');
       }
     } catch (error) {
-      console.error('Authentication error:', error);
       toast.error('Error de conexión. No se pudo autenticar.');
     }
   }

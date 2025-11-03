@@ -30,7 +30,6 @@ export class AuthService {
 				);
 				return userCredential;
 			} catch (error) {
-				console.error('Error en el registro:', error);
 				throw error;
 			}
 		}
@@ -45,7 +44,6 @@ export class AuthService {
 				);
 				return userCredential;
 			} catch (error) {
-				console.error('Error al ingreso:', error);
 				throw error;
 			}
 		}
@@ -58,7 +56,6 @@ export class AuthService {
 				const userCredential = await signInWithPopup(this._auth, provider);
 				return userCredential;
 			} catch (error) {
-				console.error('Error en la autenticación con Google:', error);
 				return null;
 			}
 		}

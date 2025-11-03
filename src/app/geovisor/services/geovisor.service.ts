@@ -694,7 +694,7 @@ export class GeovisorSharedService {
           try {
             await this.analizarSuperposicionSERFOR();
           } catch (err) {
-            console.error('Error en el análisis:', err);
+
           }
         };
         const expandAnalisis = new Expand({
@@ -766,7 +766,7 @@ export class GeovisorSharedService {
           try {
             await this.analizarSuperposicionCultivo();
           } catch (err) {
-            console.error('Error en el análisis:', err);
+
           }
         };
         const expandAnalisisCultivo = new Expand({
@@ -878,7 +878,6 @@ export class GeovisorSharedService {
 
   public goToCoordinates(lat: number, lon: number): void {
     if (!this.view) {
-      console.error('La vista del mapa no está inicializada.');
       this.showToast('La vista del mapa no está inicializada.', 'error');
       return;
     }
@@ -947,7 +946,6 @@ export class GeovisorSharedService {
       this.goToCoordinates(lat, lon);
 
     } catch (error) {
-      console.error('Error al convertir coordenadas UTM:', error);
       this.showToast('Error al convertir las coordenadas UTM.', 'error');
     }
   }
@@ -989,7 +987,6 @@ export class GeovisorSharedService {
       return resultado;
 
     } catch (error) {
-      console.error("Error al obtener las oficinas zonales:", error);
       this.showToast("No se pudieron cargar las oficinas zonales.", "error");
       return [];
     }
@@ -1051,7 +1048,6 @@ export class GeovisorSharedService {
         this.showToast(`No se encontró la oficina zonal: ${nombreOficina}`, "info");
       }
     } catch (error) {
-      console.error(`Error al buscar la oficina zonal ${nombreOficina}:`, error);
       this.showToast("Ocurrió un error al buscar la oficina.", "error");
     }
   }
@@ -1145,7 +1141,6 @@ export class GeovisorSharedService {
       };
 
     } catch (error) {
-        console.error(`Error al obtener estadísticas para ${nombreOficina}:`, error);
         this.showToast('Error al calcular las estadísticas de la oficina.', 'error');
         return { totalHectareas: 0, hectareasCacao: 0, hectareasCafe: 0, totalFamilias: 0, familiasCacao: 0, familiasCafe: 0, familiasAmbos: 0 };
     }
@@ -1460,7 +1455,6 @@ export class GeovisorSharedService {
           layer = new GeoJSONLayer({ url: blobUrl, title: file.name, renderer });
           // --- mostrar cantidad de polígonos ---
           if (polygonCount > 0) {
-            //console.log(`📌 Se importaron ${polygonCount} polígonos`);
             await this.showModal(
               `Se importaron ${polygonCount} polígonos.`,
               '✅ Importación exitosa'
@@ -1898,15 +1892,11 @@ export class GeovisorSharedService {
     }
     //Funcion para analizar la superposicion en la capa Cultivo
     async analizarSuperposicionCultivo(): Promise<void> {
-      console.log("🔍 Iniciando analizarSuperposicionCultivo...");
 
       if (!this.view || !this.mapa) {
-        console.log("⛔ No hay view o mapa inicializado.");
         return;
       }
       this.highlightLayer.removeAll();
-      console.log("✅ highlightLayer limpiado.");
-
       // --- Overlay ---
       let overlay = document.getElementById("loading-overlay-cultivo") as HTMLDivElement | null;
       if (!overlay) {
@@ -1946,7 +1936,6 @@ export class GeovisorSharedService {
       let capaBSelTitle = "capa seleccionada";
 
       try {
-        console.log("📡 Cargando capa DAIS...");
         const capaDevida = new FeatureLayer({
           url: "https://siscod.devida.gob.pe/server/rest/services/DPM_PIRDAIS_CULTIVOS_PRODUCCION/MapServer/1"
         });

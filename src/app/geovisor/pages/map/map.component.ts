@@ -39,26 +39,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   // ⚡ Aquí inicializamos el mapa SOLO cuando el DOM ya existe
   ngAfterViewInit(): void {
-    this._geovisorSharedService.initializeMap(this.mapViewEl).then(() => {
-      //console.log('Mapa inicializado correctamente ✅');
-    });
-
-    this._authStateService.authState$.subscribe(user => {
-      if (user) {
-        this.usuario = user;
-        this.sesionInicio = Date.now();
-        this.intervaloSesion = setInterval(() => {
-          const ahora = Date.now();
-          const segundos = Math.floor((ahora - this.sesionInicio) / 1000);
-          const minutos = Math.floor(segundos / 60);
-          const horas = Math.floor(minutos / 60);
-          const h = horas.toString().padStart(2, '0');
-          const m = (minutos % 60).toString().padStart(2, '0');
-          const s = (segundos % 60).toString().padStart(2, '0');
-          this.tiempoSesion = `${h}:${m}:${s}`;
-        }, 1000);
-      }
-    });
+    this._geovisorSharedService.initializeMap(this.mapViewEl);
   }
 
   onFileSelected(event: any) {

@@ -53,7 +53,6 @@ export class FiltrosComponent implements OnInit {
     try {
       this.oficinas = await this._geovisorSharedService.getOficinasZonales();
     } catch (error) {
-      console.error("Error en el componente al cargar oficinas", error);
     } finally {
       this.isLoading = false;
     }
@@ -96,7 +95,6 @@ export class FiltrosComponent implements OnInit {
         ...calculatedStats
       };
     } catch (error) {
-      console.error(`Error al cargar estadísticas para ${oficina}`, error);
       this.stats = null;
     } finally {
       this.isStatsLoading = false;
@@ -188,7 +186,6 @@ export class FiltrosComponent implements OnInit {
         familiasAmbos: familiasAmbos
       };
     } catch (error) {
-      console.error("Error al calcular estadísticas de la oficina:", error);
       return { totalHectareas: 0, hectareasCacao: 0, hectareasCafe: 0, totalFamilias: 0, familiasCacao: 0, familiasCafe: 0, familiasAmbos: 0 };
     }
   }

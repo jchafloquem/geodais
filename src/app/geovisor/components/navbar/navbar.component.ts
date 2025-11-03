@@ -16,9 +16,8 @@ export class NavbarComponent {
 
 	public _geovisorSharedService = inject(GeovisorSharedService);
 
-	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-	async logout() {
+	async logout(): Promise<void> {
 		await this._authState.logout();
-		this._router.navigateByUrl('auth/welcome')
+		this._router.navigateByUrl('auth/welcome');
 	}
 }

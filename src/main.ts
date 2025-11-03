@@ -15,4 +15,4 @@ bootstrapApplication(AppComponent, {
     ...(appConfig.providers || []),
     provideHttpClient(),   // ✅ Agregar HttpClient aquí
   ],
-}).catch((err) => console.error(err));
+})
