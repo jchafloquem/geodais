@@ -1,0 +1,6 @@
+# netlify.toml
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://wsautenticacionside.devida.gob.pe/api/:splat"
+  status = 200
