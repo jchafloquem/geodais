@@ -1,6 +1,11 @@
 export interface Usuario {
-  nombre: string;
-  email: string;
-  foto: string;
-  uid: string;
+	Operacion: number;
+	Autenticado: boolean;
+	Token: string;
+	Mensaje: string;
+	NombreCompleto: string;
+	COD_EMPRESA: string;
+	COD_UNIDAD_EJECUTORA: string;
+	COD_PERSONA: string;
+	ListaSistemas: string;
 }

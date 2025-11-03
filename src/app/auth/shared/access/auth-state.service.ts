@@ -10,6 +10,7 @@ export class AuthStateService {
   async logout(): Promise<void> {
     localStorage.removeItem('authToken');
     localStorage.removeItem('redirectUrl');
+    localStorage.removeItem('userSessionData');
     this._geovisorSharedService.resetMapState();
   }
 }
