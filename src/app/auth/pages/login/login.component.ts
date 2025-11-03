@@ -45,7 +45,7 @@ export default class LoginComponent {
       const { usuario, password } = this.form.value;
       if (!usuario || !password) return;
 
-      const apiUrl = '/api/Seguridad/AutenticarSIGA';
+      const apiUrl = 'api/Seguridad/AutenticarSIGA';
       const body = {
         login: usuario,
         clave: password
