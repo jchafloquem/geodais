@@ -2,9 +2,6 @@
   "/api": {
     "target": "https://wsautenticacionside.devida.gob.pe",
     "secure": false,
-    "changeOrigin": true,
-    "pathRewrite": {
-      "^/api": ""
-    }
+    "changeOrigin": true
   }
 }
