@@ -383,6 +383,14 @@ export class GeovisorSharedService {
   }
 
   initializeMap(mapViewEl: ElementRef): Promise<void> {
+    // --- INICIO DE LA MEJORA ---
+    // Si la vista ya existe, solo re-adjuntamos el contenedor y salimos.
+    // Esto evita la recreación del mapa y la duplicación de widgets.
+    if (this.view) {
+      this.view.container = mapViewEl.nativeElement;
+      return this.view.when(); // Devolvemos la promesa existente.
+    }
+    // --- FIN DE LA MEJORA ---
     this.layers.forEach((layerConfig) => {
       const hasValidLayerId = /\/\d+$/.test(layerConfig.url);
       const isMapImage = /\/MapServer$/.test(layerConfig.url);

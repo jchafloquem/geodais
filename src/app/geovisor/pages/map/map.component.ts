@@ -6,7 +6,6 @@ import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { FabContainerTopComponent } from '../../components/fab-container-top/fab-container-top.component';
 import { InfoCoordenadasComponent } from '../../components/info-coordenadas/info-coordenadas.component';
-import { Usuario } from '../../../auth/interfaces/usuario';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthStateService } from '../../../auth/shared/access/auth-state.service';
 
@@ -31,7 +30,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   private _authStateService = inject(AuthStateService);
   public _geovisorSharedService = inject(GeovisorSharedService);
 
-  public usuario: Usuario | null = null;
+  public usuario: { NombreCompleto: string } | null = null;
   public tiempoSesion = '';
   private sesionInicio!: number;
   private intervaloSesion!: ReturnType<typeof setInterval>;
@@ -41,7 +40,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     const userSessionData = localStorage.getItem('userSessionData');
-    // La única fuente de verdad: leer los datos completos de la sesión del usuario.
+    // Leemos los datos de la sesión del usuario desde localStorage.
     if (userSessionData) {
       try {
         this.usuario = JSON.parse(userSessionData);
@@ -76,8 +75,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
   ngOnDestroy(): void {
-    // Destruye la vista usando el servicio
-    this._geovisorSharedService.destroyMap();
+    // IMPORTANTE: Ya no destruimos el mapa para mejorar el rendimiento al volver a esta página.
+    // El servicio `GeovisorSharedService` debe ser capaz de re-adjuntar la vista del mapa
+    // a su contenedor cuando se vuelva a inicializar el componente.
+    // this._geovisorSharedService.destroyMap();
+
     // Limpia el intervalo de sesión
     clearInterval(this.intervaloSesion);
   }

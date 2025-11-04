@@ -115,17 +115,17 @@ export class ResumenComponent implements AfterViewInit {
     }
     const dashboardCultivos = new FeatureLayer({ url: this.SERVICIO_PIRDAIS });
     try {
-      const [totalArea, cafeCacao, areaPorCultivo, totalDNIResult] = await Promise.all([
+      const [totalArea, poligonosData, areaPorCultivo, totalDNIResult] = await Promise.all([
         this.sumarAreaCultivoTotal(dashboardCultivos, yearFilter),
-        this.contarCafeCacao(dashboardCultivos, yearFilter),
+        this.contarPoligonos(dashboardCultivos, yearFilter),
         this.sumarAreaPorCultivo(dashboardCultivos, yearFilter),
         this.contarRegistrosUnicosPorDNI(dashboardCultivos, yearFilter),
       ]);
       this.totalAreaCultivo = totalArea;
-      this.totalCafe = cafeCacao.cafe;
-      this.totalCacao = cafeCacao.cacao;
+      this.totalCafe = poligonosData.cafe;
+      this.totalCacao = poligonosData.cacao;
+      this.totalRegistrosCultivos = poligonosData.total;
       this.totalRegistrosUnicosDNI = totalDNIResult;
-      this.totalRegistrosCultivos = this.totalCafe + this.totalCacao;
       this.crearGraficoPorDepartamento(yearFilter);
     } catch (err) {
     }
@@ -148,35 +148,81 @@ export class ResumenComponent implements AfterViewInit {
     query.groupByFieldsForStatistics = ['tipo_cultivo'];
     const result = await layer.queryFeatures(query);
     const data = result.features.map(f => ({ cultivo: f.attributes['tipo_cultivo'], total_area: f.attributes['total_area'] }));
-    this.totalAreaCafe = data.find(c => c.cultivo.toLowerCase().includes('cafe'))?.total_area || 0;
-    this.totalAreaCacao = data.find(c => c.cultivo.toLowerCase().includes('cacao'))?.total_area || 0;
+
+    // Reiniciar valores antes de recalcular
+    this.totalAreaCafe = 0;
+    this.totalAreaCacao = 0;
+
+    for (const item of data) {
+      const cultivo = (item.cultivo || '').toUpperCase().trim();
+      if (cultivo === 'CAFE') {
+        this.totalAreaCafe = item.total_area;
+      } else if (cultivo === 'CACAO') {
+        this.totalAreaCacao = item.total_area;
+      }
+    }
+
     return data;
   }
 
-  async contarCafeCacao(layer: FeatureLayer, whereClause: string = '1=1'): Promise<{ cafe: number, cacao: number }> {
-    const queryCafe = layer.createQuery();
-    queryCafe.where = `${whereClause} AND tipo_cultivo = 'CAFE'`;
-    const queryCacao = layer.createQuery();
-    queryCacao.where = `${whereClause} AND tipo_cultivo = 'CACAO'`;
-    const [conteoCafe, conteoCacao] = await Promise.all([layer.queryFeatureCount(queryCafe), layer.queryFeatureCount(queryCacao)]);
-    return { cafe: conteoCafe, cacao: conteoCacao };
+  async contarPoligonos(layer: FeatureLayer, whereClause: string = '1=1'): Promise<{ cafe: number, cacao: number, total: number }> {
+    let conteoCafe = 0;
+    let conteoCacao = 0;
+    const pageSize = 2000;
+    let fetched = 0;
+    const totalPoligonos = await layer.queryFeatureCount({ where: whereClause });
+
+    while (fetched < totalPoligonos) {
+      const query = layer.createQuery();
+      query.where = whereClause;
+      query.outFields = ['tipo_cultivo'];
+      query.returnGeometry = false;
+      query.start = fetched;
+      query.num = pageSize;
+
+      const result = await layer.queryFeatures(query);
+      result.features.forEach(f => {
+        const cultivoRaw = (f.attributes['tipo_cultivo'] || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+        if (cultivoRaw.includes('cafe')) {
+          conteoCafe++;
+        }
+        if (cultivoRaw.includes('cacao')) {
+          conteoCacao++;
+        }
+      });
+      fetched += result.features.length;
+    }
+
+    return { cafe: conteoCafe, cacao: conteoCacao, total: totalPoligonos };
   }
 
   async contarRegistrosUnicosPorDNI(layer: FeatureLayer, whereClause: string = '1=1'): Promise<Record<string, number>> {
     const dnisPorCultivo: Record<string, Set<string>> = { cafe: new Set(), cacao: new Set() };
     const dnisTotales = new Set<string>();
-    const query = layer.createQuery();
-    query.where = whereClause;
-    query.outFields = ['dni_participante', 'tipo_cultivo'];
-    const result = await layer.queryFeatures(query);
-    result.features.forEach(f => {
-      const dni = f.attributes['dni_participante'];
-      if (!dni) return;
-      const cultivoRaw = (f.attributes['tipo_cultivo'] || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
-      if (cultivoRaw.includes('cafe')) dnisPorCultivo['cafe'].add(dni);
-      if (cultivoRaw.includes('cacao')) dnisPorCultivo['cacao'].add(dni);
-      dnisTotales.add(dni);
-    });
+    const pageSize = 2000;
+    let fetched = 0;
+    const total = await layer.queryFeatureCount({ where: whereClause });
+
+    while (fetched < total) {
+      const query = layer.createQuery();
+      query.where = whereClause;
+      query.outFields = ['dni_participante', 'tipo_cultivo'];
+      query.returnGeometry = false;
+      query.start = fetched;
+      query.num = pageSize;
+
+      const result = await layer.queryFeatures(query);
+      result.features.forEach(f => {
+        const dni = f.attributes['dni_participante'];
+        if (!dni) return;
+        const cultivoRaw = (f.attributes['tipo_cultivo'] || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+        if (cultivoRaw.includes('cafe')) dnisPorCultivo['cafe'].add(dni);
+        if (cultivoRaw.includes('cacao')) dnisPorCultivo['cacao'].add(dni);
+        dnisTotales.add(dni);
+      });
+      fetched += result.features.length;
+    }
+
     const cafe_y_cacao = [...dnisPorCultivo['cafe']].filter(dni => dnisPorCultivo['cacao'].has(dni));
     return {
       cafe: dnisPorCultivo['cafe'].size,

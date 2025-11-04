@@ -4,8 +4,8 @@
   class="fixed top-0 flex items-center justify-between w-full bg-primary px-3 h-16 z-10 shadow-lg"
 >
   <!-- Logo izquierdo -->
-  <div class="flex items-center gap-2">
-    <!-- Logo grande -->
+  <div class="flex items-center gap-6">
+    <!-- Logos -->
     <div class="hidden md:block">
       <img
         class="h-14 rounded-md drop-shadow-[0_12px_24px_rgba(255,255,255,1)] transition-all duration-300 ease-in-out hover:scale-110 hover:drop-shadow-[0_20px_32px_rgba(255,255,255,1)]"
@@ -13,13 +13,18 @@
         alt="Logo grande"
       />
     </div>
-    <!-- Logo pequeño -->
     <div class="block md:hidden">
       <img
         class="h-14 rounded-md drop-shadow-[0_12px_24px_rgba(255,255,255,1)] transition-all duration-300 ease-in-out hover:scale-110 hover:drop-shadow-[0_20px_32px_rgba(255,255,255,1)]"
         src="assets/images/logoWelBNMini.png"
         alt="Logo pequeño"
       />
+    </div>
+
+    <!-- Enlaces de Navegación -->
+    <div class="hidden md:flex items-center gap-4 text-base">
+      <a routerLink="/geovisor/map" routerLinkActive="font-bold" class="text-white hover:text-gray-200 transition-colors">Geovisor</a>
+      <a routerLink="/geovisor/dashboard" routerLinkActive="font-bold" class="text-white hover:text-gray-200 transition-colors">Dashboard</a>
     </div>
   </div>
   <!-- Título centrado -->
@@ -75,4 +80,3 @@
     </button>
   </div>
 </div>
-

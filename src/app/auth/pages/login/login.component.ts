@@ -46,9 +46,14 @@ export default class LoginComponent {
       const response = await lastValueFrom(this._http.post<Usuario>(apiUrl, body));
 
       if (response && response.Autenticado) {
-        // Guardar el token para la autenticación y el objeto de sesión completo para los datos del usuario.
+        // Guardar solo el token y la información no sensible del usuario en localStorage.
         localStorage.setItem('authToken', response.Token);
-        localStorage.setItem('userSessionData', JSON.stringify(response));
+
+        // Se crea un objeto solo con los datos necesarios para la UI, evitando exponer datos sensibles.
+        const userSession = {
+          NombreCompleto: response.NombreCompleto,
+        };
+        localStorage.setItem('userSessionData', JSON.stringify(userSession));
 
         toast.success(`Bienvenido, ${response.NombreCompleto}`);
 

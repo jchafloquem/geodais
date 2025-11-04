@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { privateGuard, publicGuard } from './core/auth.guard';
+import { privateGuard, publicGuard } from './auth/guards/auth.guard';
 
 export const routes: Routes = [
 	{
