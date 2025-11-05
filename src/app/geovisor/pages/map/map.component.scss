@@ -5,19 +5,11 @@
 */
 :host {
   display: block;
-  width: 100%;
-  /*
-   * Solución definitiva para el ancho y alto en iOS/Safari.
-   * '100dvh' (dynamic viewport height) se ajusta dinámicamente cuando las barras
-   * del navegador aparecen o desaparecen, a diferencia de '100vh'.
-   * '100vw' (viewport width) asegura que el ancho no se expanda.
-   * '100%' se mantiene como fallback para navegadores más antiguos.
-  */
-  max-width: 100vw;
   height: 100%;
-  height: 100dvh;
-  overflow: hidden;
+  height: 100%;
   position: relative;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .map-container {
