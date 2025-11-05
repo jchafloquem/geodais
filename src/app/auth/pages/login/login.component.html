@@ -1,12 +1,19 @@
 <div class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gray-900">
   <!-- Imagen de fondo con animación -->
-  <div class="absolute inset-0 bg-cover bg-center bg-no-repeat animate-zoom animate-background" style="will-change: transform;"></div>
+  <div class="background-image"
+       [style.backgroundImage]="backgrounds[0].url"
+       [class.fade-out]="backgrounds[0].fade"></div>
+  <div class="background-image"
+       [style.backgroundImage]="backgrounds[1].url"
+       [class.fade-out]="backgrounds[1].fade"></div>
   <!-- Overlay oscuro para mejorar contraste -->
   <div class="absolute inset-0 bg-black bg-opacity-50"></div>
   <!-- Logo en la esquina superior izquierda -->
   <div class="absolute top-4 left-4">
+    <!-- Logo grande para pantallas sm y mayores -->
     <img class="h-16 w-auto hidden sm:block" src="assets/images/logos/logoWelBN.png" alt="DEVIDA" />
-    <img class="h-16 w-auto sm:hidden" src="assets/images/logos/logoWelBNMini.png" alt="DEVIDA" />
+    <!-- Logo mini para pantallas pequeñas (móviles). 'block' es añadido para ser más explícito. -->
+    <img class="h-16 w-auto block sm:hidden" src="assets/images/logos/logoWelBNMini.png" alt="DEVIDA" />
   </div>
   <!-- Contenedor principal -->
   <div class="relative z-10 w-full max-w-4xl mx-auto p-4">

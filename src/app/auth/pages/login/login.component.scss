@@ -2,42 +2,31 @@
   0%, 100% {
     transform: scale(1);
   }
-  75% {
-    transform: scale(2);
-  }
   50% {
-    transform: scale(3);
+    transform: scale(1.4);
   }
-  25% {
-    transform: scale(4);
+  25%, 75% {
+    transform: scale(1.2);
   }
-  0% {
-    transform: scale(5);
-  }
-}
-.animate-zoom {
-  animation: zoomInOut 10s ease-in-out infinite;
 }
 
-@keyframes backgroundChange {
-  0% {
-    background-image: url('/assets/images/wallpapers/wallpaper1.png');
-  }
-  25% {
-    background-image: url('/assets/images/wallpapers/wallpaper2.png');
-  }
-  50% {
-    background-image: url('/assets/images/wallpapers/wallpaper3.png');
-  }
-  75% {
-    background-image: url('/assets/images/wallpapers/wallpaper2.png');
-  }
-  100% {
-    background-image: url('/assets/images/wallpapers/wallpaper1.png');
-  }
+.background-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  animation: zoomInOut 20s ease-in-out infinite;
+  transform-origin: center center;
+  opacity: 1;
+  transition: opacity 1.5s ease-in-out; /* Duración del fundido */
+
+  /* Optimización clave para Safari en iOS */
+  will-change: opacity, transform;
 }
-.animate-background {
-  animation: backgroundChange 10s infinite;
+
+.background-image.fade-out {
+  opacity: 0;
 }
 
 @keyframes columnImageChange {
