@@ -29,9 +29,14 @@ export default class WelcomeComponent implements OnInit, OnDestroy {
     'assets/images/wallpapers/wallpaper2.png' // Se repite para el efecto de ida y vuelta
   ];
 
-  public currentBackgroundImage = '';
+  public backgrounds = [
+    { url: '', fade: false },
+    { url: '', fade: false }
+  ];
+
   private intervalId: any;
   private imageIndex = 0;
+  private activeBgIndex = 0;
 
   constructor() { }
 
@@ -46,14 +51,30 @@ export default class WelcomeComponent implements OnInit, OnDestroy {
   }
 
   private startImageCarousel(): void {
-    this.currentBackgroundImage = `url('${this.backgroundImages[this.imageIndex]}')`;
+    // Configuración inicial: la primera imagen en el primer div, el segundo div está oculto.
+    this.backgrounds[0].url = `url('${this.backgroundImages[this.imageIndex]}')`;
+    this.backgrounds[1].url = '';
+    this.backgrounds[0].fade = false; // Visible
+    this.backgrounds[1].fade = true;  // Oculto
+    this.activeBgIndex = 0;
 
     // Duración basada en la animación original de 35s con 4 pasos (0, 25, 50, 75)
     const intervalDuration = 35000 / 4; // 8750ms por imagen
 
     this.intervalId = setInterval(() => {
+      // Avanza a la siguiente imagen
       this.imageIndex = (this.imageIndex + 1) % this.backgroundImages.length;
-      this.currentBackgroundImage = `url('${this.backgroundImages[this.imageIndex]}')`;
+      // Elige el div que está actualmente oculto para poner la nueva imagen
+      const nextBgIndex = (this.activeBgIndex + 1) % 2;
+
+      this.backgrounds[nextBgIndex].url = `url('${this.backgroundImages[this.imageIndex]}')`;
+
+      // Inicia la transición: oculta el div activo y muestra el siguiente
+      this.backgrounds[this.activeBgIndex].fade = true;
+      this.backgrounds[nextBgIndex].fade = false;
+
+      // El div que acabamos de mostrar es ahora el activo
+      this.activeBgIndex = nextBgIndex;
     }, intervalDuration);
   }
 

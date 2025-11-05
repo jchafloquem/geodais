@@ -4,14 +4,25 @@
   50% { transform: scale(1.4); }
 }
 
-.animate-zoom {
+/*
+ * Estilos para los contenedores de las imágenes de fondo.
+ * Ambos tendrán la misma animación de zoom y una transición de opacidad
+ * para el efecto de fundido.
+ */
+.background-image {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   animation: zoomInOut 20s ease-in-out infinite;
   transform-origin: center center;
+  opacity: 1;
+  transition: opacity 1.5s ease-in-out; // Duración del fundido
 }
 
-
-.animate-background {
-  animation: backgroundChange 35s ease-in-out infinite;
+.background-image.fade-out {
+  opacity: 0;
 }
 /*
  * Define la animación de rotación antihoraria.

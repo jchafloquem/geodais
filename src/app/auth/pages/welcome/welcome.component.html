@@ -1,6 +1,15 @@
 <div class="relative min-h-screen flex items-center justify-center overflow-hidden bg-gray-900">
   <!-- Imagen de fondo con animación -->
-  <div class="absolute inset-0 bg-cover bg-center bg-no-repeat animate-zoom" [style.backgroundImage]="currentBackgroundImage"></div>
+  <!--
+    Usamos dos divs para el fondo para poder crear un efecto de fundido (cross-fade).
+    Mientras uno se desvanece (fade-out), el otro aparece.
+  -->
+  <div class="background-image"
+       [style.backgroundImage]="backgrounds[0].url"
+       [class.fade-out]="backgrounds[0].fade"></div>
+  <div class="background-image"
+       [style.backgroundImage]="backgrounds[1].url"
+       [class.fade-out]="backgrounds[1].fade"></div>
   <!-- Overlay oscuro para mejorar contraste -->
   <div class="absolute inset-0 bg-black bg-opacity-50"></div>
   <!-- Logo en la esquina superior izquierda -->
