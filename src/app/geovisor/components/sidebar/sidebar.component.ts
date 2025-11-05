@@ -5,10 +5,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { GeovisorSharedService } from '../../services/geovisor.service';
 import { CapasComponent } from './components/capas/capas.component';
 import { LeyendaComponent } from './components/leyenda/leyenda.component';
+import { BuscarComponent } from './components/buscar/buscar.component';
 import { AcercaComponent } from './components/acerca/acerca.component';
 import { ResumenComponent } from './components/resumen/resumen.component';
 import { CoordenadasComponent } from './components/coordenadas/coordenadas.component';
 import { FiltrosComponent } from './components/filtros/filtros.component';
+
 
 @Component({
   selector: 'app-sidebar',
@@ -18,6 +20,7 @@ import { FiltrosComponent } from './components/filtros/filtros.component';
     MatButtonModule,
     CapasComponent,
     LeyendaComponent,
+    BuscarComponent,
     CoordenadasComponent,
     ResumenComponent,
     FiltrosComponent,
@@ -28,22 +31,23 @@ import { FiltrosComponent } from './components/filtros/filtros.component';
 })
 export class SidebarComponent {
   public _geovisorSharedService = inject(GeovisorSharedService);
-  public subMenu: 'capas' | 'leyendas' | 'resumen' |'coordenadas'| 'filtros'|'acerca' = 'capas';
+  public subMenu: 'capas' | 'leyendas' |'buscar'| 'resumen' |'coordenadas'| 'filtros'|'acerca' = 'capas';
   public toogleMenu = false;
   public menuItems: {
-    key: 'capas' | 'leyendas' | 'resumen' |'coordenadas'|'filtros'|'acerca';
+    key: 'capas' | 'leyendas' |'buscar'| 'resumen' |'coordenadas'|'filtros'|'acerca';
     icon: string;
     label: string;
   }[] = [
       { key: 'capas', icon: 'layers', label: 'Capas' },
       { key: 'leyendas', icon: 'view_list', label: 'Leyendas' },
-      { key: 'resumen', icon: 'summarize', label: 'resumen' },
-      { key: 'coordenadas', icon: 'explore', label: 'coordenadas' },
-      { key: 'filtros', icon: 'filter_alt', label: 'filtros' },
+      { key: 'buscar', icon: 'search', label: 'Buscar' },
+      { key: 'resumen', icon: 'summarize', label: 'Resumen' },
+      { key: 'coordenadas', icon: 'explore', label: 'Coordenadas' },
+      { key: 'filtros', icon: 'filter_alt', label: 'Filtros' },
       { key: 'acerca', icon: 'info', label: 'Acerca de' },
     ];
 
-  clickToogleMenu(filtro?: 'capas' | 'leyendas' | 'resumen' |'coordenadas'| 'filtros'|'acerca'): void {
+  clickToogleMenu(filtro?: 'capas' | 'leyendas' | 'buscar' |'resumen' |'coordenadas'| 'filtros'|'acerca'): void {
     if (filtro == undefined) {
       this.toogleMenu = !this.toogleMenu;
     } else {

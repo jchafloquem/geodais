@@ -382,6 +382,68 @@ export class GeovisorSharedService {
     this.mapa.add(this.coordinateMarkerLayer);
   }
 
+  public initializeSearchWidget(searchElement: any): void {
+    if (!searchElement || !this.view) {
+      this.showToast("El widget de búsqueda o la vista del mapa no están disponibles.", "error");
+      return;
+    }
+
+    const buscaCapasDEVIDA = [
+      {
+        layer: new FeatureLayer({
+          url: `https://siscod.devida.gob.pe/server/rest/services/DPM_PIRDAIS_CULTIVOS_PRODUCCION/MapServer/1`,
+        }),
+        searchFields: ['dni_participante', 'nombres'],
+        displayField: 'nombres',
+        exactMatch: true,
+        outFields: ['*'],
+        name: 'CULTIVOS',
+        placeholder: 'Nro DNI',
+        maxResults: 5,
+        maxSuggestions: 20,
+        suggestionsEnabled: true,
+        minSuggestCharacters: 1,
+      },
+      {
+        layer: new FeatureLayer({
+          url: `${this.restCaribSurvey.serviceBase}/${this.restCaribSurvey.capas.recopilacion}`,
+        }),
+        searchFields: ['dni_participante', 'nombre_participante'],
+        displayField: 'nombre_participante',
+        exactMatch: true,
+        outFields: ['*'],
+        name: 'VISITAS DE MONITOREO',
+        placeholder: 'Digite el DNI',
+        maxResults: 10,
+        maxSuggestions: 10,
+        suggestionsEnabled: true,
+        minSuggestCharacters: 1,
+      },
+      {
+        layer: new FeatureLayer({
+          url: `${this.restSISCOD}/0`,
+        }),
+        searchFields: ['nombre'],
+        displayField: 'nombre',
+        exactMatch: false,
+        outFields: ['*'],
+        name: 'OFICINA ZONAL',
+        placeholder: 'Nombre',
+        maxResults: 5,
+        maxSuggestions: 5,
+        suggestionsEnabled: true,
+        minSuggestCharacters: 1,
+      },
+    ];
+
+    // Se espera a que el componente esté definido para evitar race conditions
+    customElements.whenDefined('arcgis-search').then(() => {
+      searchElement.view = this.view;
+      searchElement.sources = buscaCapasDEVIDA;
+      searchElement.activeSourceIndex = 0; // Establece "CULTIVOS" como fuente por defecto
+    });
+  }
+
   initializeMap(mapViewEl: ElementRef): Promise<void> {
     // --- INICIO DE LA MEJORA ---
     // Si la vista ya existe, solo re-adjuntamos el contenedor y salimos.
@@ -499,63 +561,6 @@ export class GeovisorSharedService {
         }, { initial: true } // { initial: true } para que se ejecute una vez al inicio
       );
     });
-    //Arreglo para control de busqueda
-    const buscaCapasDEVIDA = [
-      {
-        layer: new FeatureLayer({
-          url: `https://siscod.devida.gob.pe/server/rest/services/DPM_PIRDAIS_CULTIVOS_PRODUCCION/MapServer/1`,
-        }),
-        searchFields: ['dni_participante', 'nombres'],
-        displayField: 'nombres',
-        exactMatch: true,
-        outFields: ['*'],
-        name: 'CULTIVOS',
-        placeholder: 'Nro DNI',
-        maxResults: 5,
-        maxSuggestions: 20,
-        suggestionsEnabled: true,
-        minSuggestCharacters: 1,
-      },
-      {
-        layer: new FeatureLayer({
-          url: `${this.restCaribSurvey.serviceBase}/${this.restCaribSurvey.capas.recopilacion}`,
-        }),
-        searchFields: ['dni_participante', 'nombre_participante'],
-        displayField: 'nombre_participante',
-        exactMatch: true,
-        outFields: ['*'],
-        name: 'VISITAS DE MONITOREO',
-        placeholder: 'Digite el DNI',
-        maxResults: 10,
-        maxSuggestions: 10,
-        suggestionsEnabled: true,
-        minSuggestCharacters: 1,
-      },
-      {
-        layer: new FeatureLayer({
-          url: `${this.restSISCOD}/0`,
-        }),
-        searchFields: ['nombre'],
-        displayField: 'nombre',
-        exactMatch: false,
-        outFields: ['*'],
-        name: 'OFICINA ZONAL',
-        placeholder: 'Nombre',
-        maxResults: 5,
-        maxSuggestions: 5,
-        suggestionsEnabled: true,
-        minSuggestCharacters: 1,
-      },
-    ];
-    const searchElement = document.querySelector('arcgis-search') as any;
-    if (searchElement) {
-      // Se espera a que el componente esté definido para evitar race conditions
-      customElements.whenDefined('arcgis-search').then(() => {
-        searchElement.view = this.view;
-        searchElement.sources = buscaCapasDEVIDA;
-        searchElement.activeSourceIndex = 0; // Establece "CULTIVOS" como fuente por defecto
-      });
-    }
     //Widgets del Visor
     this.view.ui.add(new Zoom({ view: this.view }), {
       position: 'top-right',
