@@ -63,7 +63,7 @@
 									"maximumError": "150kB"
 								}
 							],
-							"baseHref": "/geodais/",
+							"baseHref": "/",
 							"outputHashing": "all"
 						},
 						"development": {
