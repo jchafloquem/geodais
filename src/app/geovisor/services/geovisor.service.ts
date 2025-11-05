@@ -947,6 +947,10 @@ export class GeovisorSharedService {
             ? (geometry as __esri.Point)
             : (geometry as __esri.Polygon).centroid ?? undefined,
       });
+
+      // Forzar un reflow para arreglar glitches de renderizado en Safari después del zoom/popup.
+      // Se usa un setTimeout para asegurar que el DOM se haya actualizado.
+      setTimeout(() => window.dispatchEvent(new Event('resize')), 150);
     });
   }
 

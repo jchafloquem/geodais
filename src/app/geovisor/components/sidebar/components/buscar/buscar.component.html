@@ -26,9 +26,9 @@
     <h4 class="text-md font-semibold mb-2 text-black">RESULTADOS:</h4>
     <ul class="divide-y divide-gray-600">
       <li *ngFor="let resultado of resultados" class="group py-1 px-2 hover:bg-gray-700 cursor-pointer rounded-md" (click)="seleccionarResultado(resultado)">
-        <p class="text-sm font-medium text-black group-hover:text-gray-100">{{ resultado.displayValue }}</p>
-        <p *ngIf="resultado.secondaryInfo" class="text-sm text-gray-300 group-hover:text-gray-100">{{ resultado.secondaryInfo }}</p>
-        <p class="text-sm text-gray-400 group-hover:text-white">{{ resultado.layerName }}</p>
+        <p class="text-sm font-medium text-black group-hover:text-gray-100 break-words">{{ resultado.displayValue }}</p>
+        <p *ngIf="resultado.secondaryInfo" class="text-sm text-gray-300 group-hover:text-gray-100 break-words">{{ resultado.secondaryInfo }}</p>
+        <p class="text-sm text-gray-400 group-hover:text-white break-words">{{ resultado.layerName }}</p>
       </li>
     </ul>
   </div>
