@@ -45,19 +45,31 @@ export class NavbarComponent implements AfterViewInit {
 
 			if (searchInput) {
 				// Escuchamos el evento 'blur', que se dispara cuando el input pierde el foco.
-				// Esto ocurre cuando el usuario selecciona un resultado o simplemente toca fuera del buscador.
+				// Esto ocurre cuando el usuario selecciona un resultado o toca fuera del buscador.
 				searchInput.addEventListener('blur', () => {
 					const view = this._geovisorSharedService.view;
 					if (!view) return;
 
-					// Usamos un pequeño retardo. Esto es CRUCIAL para Safari.
-					// Le da al navegador un instante para terminar de ocultar el teclado
-					// y el panel de sugerencias ANTES de forzar el redibujado del mapa.
+					// --- SOLUCIÓN AGRESIVA PARA BUG DE RENDERIZADO EN SAFARI ---
+					// Safari no recalcula el tamaño de la página correctamente después de ocultar
+					// el teclado y el panel de sugerencias. Esta secuencia fuerza un redibujado.
 					setTimeout(() => {
-						// Forzamos el redibujado. Usamos `as any` para evitar el error de TypeScript, ya que
-						// el método `resize()` sí existe en el objeto real en tiempo de ejecución.
+						const mapContainer = view.container as HTMLElement;
+
+						// 1. Ocultamos el mapa para forzar al navegador a recalcular el layout.
+						mapContainer.style.visibility = 'hidden';
+
+						// 2. Forzamos un "reflow" del DOM. Leer una propiedad como offsetWidth es un truco conocido para esto.
+						document.body.offsetWidth;
+
+						// 3. Llamamos al método resize() de la API de ArcGIS.
 						(view as any).resize();
-					}, 300); // 300ms es un valor más seguro para dar tiempo a las animaciones de iOS.
+
+						// 4. Volvemos a hacer visible el mapa. Usamos requestAnimationFrame
+						//    para asegurarnos de que esto ocurra en el siguiente ciclo de pintado.
+						requestAnimationFrame(() => mapContainer.style.visibility = 'visible');
+
+					}, 400); // Aumentamos el retardo a 400ms para dar más tiempo a las animaciones de iOS.
 				});
 			}
 		});
