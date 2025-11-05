@@ -23,10 +23,10 @@ export default class WelcomeComponent implements OnInit, OnDestroy {
   ];
 
   private readonly backgroundImages = [
-    '/assets/images/wallpapers/wallpaper1.png',
-    '/assets/images/wallpapers/wallpaper2.png',
-    '/assets/images/wallpapers/wallpaper3.png',
-    '/assets/images/wallpapers/wallpaper2.png' // Se repite para el efecto de ida y vuelta
+    'assets/images/wallpapers/wallpaper1.png',
+    'assets/images/wallpapers/wallpaper2.png',
+    'assets/images/wallpapers/wallpaper3.png',
+    'assets/images/wallpapers/wallpaper2.png' // Se repite para el efecto de ida y vuelta
   ];
 
   public currentBackgroundImage = '';
