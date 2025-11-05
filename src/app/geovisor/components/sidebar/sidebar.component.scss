@@ -1,29 +1,27 @@
-/* === Sidebar izquierdo principal === */
-#left-panel {
-  position: relative;
-  left: 5px;
-  z-index: 50;
-  overflow: visible;
-}
-
-/* === Iconos Material dentro del panel === */
-#left-panel .material-icons-round {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-}
-
-/* === Panel oculto (cerrado) === */
+/*
+ * Estilos para el panel del menú lateral.
+ * Se mantiene la animación de deslizamiento que te gusta, pero se elimina el código duplicado y no utilizado.
+*/
+/* === Panel de menú (contenedor principal) === */
 .menu__container {
-  left: -224px !important;
-  transition: left 0.5s ease;
+  /*
+   * Usamos `transform` para la animación en lugar de `left`. Es mucho más eficiente
+   * y evita que el navegador recalcule el ancho de la página.
+   * La posición base `left: 48px` la define Tailwind en el HTML.
+  */
+  transition: transform 0.5s ease;
+
+  /*
+   * Por defecto (cerrado), movemos el panel fuera de la vista hacia la izquierda.
+   * El ancho del panel es 272px, así que lo movemos esa cantidad.
+  */
+  transform: translateX(-272px);
   border-radius: 0 8px 8px 0;
 }
 
 /* === Panel visible (abierto) === */
+/* Cuando se añade la clase .menu__container--open, se mueve a su posición visible. */
 .menu__container--open {
-  left: 48px !important;
-  transition: left 0.5s ease;
+  /* Lo devolvemos a su posición original (transformación cero). */
+  transform: translateX(0);
 }

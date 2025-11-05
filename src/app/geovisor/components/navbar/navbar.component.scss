@@ -1,13 +1,26 @@
-/* Transición del sidebar */
-#sidebar {
-  -webkit-transition: all 300ms cubic-bezier(0, 0.77, 0.58, 1);
-  transition: all 300ms cubic-bezier(0, 0.77, 0.58, 1);
+/*
+ * :host se refiere al elemento <app-navbar>.
+ * Lo posicionamos de forma fija en la parte superior de la pantalla.
+ * Estos estilos estaban antes en map.component.scss y ahora están encapsulados aquí.
+*/
+:host {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: block;
+  overflow-x: hidden; /* Contiene cualquier desbordamiento del buscador interno */
 }
-#sidebar.show {
-  transform: translateX(0);
-}
-#sidebar ul li a.active {
-  background-color: #f8f9f9;
+
+/*
+ * Contenedor interno de la barra de navegación.
+ * Usamos padding para respetar las áreas seguras de iOS (notch, Dynamic Island).
+*/
+.navbar-container {
+  padding-top: env(safe-area-inset-top, 1rem);
+  padding-left: env(safe-area-inset-left, 1rem);
+  padding-right: env(safe-area-inset-right, 1rem);
 }
 
 .logout-wrapper {
@@ -24,8 +37,3 @@
 .logout-wrapper:hover {
   background-color: #d1d5db; /* gris más oscuro */
 }
-
-
-
-
-
