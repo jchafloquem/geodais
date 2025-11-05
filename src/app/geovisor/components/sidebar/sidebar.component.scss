@@ -1,4 +1,14 @@
 /*
+ * :host se refiere al propio elemento <app-sidebar>.
+ * Al aplicarle `overflow: hidden`, forzamos a que cualquier contenido interno
+ * que se desborde (como el panel del menú) sea recortado.
+ * Esto resuelve de raíz el problema de expansión del ancho de página en Safari,
+ * sin afectar la animación de deslizamiento.
+*/
+:host {
+  overflow: hidden;
+}
+/*
  * Estilos para el panel del menú lateral.
  * Se mantiene la animación de deslizamiento que te gusta, pero se elimina el código duplicado y no utilizado.
 */
