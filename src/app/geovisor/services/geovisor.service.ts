@@ -38,6 +38,7 @@ export interface CustomSearchResult {
   feature: Graphic;
   layerName: string;
   displayValue: string;
+  secondaryInfo?: string;
 }
 
 export interface OficinaStats {
@@ -894,10 +895,20 @@ export class GeovisorSharedService {
 
       const promise = source.layer.queryFeatures(query).then(featureSet => {
         featureSet.features.forEach(feature => {
+          const attrs = feature.attributes;
+          let secondaryInfo = '';
+
+          if (source.name === 'CULTIVOS' || source.name === 'VISITAS DE MONITOREO') {
+            const dni = attrs.dni_participante;
+            if (dni) {
+              secondaryInfo = `DNI: ${dni}`;
+            }
+          }
           allResults.push({
             feature: feature,
             layerName: source.name,
-            displayValue: feature.attributes[source.displayField],
+            displayValue: attrs[source.displayField],
+            secondaryInfo: secondaryInfo,
           });
         });
       }).catch(error => {
