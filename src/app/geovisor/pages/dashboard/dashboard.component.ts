@@ -1,6 +1,6 @@
 import "driver.js/dist/driver.css";
-import { CommonModule, registerLocaleData } from '@angular/common';
-import { Component, AfterViewInit, LOCALE_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser, registerLocaleData, Location } from '@angular/common';
+import { Component, AfterViewInit, LOCALE_ID, OnDestroy, ViewChild, ElementRef, Inject, PLATFORM_ID } from '@angular/core';
 import { driver } from "driver.js";
 import { FooterComponent } from './components/footer/footer.component';
 import { NavbarmenuComponent } from './components/navbar/navbarmenu.component';
@@ -126,7 +126,7 @@ registerLocaleData(localeEsPE, 'es-PE');
   imports: [CommonModule, RouterModule, SidemenuComponent, NavbarmenuComponent, FooterComponent],
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss'],
+  styleUrls: ['./dashboard.component.scss'], // No hay cambios aquí, solo para contexto
   providers: [{ provide: LOCALE_ID, useValue: 'es-PE' }],
 })
 export class DashboardComponent implements AfterViewInit {
@@ -199,12 +199,33 @@ export class DashboardComponent implements AfterViewInit {
   public isModalLoading = false;
   /** Flag para indicar que la exportación a PDF está en progreso. */
   public isExportingPDF = false;
+
+  /** Ruta base para los assets (imágenes, etc.), calculada dinámicamente. */
+  public assetPath = '';
+
+  /**
+   * @constructor
+   * @description
+   * Inyecta dependencias y calcula la ruta base para los assets de forma dinámica,
+   * asegurando que las imágenes se carguen en cualquier entorno (local, Netlify, producción).
+   */
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private location: Location
+  ) {
+    if (isPlatformBrowser(this.platformId)) {
+      // Usamos el servicio `Location` de Angular para obtener la ruta base correcta.
+      // `prepareExternalUrl` antepone el `base-href` a la ruta proporcionada.
+      // Esto crea una ruta relativa a la raíz del dominio que funciona en todos los entornos.
+      this.assetPath = this.location.prepareExternalUrl('assets');
+    }
+  }
+
   /**
    * @method ngAfterViewInit
    * @description
    * Hook del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
    * Inicia la carga de datos del dashboard.
-   * @async
    */
   async ngAfterViewInit(): Promise<void> {
     const dashboardCultivos = new FeatureLayer({ url: this.SERVICIO_PIRDAIS });
