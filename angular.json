@@ -71,6 +71,17 @@
 							"baseHref": "/geodais/",
 							"outputHashing": "all"
 						},
+						"netlify": {
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "4mb",
+									"maximumError": "5mb"
+								}
+							],
+							"baseHref": "/",
+							"outputHashing": "all"
+						},
 						"development": {
 							"optimization": false,
 							"extractLicenses": false,
