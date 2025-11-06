@@ -68,8 +68,8 @@
 									"maximumError": "150kB"
 								}
 							],
-							"baseHref": "/geodais/",
-							"outputHashing": "all"
+							"outputHashing": "all",
+							"baseHref": "/geodais/"
 						},
 						"netlify": {
 							"budgets": [
@@ -79,8 +79,8 @@
 									"maximumError": "5mb"
 								}
 							],
-							"baseHref": "/",
-							"outputHashing": "all"
+							"outputHashing": "all",
+							"baseHref": "/"
 						},
 						"development": {
 							"optimization": false,
@@ -100,8 +100,7 @@
 							"buildTarget": "geodais:build:production"
 						},
 						"development": {
-							"buildTarget": "geodais:build:development",
-							"servePath": "/geodais/"
+							"buildTarget": "geodais:build:development"
 						}
 					},
 					"defaultConfiguration": "development"
