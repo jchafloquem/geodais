@@ -9,7 +9,6 @@ import { Router, Route, RouterModule } from '@angular/router';
 })
 export class SidemenuComponent {
   @Input() visible: boolean = true;
-  menuVisible = false;
   menuRoutes: Route[] = [];
 
   constructor() {
@@ -28,9 +27,5 @@ export class SidemenuComponent {
         r => r.path && !excluded.includes(r.path) && r.loadComponent
       );
     }
-  }
-
-  toggleMenu() {
-    this.menuVisible = !this.menuVisible;
   }
 }

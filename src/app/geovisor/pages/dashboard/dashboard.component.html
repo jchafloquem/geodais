@@ -14,7 +14,7 @@
     <!-- 📊 Contenido Principal -->
     <main class="flex-1 min-w-0 p-4 sm:p-6 overflow-y-auto space-y-6 transition-all duration-300 ease-in-out pb-20"
           [class.md:ml-64]="isMenuOpen" [class.md:ml-0]="!isMenuOpen"> <!-- Espacio para el footer -->
-    <h1 id="dashboard-title" class="text-base sm:text-lg md:text-xl font-semibold text-white bg-[#0DA642] px-3 py-2 rounded-lg shadow-md text-center">
+    <h1 id="dashboard-title" class="text-base sm:text-lg md:text-xl font-semibold text-white bg-secondary px-3 py-2 rounded-lg shadow-md text-center">
       <ng-container [ngSwitch]="selectedYear">
         <ng-container *ngSwitchCase="0">
           Información Acumulada (Todos los años)

@@ -1,18 +1,6 @@
-<!-- Botón toggle (solo visible en móvil, pero puedes quitar md:hidden si lo quieres en todos) -->
-<button
-  (click)="toggleMenu()"
-  class="absolute top-4 left-4 z-20 p-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 md:hidden">
-  <!-- ícono hamburguesa -->
-  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-       viewBox="0 0 24 24" stroke="currentColor">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-      d="M4 6h16M4 12h16M4 18h16"/>
-  </svg>
-</button>
-
 <!-- SIDEMENU -->
 <div id="menu"
-  [class.hidden]="!menuVisible"
+  [class.hidden]="!visible"
   class="md:block bg-[#323232] min-h-screen z-10 text-slate-300 w-64 left-0 h-screen overflow-y-hidden">
 
   <div id="logo" class="my-4 px-6">
@@ -30,7 +18,7 @@
 
         <div class="flex flex-col">
           <span class="text-lg font-bold leading-5 text-[#0D9BD7]">{{item.title}}</span>
-          
+
         </div>
       </a>
     }
