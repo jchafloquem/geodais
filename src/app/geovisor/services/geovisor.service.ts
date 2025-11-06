@@ -462,7 +462,7 @@ export class GeovisorSharedService {
     this.view = new MapView({
       container: mapViewEl.nativeElement,
       map: this.mapa,
-      center: [-74.0, -8.80],
+      center: [-75.0, -8.80],
       zoom: isMobile ? 5 : 6,
       rotation: 0,
       constraints: {
